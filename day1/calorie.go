@@ -16,7 +16,8 @@ func main() {
 	fmt.Println("max 3 elfs total:", top3[0]+top3[1]+top3[2])
 }
 
-// EFFECTS: reads from stdin until EOF, calculating top 3 elfs with most calories
+// REQUIRES: stdin is a valid puzzle input
+// EFFECTS: reads from stdin until EOF, calculating top 3 elfs carrying most calories
 // MODIFIES: stdin
 func maxElf() [3]int {
 	var maxCals [3]int = [3]int{0, 0, 0}
@@ -25,14 +26,15 @@ func maxElf() [3]int {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
-		if line == "" {
-			if curElf > maxCals[0] {
+		// fmt.Println(line)
+
+		if line == "" { // current elf ended
+			if curElf > maxCals[0] { // check if current elf in top3
 				maxCals[0] = curElf
 				sort.Ints(maxCals[:])
 			}
-			curElf = 0
-		} else {
+			curElf = 0 // reset current elf
+		} else { // current elf still carrying
 			cal, _ := strconv.Atoi(line)
 			curElf += cal
 		}
