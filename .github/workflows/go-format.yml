@@ -1,14 +1,13 @@
 name: Golang Formatter
-on: [pull_request]
+
+on: pull_request
+
 jobs:
-  test:
+  format:
     name: Golang Formatter
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-      with:
-        fetch-depth: 0
     - name: Golang Formatter
-      uses: sladyn98/auto-go-format@master
+      uses: sladyn98/auto-go-format@main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
