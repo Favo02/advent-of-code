@@ -101,11 +101,7 @@ func calculateWin(me, opponent int) int {
 func calculateMove(opponent int, result string) int {
 	switch result {
 	case "X": // lose
-		move := (opponent - 1)
-		if move == -1 { // outside of circular array
-			move = 2
-		}
-		return move
+		return (opponent-1 % 3 + 3) % 3 // go % operation is weird with negative numbers
 	case "Y": // draw
 		return opponent
 	case "Z": // win
