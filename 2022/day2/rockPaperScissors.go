@@ -48,75 +48,68 @@ func lineToScore(line string) (int, int) {
 	var wrongScore, correctScore int
 
 	// me is already the move to be performed
-	wrongScore += me
+	wrongScore += me+1 // convert code to score (+1)
 	wrongScore += calculateWin(me, opponent)
 
 	// me is (win, lose or draw), not the move to be performed
 	myMove := calculateMove(opponent, meStr)
 
 	// myMove is the move to be performed
-	correctScore += myMove
+	correctScore += myMove+1 // convert code to score (+1)
 	correctScore += calculateWin(myMove, opponent)
 
 	return wrongScore, correctScore
 }
 
 // REQUIRES: me = X, Y or Z
-// EFFECTS: returns 1 for rock, 2 for paper, 3 for scissors, -1 otherwise
+// EFFECTS: returns 0 for rock, 1 for paper, 2 for scissors, -1 otherwise
 func stringCodeToIntCode(strCode string) int {
-	// X = A = rock			= 1
-	// Y = B = paper		= 2
-	// Z = C = scissors	= 3
+	// X = A = rock			= code 0 = 1 score
+	// Y = B = paper		= code 1 = 2 score
+	// Z = C = scissors	= code 2 = 3 score
 
 	switch strCode {
 	case "X", "A": // rock
-		return 1
+		return 0
 	case "Y", "B": // paper
-		return 2
+		return 1
 	case "Z", "C": // scissors
-		return 3
+		return 2
 	}
 	return -1
 }
 
-// REQUIRES: me, opponent = 1, 2, 3 (code for rock, paper, scissors)
+// REQUIRES: me, opponent = 0, 1, 2 (code for rock, paper, scissors)
 // EFFECTS: returns 6 if me wins, 3 if me and opponents draw, 0 if opponent wins
 func calculateWin(me, opponent int) int {
 	// 6 = win
 	// 3 = draw
 	// 0 = lose
-	if me == opponent {
+
+	if me == opponent { // draw
 		return 3
 	}
-	// convert codes to circular array:
-	// convert code from 1,2,3 to 0,1,2
-	me--
-	opponent--
-	if (me+1)%3 == opponent {
+	if (me+1)%3 == opponent { // lose
 		return 0
-	} else {
-		return 6
 	}
+	// win
+	return 6
 }
 
-// REQUIRES: opponent = 1, 2, 3 (code for rock, paper, scissors), result = X, Y, Z (lose, draw, lose)
+// REQUIRES: opponent = 0, 1, 2 (code for rock, paper, scissors), result = X, Y, Z (lose, draw, lose)
 // EFFECTS: returns the move needed to get the result desiderated by result parameter
 func calculateMove(opponent int, result string) int {
 	switch result {
 	case "X": // lose
-		move := opponent - 1
-		if move == 0 { // outside of circular array
-			move = 3
+		move := (opponent - 1)
+		if move == -1 { // outside of circular array
+			move = 2
 		}
 		return move
 	case "Y": // draw
 		return opponent
 	case "Z": // win
-		move := opponent + 1
-		if move == 4 { // outside of circular array
-			move = 1
-		}
-		return move
+		return (opponent + 1) % 3
 	}
 	return 0
 }
