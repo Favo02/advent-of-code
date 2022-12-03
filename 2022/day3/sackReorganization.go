@@ -13,6 +13,9 @@ func main() {
 	fmt.Println(tot, totGroup)
 }
 
+// REQUIRES: stdin is a valid puzzle input
+// MODIFIES: stdin
+// EFFECTS: returns the priority for every elf (part1) and the priority for every group of elfs (part2)
 func parseInput() (int, int) {
 	var tot, totGroup int
 	scanner := bufio.NewScanner(os.Stdin)
@@ -25,7 +28,7 @@ func parseInput() (int, int) {
 		// part1
 		substr1 := line[:len(line)/2]
 		substr2 := line[len(line)/2:]
-		commonChar := compareStrings(substr1, substr2)
+		commonChar := compare2Strings(substr1, substr2)
 		priority := charToVal(commonChar)
 		// fmt.Println(string(commonChar), priority)
 		tot += priority
@@ -35,7 +38,7 @@ func parseInput() (int, int) {
 		bufsize++
 
 		if bufsize == 3 { // each group of elfs
-			charGroup := compareBuffer(buffer)
+			charGroup := compare3Strings(buffer)
 			groupPriority := charToVal(charGroup)
 			totGroup += groupPriority
 
@@ -45,7 +48,8 @@ func parseInput() (int, int) {
 	return tot, totGroup
 }
 
-func compareStrings(str1, str2 string) rune {
+// EFFECTS: returns the common character between str1 and str2, '0' if there are no common characters
+func compare2Strings(str1, str2 string) rune {
 	for _, v := range str1 {
 		for _, w := range str2 {
 			if v == w {
@@ -56,12 +60,13 @@ func compareStrings(str1, str2 string) rune {
 	return '0'
 }
 
-func compareBuffer(buf [3]string) rune {
-	for _, v := range buf[0] {
-		for _, w := range buf[1] {
+// EFFECTS: returns the common character between the 3 strings contained in strings, '0' if there are no common characters
+func compare3Strings(strings [3]string) rune {
+	for _, v := range strings[0] {
+		for _, w := range strings[1] {
 			// run 3rd loop only if a match between first two strings is already found
 			if v == w {
-				for _, z := range buf[2] {
+				for _, z := range strings[2] {
 					if w == z {
 						return v
 					}
@@ -72,6 +77,7 @@ func compareBuffer(buf [3]string) rune {
 	return '0'
 }
 
+// EFFECTS: returns the priority of the character c
 func charToVal(c rune) int {
 	if c >= 'a' && c <= 'z' {
 		var base rune = 'a'
