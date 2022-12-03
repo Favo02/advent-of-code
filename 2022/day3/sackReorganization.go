@@ -25,15 +25,14 @@ func parseInput() (int, int) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		// part1
+		// --- part1 --- //
 		substr1 := line[:len(line)/2]
 		substr2 := line[len(line)/2:]
 		commonChar := compare2Strings(substr1, substr2)
 		priority := charToVal(commonChar)
-		// fmt.Println(string(commonChar), priority)
 		tot += priority
 
-		// part2
+		// --- part2 --- //
 		buffer[bufsize] = line
 		bufsize++
 
@@ -42,7 +41,7 @@ func parseInput() (int, int) {
 			groupPriority := charToVal(charGroup)
 			totGroup += groupPriority
 
-			bufsize = 0
+			bufsize = 0 // reset buffer to start new elfs group
 		}
 	}
 	return tot, totGroup
