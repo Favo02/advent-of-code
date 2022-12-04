@@ -61,22 +61,40 @@ func parseInput() (int, int) {
 // returns (false, true) if the elf couple has a partial overlap,
 // returns (false, false) if the elf couple has not overlap
 func checkOverlap(e ElfCouple) (bool, bool) {
-	// complete overlap
-	if e.min1 <= e.min2 && e.max1 >= e.max2 {
-		return true, true
-	}
-	if e.min2 <= e.min1 && e.max2 >= e.max1 {
-		return true, true
-	}
+
+	maxMin := max(e.min1, e.min2) // biggest min
+	minMax := min(e.max1, e.max2) // smallest max
 
 	// partial overlap
-	if e.max1 >= e.min2 && e.min1 < e.max2 {
-		return false, true
-	}
-	if e.max2 >= e.min1 && e.min2 < e.max1 {
+	if maxMin <= minMax {
+
+		// full overlap
+		if e.min1 <= e.min2 && e.max1 >= e.max2 {
+			return true, true
+		}
+		if e.min2 <= e.min1 && e.max2 >= e.max1 {
+			return true, true
+		}
+
 		return false, true
 	}
 
 	// no overlap
 	return false, false
+}
+
+// EFFECTS: returns smallest number between a and b, a if a = b
+func min(a, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
+}
+
+// EFFECTS: returns the biggest number between a and b, a if a = b
+func max(a, b int) int {
+	if a >= b {
+		return a
+	}
+	return b
 }
