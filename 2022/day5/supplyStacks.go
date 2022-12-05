@@ -15,11 +15,17 @@ var stacks []stack
 func main() {
 	// false --> part1
 	// true --> part2
-	parseInput(true)
-	printStacks()
+	parseInput(false) // modifies stacks
+	// printStacks()
 	fmt.Println(readMessage())
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stacks, stdin
+// EFFECTS: parses input stacks into stacks global var,
+// then parses instructions executing them on stacks.
+// if multipleMoveCrane = false: moving operationg will move only one crane at a time
+// if multipleMoveCrane = true: moving operations will move more than one crane at a time
 func parseInput(multipleMoveCrane bool) {
 	var startingLines stack
 
@@ -87,6 +93,11 @@ func parseInput(multipleMoveCrane bool) {
 	}
 }
 
+// REQUIRES: amount >= 0, from and to valid stacks indexes
+// MODIFIES: stacks
+// EFFECTS: perform the move: move "amount" values from "from" to "to"
+// if multiple = false: values will be moved only one at a time
+// if multiple = true: values will be moved more than ones at a time
 func moveStacks(amount, from, to int, multiple bool) {
 	if !multiple { // pop from "from" stack and push to "to" stack
 		for i := 0; i < amount; i++ { // move "amout" times
@@ -103,6 +114,9 @@ func moveStacks(amount, from, to int, multiple bool) {
 	}
 }
 
+// REQUIRES: every stack is not empty
+// MODIFIES: stacks
+// EFFECTS: returns the first values of each stack (removing it (pop)) concatenated in a string
 func readMessage() string {
 	var msg string
 	for i := 0; i < len(stacks); i++ {
@@ -111,6 +125,9 @@ func readMessage() string {
 	return msg
 }
 
+// REQUIRES: s != nil
+// MODIFIES: stdout
+// EFFECTS: print to stdout each stack
 func printStacks() {
 	fmt.Println("---")
 	for _, s := range stacks {
@@ -119,7 +136,7 @@ func printStacks() {
 	fmt.Println("---")
 }
 
-// STACK //
+// STACK IMPLEMENTATION //
 
 type listNode struct {
 	next *listNode
