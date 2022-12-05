@@ -13,19 +13,26 @@ import (
 var stacks []stack
 
 func main() {
-	// false --> part1
-	// true --> part2
-	parseInput(false) // modifies stacks
+	if len(os.Args) < 2 {
+		fmt.Println("Please pass true or false as command line argument:")
+		fmt.Println("false: PART1 (only one value moved at time)")
+		fmt.Println("true: PART2 (multiple values moved at time)")
+		return
+	}
+	isPart2, _ := strconv.ParseBool(os.Args[1])
+	parseInput(isPart2) // modifies stacks
 	// printStacks()
-	fmt.Println(readMessage())
+	msg := readMessage()
+	fmt.Println("multiple values moved at time:", isPart2)
+	fmt.Println("top of each stack after movings:", msg)
 }
 
 // REQUIRES: stdin is a valid challenge input
 // MODIFIES: stacks, stdin
 // EFFECTS: parses input stacks into stacks global var,
 // then parses instructions executing them on stacks.
-// if multipleMoveCrane = false: moving operationg will move only one crane at a time
-// if multipleMoveCrane = true: moving operations will move more than one crane at a time
+// if multipleMoveCrane = false: moving operationg will move only one value at a time
+// if multipleMoveCrane = true: moving operations will move more than one value at a time
 func parseInput(multipleMoveCrane bool) {
 	var startingLines stack
 
