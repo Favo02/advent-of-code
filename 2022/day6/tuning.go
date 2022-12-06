@@ -14,6 +14,9 @@ func main() {
 	fmt.Println("14 characters (part2):", part2)
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns a string read from stdin terminated by EOF
 func parseInput() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	var str string
@@ -24,10 +27,10 @@ func parseInput() string {
 	return str
 }
 
+// REQUIRES: length >= 0
+// EFFECTS: returns the index of index of the last character added to a string of "length" length that has no duplicate characters
 func checkSubstrings(input string, length int) int {
-	fmt.Println(input)
 	for i := 0; i < len(input)-length; i++ {
-		fmt.Println(input[i : i+length])
 		if !hasDuplicateChar(input[i : i+length]) {
 			return i + length // index of last char added to substring
 		}
@@ -35,6 +38,7 @@ func checkSubstrings(input string, length int) int {
 	return -1
 }
 
+// EFFECTS: returns true if "str" has at least one duplicate characted, false otherwise
 func hasDuplicateChar(str string) bool {
 	for i, v := range str {
 		for j, w := range str {
