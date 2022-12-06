@@ -25,15 +25,11 @@ func parseInput() string {
 }
 
 func checkSubstrings(input string, length int) int {
-	var buffer string
-	for i, char := range input {
-		if len(buffer) < length {
-			buffer = buffer + string(char)
-			continue
-		}
-		buffer = buffer[1:] + string(char)
-		if !hasDuplicateChar(buffer) {
-			return i + 1
+	fmt.Println(input)
+	for i := 0; i < len(input)-length; i++ {
+		fmt.Println(input[i : i+length])
+		if !hasDuplicateChar(input[i : i+length]) {
+			return i + length // index of last char added to substring
 		}
 	}
 	return -1
