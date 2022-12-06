@@ -15,6 +15,7 @@ func main() {
 	fmt.Println("last board to win (part2):", last)
 }
 
+// returns numbers drawn and a slice of boards (each board is a bidimensional array)
 func parseInput() ([]int, [][][]int) {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -47,6 +48,7 @@ func parseInput() ([]int, [][][]int) {
 	return nums, boards
 }
 
+// converts an array of strings to an array of numbers
 func strToNum(strs []string) []int {
 	var res []int
 	for _, s := range strs {
@@ -58,6 +60,7 @@ func strToNum(strs []string) []int {
 	return res
 }
 
+// returns score of first and last board to win
 func getBingoScore(nums []int, boards [][][]int) (int, int) {
 	// how many numbers have been found on each line of each board
 	foundLines := make([][]int, len(boards))
@@ -122,6 +125,7 @@ func getBingoScore(nums []int, boards [][][]int) (int, int) {
 	return firstWin, lastWin
 }
 
+// returns the sum of all numbers on a board
 func sumBoard(board [][]int) int {
 	var sum int
 	for i := range board {
