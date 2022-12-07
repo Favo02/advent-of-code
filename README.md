@@ -20,7 +20,7 @@
 ## Commit convention:
 `YEAR-DAY: working`: usually first solution for the YEAR - DAY challenge
 
-`YEAR-DAY: refactor` or `YEAR-DAY: efficiency`: refactor of the clean solution or refactor of the comments
+`YEAR-DAY: refactor`: refactor of the clean solution or refactor of the comments
 
 `YEAR-DAY: add input`: add a test input for the YEAR - DAY challenge
 
