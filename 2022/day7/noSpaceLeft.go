@@ -11,9 +11,6 @@ import (
 	"strings"
 )
 
-const TOTAL_SPACE int = 70000000  // total filespace size
-const NEEDED_SPACE int = 30000000 // space needed to update
-
 func main() {
 	// directory saved as a tree, using a parallel array for parent of each node
 	nodes, parents := parseInput()
@@ -21,30 +18,13 @@ func main() {
 	// map with each directory size
 	dirSizes := calcDirsSizes(nodes, parents)
 
-	// sum directories smaller than 100000 (part1)
-	var sum int
-	for _, v := range dirSizes {
-		if v > 100000 {
-			continue
-		}
-		sum += v
-	}
-	fmt.Println("Sum of directories smaller than 100000 (part1):\n\t", sum)
+	// calculate part1 (sum of dirs size smaller than 10000)
+	part1 := calculatePart1(dirSizes)
+	fmt.Println("Sum of directories smaller than 100000 (part1):\n\t", part1)
 
-	// space on filesystem
-	totalFree := TOTAL_SPACE - dirSizes["/"]
-	missing := NEEDED_SPACE - totalFree
-
-	// smaller dir to delete to free space
-	var min int = dirSizes["/"]
-	for _, v := range dirSizes {
-		if v > missing { // if dir bug enough to reach NEEDED_SPACE
-			if v < min { // if the smallest yet
-				min = v
-			}
-		}
-	}
-	fmt.Println("Smallest directory to delete to free 30000000 (part2):\n\t", min)
+	// calculate part2 (size of smallest dir to free enough space)
+	part2 := calculatePart2(dirSizes)
+	fmt.Println("Smallest directory to delete to free 30000000 (part2):\n\t", part2)
 }
 
 // node object
@@ -181,4 +161,36 @@ func getDirSize(nodes []node, parents []string, dir string, sizes map[string]int
 		sizes[dir] = sum
 	}
 	return sizes
+}
+
+func calculatePart1(dirSizes map[string]int) int {
+	// sum directories smaller than 100000 (part1)
+	var sum int
+	for _, v := range dirSizes {
+		if v > 100000 {
+			continue
+		}
+		sum += v
+	}
+	return sum
+}
+
+func calculatePart2(dirSizes map[string]int) int {
+	const TOTAL_SPACE int = 70000000  // total filespace size
+	const NEEDED_SPACE int = 30000000 // space needed to update
+
+	// space on filesystem
+	totalFree := TOTAL_SPACE - dirSizes["/"]
+	missing := NEEDED_SPACE - totalFree
+
+	// smaller dir to delete to free enough space
+	var min int = dirSizes["/"]
+	for _, v := range dirSizes {
+		if v > missing { // if dir bug enough to reach NEEDED_SPACE
+			if v < min { // if the smallest yet
+				min = v
+			}
+		}
+	}
+	return min
 }
