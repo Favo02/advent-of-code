@@ -34,7 +34,9 @@ type node struct {
 	type_ rune // d = dir, d = file
 }
 
-// parse file system to a tree, using a parallel array for parent of each node
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns a node array and a parent array that represent a tree, each node has his father in same index in parents array
 func parseInput() ([]node, []string) {
 	var nodes []node
 	var parent []string
@@ -90,7 +92,8 @@ func parseInput() ([]node, []string) {
 	return nodes, parent
 }
 
-// returns index of last / in dir, used for cd ..
+// REQUIRES: dir has at least a "/"
+// EFFECTS: returns index of last / in dir, used for cd ..
 func findLastSlash(dir string) int {
 	var index int
 	for i, v := range dir {
@@ -101,7 +104,8 @@ func findLastSlash(dir string) int {
 	return index
 }
 
-// calculate the size of each directory
+// REQUIRES: nodes and parents are a valid tree of directories
+// EFFECTS: returns a map that contains the size of each directory
 func calcDirsSizes(nodes []node, parents []string) map[string]int {
 	sizes := make(map[string]int)
 
@@ -120,7 +124,9 @@ func calcDirsSizes(nodes []node, parents []string) map[string]int {
 	return sizes
 }
 
-// returns updated map of sizes with requested directory ("dir")
+// REQUIRES: nodes and parents are a valid tree of directories, dir is an existing directory
+// MODIFIES: sizes
+// EFFECTS: returns map of sizes updated with requested directory ("dir") and his subdirectories
 func getDirSize(nodes []node, parents []string, dir string, sizes map[string]int) map[string]int {
 	var sum int
 
@@ -163,18 +169,21 @@ func getDirSize(nodes []node, parents []string, dir string, sizes map[string]int
 	return sizes
 }
 
+// EFFECTS: returns sum of directory sizes big at least 100000
 func calculatePart1(dirSizes map[string]int) int {
 	// sum directories smaller than 100000 (part1)
 	var sum int
-	for _, v := range dirSizes {
-		if v > 100000 {
+	for _, dirSize := range dirSizes {
+		if dirSize > 100000 {
 			continue
 		}
-		sum += v
+		sum += dirSize
 	}
 	return sum
 }
 
+// REQUIRES: dirSizes is a valid representation of directories size
+// EFFECTS: returns the size of smallest directory to reach free space of 30000000
 func calculatePart2(dirSizes map[string]int) int {
 	const TOTAL_SPACE int = 70000000  // total filespace size
 	const NEEDED_SPACE int = 30000000 // space needed to update
