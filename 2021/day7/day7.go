@@ -11,19 +11,26 @@ import (
 
 func main() {
 	crabs, maxCrab, minCrab := parseInput()
-	fmt.Println(calculateLessFuel1(crabs, maxCrab, minCrab))
-	fmt.Println(calculateLessFuel2(crabs, maxCrab, minCrab))
+
+	part1, part2 := calculateLessFuel(crabs, maxCrab, minCrab)
+	fmt.Println("constant fuel cost (part1):", part1)
+	fmt.Println("increasing fuel cost (part2):", part2)
 }
 
+// returns crabs list, max crab and min crab
 func parseInput() ([]int, int, int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	var crabsStr []string
 	for scanner.Scan() {
-		crabsStr = strings.Split(scanner.Text(), ",")
+		crabsStr = strings.Split(scanner.Text(), ",") // list of crab (str)
 	}
 
+	// convert crabs from str to int
 	var crabs []int
-	var maxCrab, minCrab int = math.MinInt, math.MaxInt
+	// while converting every crab, save max and min
+	var maxCrab int = math.MinInt
+	var minCrab int = math.MaxInt
+
 	for _, crabStr := range crabsStr {
 		crab, _ := strconv.Atoi(crabStr)
 		crabs = append(crabs, crab)
@@ -34,43 +41,39 @@ func parseInput() ([]int, int, int) {
 			minCrab = crab
 		}
 	}
+
 	return crabs, maxCrab, minCrab
 }
 
-func calculateLessFuel1(crabs []int, max, min int) int {
-	var minFuel int = math.MaxInt
+// returns the least fuel possible to align every crab, both usign constant fuel cost (part1) and increasing fuel cost (part2)
+func calculateLessFuel(crabs []int, max, min int) (int, int) {
+	var minFuelConst int = math.MaxInt
+	var minFuelIncr int = math.MaxInt
+
+	// scan every possible point to align crabs
 	for goal := min; goal <= max; goal++ {
-		var fuel int
+
+		// calculate fuel needed to move all crabs
+		var fuelConst, fuelIncr int
 		for _, crab := range crabs {
-			fuel += int(math.Abs(float64(goal - crab)))
+			fuelConst += int(math.Abs(float64(goal - crab)))
+			fuelIncr += calculateFuelSteps(int(math.Abs(float64(goal - crab))))
 		}
-		if fuel < minFuel {
-			minFuel = fuel
+
+		// save min fuel cost possible
+		if fuelConst < minFuelConst {
+			minFuelConst = fuelConst
 		}
-		fuel = 0
+		if fuelIncr < minFuelIncr {
+			minFuelIncr = fuelIncr
+		}
+		fuelConst, fuelIncr = 0, 0
 	}
-	return minFuel
+
+	return minFuelConst, minFuelIncr
 }
 
-func calculateLessFuel2(crabs []int, max, min int) int {
-	var minFuel int = math.MaxInt
-	for goal := min; goal <= max; goal++ {
-		var fuel int
-		for _, crab := range crabs {
-			fuel += calculateFuelSteps(int(math.Abs(float64(goal - crab))))
-		}
-		if fuel < minFuel {
-			minFuel = fuel
-		}
-		fuel = 0
-	}
-	return minFuel
-}
-
+// returns fuel increased fuel cost (for part2)
 func calculateFuelSteps(diff int) int {
-	var sum int
-	for i := 0; i <= diff; i++ {
-		sum += i
-	}
-	return sum
+	return ((diff * (diff - 1)) / 2) + diff
 }
