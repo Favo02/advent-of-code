@@ -1,4 +1,5 @@
 // https://adventofcode.com/2022/day/7
+// filesystem implemented using parent parallel array
 
 package main
 
@@ -10,96 +11,97 @@ import (
 	"strings"
 )
 
-const TOTAL_SPACE int = 70000000
-const NEEDED_SPACE int = 30000000
+const TOTAL_SPACE int = 70000000  // total filespace size
+const NEEDED_SPACE int = 30000000 // space needed to update
 
 func main() {
+	// directory saved as a tree, using a parallel array for parent of each node
 	nodes, parents := parseInput()
-	calcDir := calcDir(nodes, parents)
+
+	// map with each directory size
+	dirSizes := calcDirsSizes(nodes, parents)
+
+	// sum directories smaller than 100000 (part1)
 	var sum int
-	for _, v := range calcDir {
+	for _, v := range dirSizes {
 		if v > 100000 {
 			continue
 		}
 		sum += v
 	}
-	fmt.Println(sum)
+	fmt.Println("Sum of directories smaller than 100000 (part1):\n\t", sum)
 
-	totalFree := TOTAL_SPACE - calcDir["/"]
+	// space on filesystem
+	totalFree := TOTAL_SPACE - dirSizes["/"]
 	missing := NEEDED_SPACE - totalFree
 
-	var min int = calcDir["/"]
-	for _, v := range calcDir {
-		if v > missing {
-			if v < min {
+	// smaller dir to delete to free space
+	var min int = dirSizes["/"]
+	for _, v := range dirSizes {
+		if v > missing { // if dir bug enough to reach NEEDED_SPACE
+			if v < min { // if the smallest yet
 				min = v
 			}
 		}
 	}
-	fmt.Println(min)
+	fmt.Println("Smallest directory to delete to free 30000000 (part2):\n\t", min)
 }
 
+// node object
 type node struct {
 	name  string
-	size  int
-	type_ rune
+	size  int  // size for dir = 0
+	type_ rune // d = dir, d = file
 }
 
-type size_ struct {
-	name string
-	size int
-}
-
+// parse file system to a tree, using a parallel array for parent of each node
 func parseInput() ([]node, []string) {
 	var nodes []node
 	var parent []string
 
+	// current directory
 	var curDir string
 
+	// append root
 	nodes = append(nodes, node{"/", 0, 'd'})
 	parent = append(parent, "")
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if line[:1] == "$" {
+
+		if line[:1] == "$" { // if command
 			command := line[2:4]
+
+			// change current directory
 			if command == "cd" {
-				dest := line[5:]
-				if dest == ".." {
+				dest := line[5:]  // destination
+				if dest == ".." { // go back
 					curDir = curDir[:findLastSlash(curDir)]
-				} else if dest == "/" {
+				} else if dest == "/" { // go to root
 					curDir = "/"
-				} else {
-					if curDir[len(curDir)-1] != '/' {
-
-						curDir += "/" + dest
-					} else {
-						curDir += dest
-
-					}
+				} else { // go deeper
+					curDir += "/" + dest
+					curDir = strings.ReplaceAll(curDir, "//", "/")
 				}
-
 			}
-		} else {
+		} else { // if not command then list of content
 			var type_ rune
 			var size int
 			var name string
 
 			tokens := strings.Split(line, " ")
 
-			if tokens[0] == "dir" {
+			if tokens[0] == "dir" { // type directory
 				type_ = 'd'
 				name = tokens[1]
-			} else {
+			} else { // type file
 				type_ = 'f'
-			}
-
-			if type_ == 'f' {
 				size, _ = strconv.Atoi(tokens[0])
 				name = tokens[1]
 			}
 
+			// append node to tree (and set parent)
 			node := node{name, size, type_}
 			nodes = append(nodes, node)
 			parent = append(parent, curDir)
@@ -108,66 +110,75 @@ func parseInput() ([]node, []string) {
 	return nodes, parent
 }
 
+// returns index of last / in dir, used for cd ..
 func findLastSlash(dir string) int {
 	var index int
-	var count int
 	for i, v := range dir {
 		if v == '/' {
 			index = i
-			count++
 		}
-	}
-	if count == 1 {
-		return index + 1
 	}
 	return index
 }
 
-func calcDir(nodes []node, parents []string) map[string]int {
-	var sizes map[string]int = make(map[string]int)
+// calculate the size of each directory
+func calcDirsSizes(nodes []node, parents []string) map[string]int {
+	sizes := make(map[string]int)
+
+	// scan each node
 	for i, node := range nodes {
+
+		// if node is a directory
 		if node.type_ == 'd' {
-			fulldir := parents[i] + "/" + node.name
-			fulldir = strings.ReplaceAll(fulldir, "//", "/")
-			dir, size := getDirSize(nodes, parents, fulldir, sizes)
-			if dir == "/" {
-				sizes[dir] = size
-			}
+
+			fulldir := strings.ReplaceAll(parents[i]+"/"+node.name, "//", "/")
+
+			sizes = getDirSize(nodes, parents, fulldir, sizes)
+
 		}
 	}
 	return sizes
 }
 
-func getDirSize(nodes []node, parents []string, dir string, sizes map[string]int) (string, int) {
+// returns updated map of sizes with requested directory ("dir")
+func getDirSize(nodes []node, parents []string, dir string, sizes map[string]int) map[string]int {
 	var sum int
-	for i, v := range parents {
-		// par := v[findLastSlash(v):]
-		// if len(par) == 0 {
-		// 	par = "/"
-		// } else if par[0] == '/' {
-		// 	par = par[1:]
-		// }
-		par := v
 
+	// scan each node (files + dirs)
+	for i, par := range parents {
+
+		// if file is in current dir (has parent = current dir)
 		if par == dir {
-			if nodes[i].type_ == 'f' {
+			if nodes[i].type_ == 'f' { // file: just sum size
 				sum += nodes[i].size
-			} else {
-				var skip bool
-				if s, found := sizes[dir]; found {
-					sum += s
-					skip = true
+			} else { // subdirectory: calculate size of subdirectory
+
+				// directory already calculated
+				subSize, found := sizes[dir]
+				if found {
+					sum += subSize
 				}
 
-				if !skip {
-					fulldir := v + "/" + nodes[i].name
-					fulldir = strings.ReplaceAll(fulldir, "//", "/")
-					d, s := getDirSize(nodes, parents, fulldir, sizes)
-					sizes[d] = s
-					sum += s
+				// directory not calculated yet
+				if !found {
+
+					// calculate dir of subdirectory
+					subDir := strings.ReplaceAll(par+"/"+nodes[i].name, "//", "/")
+
+					// calculate size of subdirectory and add to sizes
+					sizes = getDirSize(nodes, parents, subDir, sizes)
+
+					// sum subdirectory size to current directory total size
+					sum += sizes[subDir]
 				}
 			}
 		}
+
 	}
-	return dir, sum
+
+	// if directory size not calculated yet, add to sizes
+	if _, found := sizes[dir]; !found {
+		sizes[dir] = sum
+	}
+	return sizes
 }
