@@ -1,3 +1,5 @@
+// https://adventofcode.com/2022/day/8
+
 package main
 
 import (
@@ -15,6 +17,9 @@ func main() {
 	fmt.Println("max visibility from a tree (part2):\n\t", bestVisibility)
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns a bidimensional array representing the tree grid
 func parseInput() [][]int {
 	var grid [][]int
 
@@ -34,6 +39,7 @@ func parseInput() [][]int {
 	return grid
 }
 
+// EFFECTS: returns the number of visible tree (trees without any taller tree on each side of them)
 func countVisibleTrees(grid [][]int) int {
 	// count initialized with tree on the edge (always visible)
 	var count int = len(grid)*2 + len(grid[0])*2 - 4 // each side * 2 - 4 corners
@@ -54,6 +60,8 @@ func countVisibleTrees(grid [][]int) int {
 	return count
 }
 
+// REQUIRES: i, j are valid indexes in grid, i, j are not on the edges of grid (i,j != 0; i,j != len(grid))
+// EFFECTS: returns true if the tree in position i, j is visible, false otherwise
 func checkVisible(grid [][]int, i, j int) bool {
 	var top, bottom, left, right bool = true, true, true, true
 
@@ -95,6 +103,7 @@ func checkVisible(grid [][]int, i, j int) bool {
 	return top || bottom || left || right
 }
 
+// EFFECTS: returns the visibility (how many trees are visible from that tree, on every side) from the tree with the most visibility
 func maxVisibility(grid [][]int) int {
 	var maxVis = 0
 
@@ -116,6 +125,8 @@ func maxVisibility(grid [][]int) int {
 	return maxVis
 }
 
+// REQUIRES: i, j are valid indexes in grid, i, j are not on the edges of grid (i,j != 0; i,j != len(grid))
+// EFFECTS: returns the visibility (number of trees visible from ij multiplied for each side) from the tree in position i, j
 func countVisibility(grid [][]int, i, j int) int {
 	var top, bottom, left, right int
 
