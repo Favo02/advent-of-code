@@ -9,118 +9,168 @@ import (
 
 func main() {
 	grid := parseInput()
-	fmt.Println(countVisible(grid))
-	fmt.Println(countMaxVisibility(grid))
+	visibleTrees := countVisibleTrees(grid)
+	bestVisibility := maxVisibility(grid)
+	fmt.Println("number of visible trees (part1):\n\t", visibleTrees)
+	fmt.Println("max visibility from a tree (part2):\n\t", bestVisibility)
 }
 
 func parseInput() [][]int {
 	var grid [][]int
 
-	var index int = -1
+	var index int = 0
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		grid = append(grid, make([]int, 0))
-		index++
+
+		grid = append(grid, make([]int, 0)) // add new line to grid
 		for _, n := range line {
-			num, _ := strconv.Atoi(string(n))
-			grid[index] = append(grid[index], num)
+			num, _ := strconv.Atoi(string(n))      // parse num
+			grid[index] = append(grid[index], num) // insert num into grid
 		}
+
+		index++ // move to next line
 	}
 	return grid
 }
 
-func countVisible(grid [][]int) int {
-	var count int = len(grid)*2 + len(grid[0])*2 - 4
+func countVisibleTrees(grid [][]int) int {
+	// count initialized with tree on the edge (always visible)
+	var count int = len(grid)*2 + len(grid[0])*2 - 4 // each side * 2 - 4 corners
 
+	// scan each tree
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[0])-1; j++ {
-			// fmt.Println("check", i, j, "tree")
-			if checkVisible(grid, i, j) > 0 {
+
+			// check visibility
+			if checkVisible(grid, i, j) {
 				count++
 			}
-			// count += checkVisible(grid, i, j)
+
 		}
 	}
+
+	// return number of trees with visibility
 	return count
 }
 
-func checkVisible(grid [][]int, i, j int) int {
-	var top, bottom, left, right int = 1, 1, 1, 1
-	for ii := i; ii >= 0; ii-- {
-		if ii != i && grid[i][j] <= grid[ii][j] {
-			// fmt.Println(i, j, "<", ii, j)
-			top = 0
+func checkVisible(grid [][]int, i, j int) bool {
+	var top, bottom, left, right bool = true, true, true, true
+
+	// ij = x,y of the tree we are checking visibility
+
+	// scan every tree above ij
+	for ii := i - 1; ii >= 0; ii-- {
+		// if a tree is >= of ij height, ij has no visbility
+		if grid[i][j] <= grid[ii][j] {
+			top = false
 		}
 	}
-	for ii := i; ii < len(grid); ii++ {
-		if ii != i && grid[i][j] <= grid[ii][j] {
-			bottom = 0
+
+	// scan every tree below ij
+	for ii := i + 1; ii < len(grid); ii++ {
+		// if a tree is >= of ij height, ij has no visbility
+		if grid[i][j] <= grid[ii][j] {
+			bottom = false
 		}
 	}
-	for jj := j; jj >= 0; jj-- {
-		if jj != j && grid[i][j] <= grid[i][jj] {
-			left = 0
+
+	// scan every tree to the left of ij
+	for jj := j - 1; jj >= 0; jj-- {
+		// if a tree is >= of ij height, ij has no visbility
+		if grid[i][j] <= grid[i][jj] {
+			left = false
 		}
 	}
-	for jj := j; jj < len(grid[0]); jj++ {
-		if jj != j && grid[i][j] <= grid[i][jj] {
-			right = 0
+
+	// scan every tree to the rigth of ij
+	for jj := j + 1; jj < len(grid[0]); jj++ {
+		// if a tree is >= of ij height, ij has no visbility
+		if grid[i][j] <= grid[i][jj] {
+			right = false
 		}
 	}
-	// fmt.Println(top, bottom, left, right)
-	return top + bottom + left + right
+
+	// if ij tree has visibility to at least one side (or between every side)
+	return top || bottom || left || right
 }
 
-func countMaxVisibility(grid [][]int) int {
+func maxVisibility(grid [][]int) int {
 	var maxVis = 0
 
+	// scan each tree
 	for i := 1; i < len(grid)-1; i++ {
 		for j := 1; j < len(grid[0])-1; j++ {
-			vis := checkVisible2(grid, i, j)
-			// fmt.Println("check", i, j, "tree", vis)
+
+			// calculate visibility from tree
+			vis := countVisibility(grid, i, j)
+
+			// if visibility is the highest yet
 			if vis > maxVis {
 				maxVis = vis
 			}
 		}
 	}
+
+	// return visibility of tree with max visibility
 	return maxVis
 }
 
-func checkVisible2(grid [][]int, i, j int) int {
+func countVisibility(grid [][]int, i, j int) int {
 	var top, bottom, left, right int
-	for ii := i; ii >= 0; ii-- {
-		if ii != i && grid[i][j] <= grid[ii][j] {
+
+	// scan trees above ij
+	for ii := i - 1; ii >= 0; ii-- {
+		// found a tree taller:
+		// add taller tree to visibility and stop scanning
+		if grid[i][j] <= grid[ii][j] {
 			top++
 			break
 		}
+		// found shorter tree:
+		// add shorter tree to visibility
 		top++
 	}
-	top--
-	for ii := i; ii < len(grid); ii++ {
-		if ii != i && grid[i][j] <= grid[ii][j] {
+
+	// scan trees below ij
+	for ii := i + 1; ii < len(grid); ii++ {
+		// found a tree taller:
+		// add taller tree to visibility and stop scanning
+		if grid[i][j] <= grid[ii][j] {
 			bottom++
 			break
 		}
+		// found shorter tree:
+		// add shorter tree to visibility
 		bottom++
 	}
-	bottom--
-	for jj := j; jj >= 0; jj-- {
-		if jj != j && grid[i][j] <= grid[i][jj] {
+
+	// scan trees to the left of ij
+	for jj := j - 1; jj >= 0; jj-- {
+		// found a tree taller:
+		// add taller tree to visibility and stop scanning
+		if grid[i][j] <= grid[i][jj] {
 			left++
 			break
 		}
+		// found shorter tree:
+		// add shorter tree to visibility
 		left++
 	}
-	left--
-	for jj := j; jj < len(grid[0]); jj++ {
-		if jj != j && grid[i][j] <= grid[i][jj] {
+
+	// scan trees to the right of ij
+	for jj := j + 1; jj < len(grid[0]); jj++ {
+		// found a tree taller:
+		// add taller tree to visibility and stop scanning
+		if grid[i][j] <= grid[i][jj] {
 			right++
 			break
 		}
+		// found shorter tree:
+		// add shorter tree to visibility
 		right++
 	}
-	right--
-	// fmt.Println(top, bottom, left, right)
+
+	// return visibility score
 	return top * bottom * left * right
 }
