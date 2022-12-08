@@ -1,8 +1,36 @@
-# Advent of code
+# My stats
+
+## 2022
+
+|Day|Name|Time|Rank|Time|Rank|
+|-|-|-|-|-|-|
+|&nbsp;&nbsp;1|[Calorie counting](https://adventofcode.com/2022/day/1)|04:27:47 💤|35634|04:34:32 💤|33772|
+|&nbsp;&nbsp;2|[Rock paper scissors](https://adventofcode.com/2022/day/2)|03:02:40 💤|32160|03:48:02 💤|34395|
+|&nbsp;&nbsp;3|[Rucksack reorganization](https://adventofcode.com/2022/day/3)|00:38:19|11855|00:44:43|9742|
+|&nbsp;&nbsp;4|[Camp cleanup](https://adventofcode.com/2022/day/4)|02:15:40 💤|21907|02:40:15 💤|22753|
+|&nbsp;&nbsp;5|[Supply stacks](https://adventofcode.com/2022/day/5)|00:47:19|9299|00:51:58|8656|
+|&nbsp;&nbsp;6|[Tuning trouble](https://adventofcode.com/2022/day/6)|00:10:23|6419|00:12:15|5931|
+|&nbsp;&nbsp;7|[No space left on device](https://adventofcode.com/2022/day/7)|01:46:52|10534|01:51:12|9502|
+|&nbsp;&nbsp;8|[Treetop tree house](https://adventofcode.com/2022/day/8)|00:24:24|4216|00:32:42|2547|
+
+💤 = I didn't wake up :) 
+
+*Every year but 2022 is >24h*
+
+# Table of contents:
+1. [ My stats ](#my-stats)
+2. [ What is advent of code ](#what-is-advent-of-code)
+3. [ Conventions ](#conventions)
+    - [ File naming convention ](#file-naming-convention)
+    - [ Commit convention ](#commit-convention)
+    - [ Pull request convention ](#pull-request-convention)
+
+# What is advent of code
 [Advent of code](https://adventofcode.com/) challenges, resolved using golang
 
-
 > Advent of Code is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
+
+# Conventions
 
 ## File naming convention:
 `challenge.go`: clean solution with comments
