@@ -16,17 +16,20 @@ import (
 	"strings"
 )
 
-const TAIL int = 1 // 1 for part1, 9 for part2
+const TAIL int = 10 // 2 for part1, 10 for part2
 
-var grid [][]bool
-var curX, curY int // head
-var curXs []int = make([]int, TAIL)
-var curYs []int = make([]int, TAIL)
+// Point are relative to starting point, can be negative
+var tailCrossed map[Point]bool = make(map[Point]bool)
+var curRope []Point = make([]Point, TAIL)
+
+type Point struct {
+	x int
+	y int
+}
 
 func main() {
 	lines := parseInput()
-	grid = append(grid, make([]bool, 1))
-	grid[0][0] = true
+	tailCrossed[Point{0, 0}] = true
 	for _, line := range lines {
 		moveHead(line)
 	}
@@ -54,109 +57,33 @@ func moveHead(line string) {
 }
 
 func moveStep(dir string) {
-	// fmt.Println("move:", dir)
 	switch dir {
 	case "U":
-		curY--
-		if curY < 0 {
-			editGrid('U')
-			curY++
-			for i := 0; i < len(curYs); i++ {
-				curYs[i]++
-			}
-		}
+		curRope[0].y--
 	case "D":
-		curY++
-		if curY >= len(grid) {
-			editGrid('D')
-		}
+		curRope[0].y++
 	case "L":
-		curX--
-		if curX < 0 {
-			editGrid('L')
-			curX++
-			for i := 0; i < len(curXs); i++ {
-				curXs[i]++
-			}
-		}
+		curRope[0].x--
 	case "R":
-		curX++
-		if curX >= len(grid) {
-			editGrid('R')
+		curRope[0].x++
+	}
+
+	for i := 1; i < len(curRope); i++ {
+		if !isTailClose(i, curRope[i-1]) {
+			moveTailPoint(i, curRope[i-1])
 		}
 	}
 
-	// fmt.Println(grid)
-
-	for i := 0; i < len(curXs); i++ {
-		if i == 0 {
-			if !isTailClose(i, curX, curY) {
-				moveTail(i, curX, curY)
-			}
-		} else {
-			if !isTailClose(i, curXs[i-1], curYs[i-1]) {
-				moveTail(i, curXs[i-1], curYs[i-1])
-			}
-		}
-	}
-	// fmt.Println("tail:", curXs[8], curYs[8])
-
-	// // fmt.Println("tail:", curXtail, curYtail)
-	grid[curYs[TAIL-1]][curXs[TAIL-1]] = true
-
-	// // fmt.Println(grid)
-
-	// fmt.Println("\n---\n")
+	tailCrossed[curRope[TAIL-1]] = true
 }
 
-func editGrid(dir rune) {
-	switch dir {
-	case 'U':
-		grid = append(grid, make([]bool, len(grid[0])))
-		for i := len(grid) - 1; i > 0; i-- {
-			for j := 0; j < len(grid[i]); j++ {
-				grid[i][j] = grid[i-1][j]
-			}
-		}
-		for i := 0; i < len(grid[0]); i++ { //reset 1st line
-			grid[0][i] = false
-		}
-
-	case 'D':
-		grid = append(grid, make([]bool, len(grid[0])))
-
-	case 'L':
-		for i := 0; i < len(grid); i++ {
-			grid[i] = append(grid[i], false)
-			for j := len(grid[i]) - 1; j > 0; j-- {
-				grid[i][j] = grid[i][j-1]
-			}
-		}
-		// reset 1st column
-		for i := 0; i < len(grid); i++ {
-			grid[i][0] = false
-		}
-
-	case 'R':
-		for i := 0; i < len(grid); i++ {
-			grid[i] = append(grid[i], false)
-		}
-	}
-}
-
-func isTailClose(ii int, targetX, targetY int) bool {
-	if targetX == curXs[ii] && targetY == curYs[ii] {
+func isTailClose(ii int, targetPoint Point) bool {
+	if targetPoint.x == curRope[ii].x && targetPoint.y == curRope[ii].y {
 		return true
 	}
-	for i := targetY - 1; i < targetY+2; i++ {
-		for j := targetX - 1; j < targetX+2; j++ {
-			if !(i >= 0 && i < len(grid)) {
-				continue
-			}
-			if !(j >= 0 && j < len(grid[i])) {
-				continue
-			}
-			if i == curYs[ii] && j == curXs[ii] {
+	for i := targetPoint.y - 1; i < targetPoint.y+2; i++ {
+		for j := targetPoint.x - 1; j < targetPoint.x+2; j++ {
+			if i == curRope[ii].y && j == curRope[ii].x {
 				return true
 			}
 		}
@@ -164,55 +91,47 @@ func isTailClose(ii int, targetX, targetY int) bool {
 	return false
 }
 
-func moveTail(i int, targetX, targetY int) {
-	if targetX == curXs[i] {
-		if targetY > curYs[i] {
-			curYs[i]++
+func moveTailPoint(i int, targetPoint Point) {
+	if targetPoint.x == curRope[i].x {
+		if targetPoint.y > curRope[i].y {
+			curRope[i].y++
 		} else {
-			curYs[i]--
+			curRope[i].y--
 		}
 		return
 	}
 
-	if targetY == curYs[i] {
-		if targetX > curXs[i] {
-			curXs[i]++
+	if targetPoint.y == curRope[i].y {
+		if targetPoint.x > curRope[i].x {
+			curRope[i].x++
 		} else {
-			curXs[i]--
+			curRope[i].x--
 		}
 		return
 	}
 
-	if curXs[i] < targetX && curYs[i] < targetY {
-		curXs[i]++
-		curYs[i]++
+	if curRope[i].x < targetPoint.x && curRope[i].y < targetPoint.y {
+		curRope[i].x++
+		curRope[i].y++
 		return
 	}
-	if curXs[i] > targetX && curYs[i] < targetY {
-		curXs[i]--
-		curYs[i]++
+	if curRope[i].x > targetPoint.x && curRope[i].y < targetPoint.y {
+		curRope[i].x--
+		curRope[i].y++
 		return
 	}
-	if curXs[i] < targetX && curYs[i] > targetY {
-		curXs[i]++
-		curYs[i]--
+	if curRope[i].x < targetPoint.x && curRope[i].y > targetPoint.y {
+		curRope[i].x++
+		curRope[i].y--
 		return
 	}
-	if curXs[i] > targetX && curYs[i] > targetY {
-		curXs[i]--
-		curYs[i]--
+	if curRope[i].x > targetPoint.x && curRope[i].y > targetPoint.y {
+		curRope[i].x--
+		curRope[i].y--
 		return
 	}
 }
 
 func countTail() int {
-	var count int
-	for i := 0; i < len(grid); i++ {
-		for j := 0; j < len(grid[i]); j++ {
-			if grid[i][j] == true {
-				count++
-			}
-		}
-	}
-	return count
+	return len(tailCrossed)
 }
