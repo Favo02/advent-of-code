@@ -1,74 +1,71 @@
-// pesci lanterna - advent of code 2021 day 6
-// parti 1, 2
-
 package main
 
 import (
+	"fmt"
 	. "fmt"
+	"os"
 	"strconv"
 	"strings"
 )
 
 func main() {
 
-	// prendo in input i pesci iniziali come string
-	pesciStr := ""
-	Scan(&pesciStr)
-	pesci := strings.Split(pesciStr, ",")
+	// read starting fishes
+	fishesStr := ""
+	Scan(&fishesStr)
+	fishes := strings.Split(fishesStr, ",")
 
-	// converto lo slice di stringhe a slice di interi
-	var pesciInt = []int{}
-	for _, i := range pesci {
-		j, err := strconv.Atoi(i)
-		if err != nil {
-			panic(err)
-		}
-		pesciInt = append(pesciInt, j)
+	// parse strings slice to ints slice
+	var fishesInt = []int{}
+	for _, i := range fishes {
+		j, _ := strconv.Atoi(i)
+		fishesInt = append(fishesInt, j)
 	}
 
-	// prendo in input il numero di giorni
-	giorni := 0
-	giorno := 1
-	Scan(&giorni)
+	// current day
+	var curDay int = 1
 
-	// calcolo il numero di stati per i pesci iniziali
-	// i pesci iniziali possono essere solo da 0 a 6 ma predispongo fino ad 8
-	// per quando faranno spawnare nuovi pesciolini
-	num_pesci_array := printUniqueValue(pesciInt)
-	num_pesci := num_pesci_array[:] //conversione array to slice
-
-	// inizio a scorrere i giorni
-	for giorno <= giorni {
-		// metto da parte i pesci nello stato 0 (gli unici che effettivamente fanno qualcosa)
-		num_pesci_a_zero := num_pesci[0]
-
-		// faccio scorrere a sinistra la slice (quelli nello stato 8 vanno a 7, i 6 a 5, ...)
-		// facendo finire i pesci nello stato 0 nello stato 8 (nuovi pesciolini)
-		num_pesci = append(num_pesci[1:], num_pesci_a_zero)
-		// faccio tornare i pesci "genitori" che hanno appena fatto un altro pesce nello stato 6
-		// sommandoli a quelli che sono evoluti nello stato 6 (dal 7)
-		num_pesci[6] += num_pesci_a_zero
-
-		Println("Giorno:", giorno, "- pesci", sommaSlice(num_pesci))
-
-		giorno++
+	// number of days
+	var days int
+	if len(os.Args) < 2 {
+		fmt.Println("insert number of days to calculate as command line argument")
+		return
 	}
-	Println(sommaSlice(num_pesci))
+	daysStr := os.Args[1]
+	days, _ = strconv.Atoi(daysStr)
+
+	// calculate starting statuses of starting fishes
+	fishesNumArray := printUniqueValue(fishesInt)
+	fishesNum := fishesNumArray[:] //array to slice
+
+	// for each day
+	for curDay <= days {
+		// fishes at status 0 are the only one that do something
+		zeroFishes := fishesNum[0]
+
+		// shift left fish slice (fish in status 8 --> status 7, status 7 --> 6, ...)
+		// move fishes in status 0 to status 8 (new fishes generated)
+		fishesNum = append(fishesNum[1:], zeroFishes)
+		// move parent fishes (that just generated a fish) to status 6
+		fishesNum[6] += zeroFishes
+
+		curDay++
+	}
+	Println(sumSlice(fishesNum))
 
 }
 
-// calcola il numero di pesci in ogni stato
+// returns number of fishes in each status
 func printUniqueValue(arr []int) [9]int {
-	var num_pesci [9]int
+	var fishesNum [9]int
 	for _, v := range arr {
-		num_pesci[v]++
+		fishesNum[v]++
 	}
-	Println(num_pesci)
-	return num_pesci
+	return fishesNum
 }
 
-// somma i numeri contenuti nella slice
-func sommaSlice(sl []int) int {
+// returns the sum of slice
+func sumSlice(sl []int) int {
 	res := 0
 	for _, v := range sl {
 		res += v
