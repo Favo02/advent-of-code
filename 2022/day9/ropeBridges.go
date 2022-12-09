@@ -42,10 +42,13 @@ func main() {
 		for _, instruction := range instructions {
 			moveHead(instruction, rope, crossed, tail)
 		}
-		fmt.Print("Points crossed by the tail (of length ", tail, "): ", len(crossed), "\n")
+		fmt.Print("Points crossed by the tail (of length ", tail, "):\n\t", len(crossed), "\n")
 	}
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns the instruction list
 func parseInput() []string {
 	var lines []string
 	scanner := bufio.NewScanner(os.Stdin)
@@ -56,6 +59,8 @@ func parseInput() []string {
 	return lines
 }
 
+// REQUIRES: instruction is a valid instruction format (<direction> <amount>)
+// EFFECTS: returns the updated rope updated (moved by the instruction) and the updated points crossed by the tail (moved by the instruction)
 func moveHead(instruction string, rope []Point, crossed map[Point]bool, tailLength int) ([]Point, map[Point]bool) {
 	tokens := strings.Split(instruction, " ")
 	direction := tokens[0]
@@ -68,6 +73,8 @@ func moveHead(instruction string, rope []Point, crossed map[Point]bool, tailLeng
 	return rope, crossed
 }
 
+// REQUIRES: dir is a valid direction ("U", "D", "L", "R"), rope has at least one Point
+// EFFECTS: returns the rope moved in the direction "dir" (updates both head of rope and all tail points)
 func moveStep(dir string, rope []Point) []Point {
 	switch dir {
 	case "U":
@@ -89,6 +96,8 @@ func moveStep(dir string, rope []Point) []Point {
 	return rope
 }
 
+// REQUIRES: currentPoint, targetPoint not nil
+// EFFECTS: returns true if target point is close (if it is tha same point or if it is in one of the 8 cells surrounding the point), false otherwise
 func isTailClose(currentPoint, targetPoint Point) bool {
 	for i := targetPoint.y - 1; i < targetPoint.y+2; i++ {
 		for j := targetPoint.x - 1; j < targetPoint.x+2; j++ {
@@ -100,6 +109,8 @@ func isTailClose(currentPoint, targetPoint Point) bool {
 	return false
 }
 
+// REQUIRES: rope is not nil, currentIndex and targetIndex are valid indexes of rope
+// EFFECTS: returns the rope updated with the point at "currentIndex" moved if it is not close to "targetIndex" point
 func moveTailPoint(rope []Point, currentIndex, targetIndex int) []Point {
 	// same column
 	if rope[targetIndex].x == rope[currentIndex].x {
