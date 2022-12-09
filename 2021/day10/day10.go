@@ -17,8 +17,8 @@ func main() {
 	for scanner.Scan() {
 		line := scanner.Text()
 		wellFormed, firstInvalid, missingChunks := checkLine(line)
-		if (!wellFormed) {
-			if (len(missingChunks) > 0) { // incomplete line
+		if !wellFormed {
+			if len(missingChunks) > 0 { // incomplete line
 				missingPoints = append(missingPoints, getMissingPoints(missingChunks))
 			} else { // invalid line
 				invalidPoints += getInvalidPoints(firstInvalid)
@@ -29,20 +29,19 @@ func main() {
 	sort.Ints(missingPoints)
 	var middleScore int = missingPoints[len(missingPoints)/2]
 
-	fmt.Println("invalidPoints:", invalidPoints)
-	fmt.Println("missingPoints:", missingPoints)
-	fmt.Println("middleScore:", middleScore)
+	fmt.Println("invalidPoints (part1):\t", invalidPoints)
+	fmt.Println("middleScore (part2):\t", middleScore)
 }
 
 func checkLine(line string) (bool, rune, []rune) {
 	var stack stack = stack{nil}
 	const opening string = "([{<"
 	const closing string = ")]}>"
-	
+
 	for _, c := range line {
-		if (strings.Contains(opening, string(c))) {
+		if strings.Contains(opening, string(c)) {
 			stack.push(c)
-		} else if (strings.Contains(closing, string(c))) {
+		} else if strings.Contains(closing, string(c)) {
 			if getCorresponding(c) != stack.pop() {
 				// invalid line
 				return false, c, nil
@@ -53,13 +52,13 @@ func checkLine(line string) (bool, rune, []rune) {
 	}
 
 	// valid line
-	if (stack.isEmpty()) {
+	if stack.isEmpty() {
 		return true, '0', nil
 	}
 
 	// incomplete line
 	var missingChunks = make([]rune, 0)
-	for (!stack.isEmpty()) {
+	for !stack.isEmpty() {
 		missingChunks = append(missingChunks, getCorresponding(stack.pop()))
 	}
 	return false, '0', missingChunks
