@@ -1,11 +1,5 @@
 // https://adventofcode.com/2022/day/9
 
-// ------------------------------
-//
-// 			NOT REFACTORED YET
-//
-// ------------------------------
-
 package main
 
 import (
@@ -18,23 +12,24 @@ import (
 
 const TAIL int = 10 // 2 for part1, 10 for part2
 
-// Point are relative to starting point, can be negative
-var tailCrossed map[Point]bool = make(map[Point]bool)
-var curRope []Point = make([]Point, TAIL)
-
 type Point struct {
 	x int
 	y int
 }
 
 func main() {
-	lines := parseInput()
-	tailCrossed[Point{0, 0}] = true
-	for _, line := range lines {
-		moveHead(line)
+	instructions := parseInput()
+
+	// points are relative to starting point, can be negative
+	rope := make([]Point, TAIL)     // current rope points positions
+	crossed := make(map[Point]bool) // points crossed by the tail of the rope
+
+	crossed[Point{0, 0}] = true
+
+	for _, instruction := range instructions {
+		moveHead(instruction, rope, crossed)
 	}
-	count := countTail()
-	fmt.Println(count)
+	fmt.Println("Points crossed by the tail:", len(crossed))
 }
 
 func parseInput() []string {
@@ -47,43 +42,43 @@ func parseInput() []string {
 	return lines
 }
 
-func moveHead(line string) {
-	tokens := strings.Split(line, " ")
-	dir := tokens[0]
-	amnt, _ := strconv.Atoi(tokens[1])
-	for i := 0; i < amnt; i++ {
-		moveStep(dir)
+func moveHead(instruction string, rope []Point, crossed map[Point]bool) ([]Point, map[Point]bool) {
+	tokens := strings.Split(instruction, " ")
+	direction := tokens[0]
+	amount, _ := strconv.Atoi(tokens[1])
+	for i := 0; i < amount; i++ {
+		moveStep(direction, rope)
+		crossed[rope[TAIL-1]] = true
 	}
+
+	return rope, crossed
 }
 
-func moveStep(dir string) {
+func moveStep(dir string, rope []Point) []Point {
 	switch dir {
 	case "U":
-		curRope[0].y--
+		rope[0].y--
 	case "D":
-		curRope[0].y++
+		rope[0].y++
 	case "L":
-		curRope[0].x--
+		rope[0].x--
 	case "R":
-		curRope[0].x++
+		rope[0].x++
 	}
 
-	for i := 1; i < len(curRope); i++ {
-		if !isTailClose(i, curRope[i-1]) {
-			moveTailPoint(i, curRope[i-1])
+	for i := 1; i < len(rope); i++ {
+		if !isTailClose(rope[i], rope[i-1]) {
+			rope = moveTailPoint(rope, i, i-1)
 		}
 	}
 
-	tailCrossed[curRope[TAIL-1]] = true
+	return rope
 }
 
-func isTailClose(ii int, targetPoint Point) bool {
-	if targetPoint.x == curRope[ii].x && targetPoint.y == curRope[ii].y {
-		return true
-	}
+func isTailClose(currentPoint, targetPoint Point) bool {
 	for i := targetPoint.y - 1; i < targetPoint.y+2; i++ {
 		for j := targetPoint.x - 1; j < targetPoint.x+2; j++ {
-			if i == curRope[ii].y && j == curRope[ii].x {
+			if i == currentPoint.y && j == currentPoint.x {
 				return true
 			}
 		}
@@ -91,47 +86,47 @@ func isTailClose(ii int, targetPoint Point) bool {
 	return false
 }
 
-func moveTailPoint(i int, targetPoint Point) {
-	if targetPoint.x == curRope[i].x {
-		if targetPoint.y > curRope[i].y {
-			curRope[i].y++
+func moveTailPoint(rope []Point, currentIndex, targetIndex int) []Point {
+	// same column
+	if rope[targetIndex].x == rope[currentIndex].x {
+		if rope[targetIndex].y > rope[currentIndex].y {
+			rope[currentIndex].y++
 		} else {
-			curRope[i].y--
+			rope[currentIndex].y--
 		}
-		return
+		return rope
 	}
 
-	if targetPoint.y == curRope[i].y {
-		if targetPoint.x > curRope[i].x {
-			curRope[i].x++
+	// same row
+	if rope[targetIndex].y == rope[currentIndex].y {
+		if rope[targetIndex].x > rope[currentIndex].x {
+			rope[currentIndex].x++
 		} else {
-			curRope[i].x--
+			rope[currentIndex].x--
 		}
-		return
+		return rope
 	}
 
-	if curRope[i].x < targetPoint.x && curRope[i].y < targetPoint.y {
-		curRope[i].x++
-		curRope[i].y++
-		return
+	// diagonal
+	if rope[currentIndex].x < rope[targetIndex].x && rope[currentIndex].y < rope[targetIndex].y {
+		rope[currentIndex].x++
+		rope[currentIndex].y++
+		return rope
 	}
-	if curRope[i].x > targetPoint.x && curRope[i].y < targetPoint.y {
-		curRope[i].x--
-		curRope[i].y++
-		return
+	if rope[currentIndex].x > rope[targetIndex].x && rope[currentIndex].y < rope[targetIndex].y {
+		rope[currentIndex].x--
+		rope[currentIndex].y++
+		return rope
 	}
-	if curRope[i].x < targetPoint.x && curRope[i].y > targetPoint.y {
-		curRope[i].x++
-		curRope[i].y--
-		return
+	if rope[currentIndex].x < rope[targetIndex].x && rope[currentIndex].y > rope[targetIndex].y {
+		rope[currentIndex].x++
+		rope[currentIndex].y--
+		return rope
 	}
-	if curRope[i].x > targetPoint.x && curRope[i].y > targetPoint.y {
-		curRope[i].x--
-		curRope[i].y--
-		return
+	if rope[currentIndex].x > rope[targetIndex].x && rope[currentIndex].y > rope[targetIndex].y {
+		rope[currentIndex].x--
+		rope[currentIndex].y--
+		return rope
 	}
-}
-
-func countTail() int {
-	return len(tailCrossed)
+	return rope
 }
