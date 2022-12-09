@@ -10,7 +10,6 @@ import (
 
 func main() {
 	grid := parseInput()
-	// printGrid(grid)
 	var lowPoints int = 0
 	var lowPointsVal int = 0
 	var basins [3]int
@@ -46,10 +45,8 @@ func main() {
 		}
 	}
 
-	Println("number of lowpoints:", lowPoints)
-	Println("value of lowpoints:", lowPointsVal)
-	Println("top 3 basins:", basins)
-	Println("value of basins:", basins[0]*basins[1]*basins[2])
+	Println("value of lowpoints (part1):\t", lowPointsVal)
+	Println("value of basins (part2):\t", basins[0]*basins[1]*basins[2])
 }
 
 func exploreBasin(grid [][]int, x, y, count int) int {
