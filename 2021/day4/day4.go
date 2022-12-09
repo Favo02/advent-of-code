@@ -11,8 +11,8 @@ import (
 func main() {
 	nums, boards := parseInput()
 	first, last := getBingoScore(nums, boards)
-	fmt.Println("first board to win (part1):", first)
-	fmt.Println("last board to win (part2):", last)
+	fmt.Println("first board to win (part1):\t", first)
+	fmt.Println("last board to win (part2):\t", last)
 }
 
 // returns numbers drawn and a slice of boards (each board is a bidimensional array)
@@ -107,7 +107,7 @@ func getBingoScore(nums []int, boards [][][]int) (int, int) {
 					}
 
 					// if line or column have found all numbers and that board didnt win yet
-					if (foundLines[i][j] == len(boards[i]) || foundColumns[i][k] == len(boards[k])) && !winBoard[i] {
+					if (foundLines[i][j] == len(boards[i]) || foundColumns[i][k] == len(boards[i][k])) && !winBoard[i] {
 						winBoard[i] = true                           // this board won
 						sumBoard := sumBoard(boards[i])              // sum of numbers on that board
 						numbersNotDrawnSum := sumBoard - foundSum[i] // total number of that board - sum of numbers drawn
