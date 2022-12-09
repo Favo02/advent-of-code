@@ -1,5 +1,7 @@
 # My stats
 
+*Every year but 2022 is >24h*
+
 ## 2022
 
 |Day|Name|Time|Rank|Time|Rank|
@@ -15,8 +17,6 @@
 |&nbsp;&nbsp;9|[Rope bridge](https://adventofcode.com/2022/day/9)|01:01:14|8492|01:19:43|5912|
 
 💤 = I didn't wake up :) 
-
-*Every year but 2022 is >24h*
 
 # Table of contents:
 1. [ My stats ](#my-stats)
