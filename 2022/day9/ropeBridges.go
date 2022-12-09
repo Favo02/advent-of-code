@@ -1,11 +1,5 @@
 // https://adventofcode.com/2022/day/9
 
-// ------------------------------
-//
-// 			NOT REFACTORED YET
-//
-// ------------------------------
-
 package main
 
 import (
@@ -16,24 +10,45 @@ import (
 	"strings"
 )
 
-const TAIL int = 1 // 1 for part1, 9 for part2
-
-var grid [][]bool
-var curX, curY int // head
-var curXs []int = make([]int, TAIL)
-var curYs []int = make([]int, TAIL)
-
-func main() {
-	lines := parseInput()
-	grid = append(grid, make([]bool, 1))
-	grid[0][0] = true
-	for _, line := range lines {
-		moveHead(line)
-	}
-	count := countTail()
-	fmt.Println(count)
+type Point struct {
+	x int
+	y int
 }
 
+func main() {
+	const TAIL_LENGTH_p1 int = 2  // tail for part1 (length 2)
+	const TAIL_LENGTH_p2 int = 10 // tail for part2 (length 10)
+
+	instructions := parseInput()
+
+	var rope []Point           // current points of the rope
+	var crossed map[Point]bool // points crossed by the tail (last point) of the rope
+
+	// execute 2 times, one for part1, one for part2
+	for i := 0; i < 2; i++ {
+		var tail int
+		if i == 0 {
+			tail = TAIL_LENGTH_p1
+		} else {
+			tail = TAIL_LENGTH_p2
+		}
+
+		// points are relative to starting point, can be negative
+		rope = make([]Point, tail)     // current rope points positions
+		crossed = make(map[Point]bool) // points crossed by the tail of the rope
+
+		crossed[Point{0, 0}] = true // starting point is crossed by every point of the rope
+
+		for _, instruction := range instructions {
+			moveHead(instruction, rope, crossed, tail) // move head in the direction of instruction (the tail of the rope will follow the head)
+		}
+		fmt.Print("Points crossed by the tail (of length ", tail, "):\n\t", len(crossed), "\n")
+	}
+}
+
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns the instruction list
 func parseInput() []string {
 	var lines []string
 	scanner := bufio.NewScanner(os.Stdin)
@@ -44,119 +59,52 @@ func parseInput() []string {
 	return lines
 }
 
-func moveHead(line string) {
-	tokens := strings.Split(line, " ")
-	dir := tokens[0]
-	amnt, _ := strconv.Atoi(tokens[1])
-	for i := 0; i < amnt; i++ {
-		moveStep(dir)
+// REQUIRES: instruction is a valid instruction format (<direction> <amount>)
+// EFFECTS: returns the updated rope updated (moved by the instruction) and the updated points crossed by the tail (moved by the instruction)
+func moveHead(instruction string, rope []Point, crossed map[Point]bool, tailLength int) ([]Point, map[Point]bool) {
+	tokens := strings.Split(instruction, " ")
+	direction := tokens[0]
+	amount, _ := strconv.Atoi(tokens[1])
+	for i := 0; i < amount; i++ { // move the head the amount of times the instruction requires
+		moveStep(direction, rope)          // moves the head in the direction 1 time
+		crossed[rope[tailLength-1]] = true // mark as crossed the point the rope tail is currently
 	}
+
+	return rope, crossed
 }
 
-func moveStep(dir string) {
-	// fmt.Println("move:", dir)
+// REQUIRES: dir is a valid direction ("U", "D", "L", "R"), rope has at least one Point
+// EFFECTS: returns the rope moved in the direction "dir" (updates both head of rope and all tail points)
+func moveStep(dir string, rope []Point) []Point {
 	switch dir {
 	case "U":
-		curY--
-		if curY < 0 {
-			editGrid('U')
-			curY++
-			for i := 0; i < len(curYs); i++ {
-				curYs[i]++
-			}
-		}
+		rope[0].y-- // move head up
 	case "D":
-		curY++
-		if curY >= len(grid) {
-			editGrid('D')
-		}
+		rope[0].y++ // move head down
 	case "L":
-		curX--
-		if curX < 0 {
-			editGrid('L')
-			curX++
-			for i := 0; i < len(curXs); i++ {
-				curXs[i]++
-			}
-		}
+		rope[0].x-- // move head left
 	case "R":
-		curX++
-		if curX >= len(grid) {
-			editGrid('R')
+		rope[0].x++ // move head right
+	}
+
+	// make tail points follow the head
+	for i := 1; i < len(rope); i++ { // scan every point of the rope (except the head)
+		if !isTailClose(rope[i], rope[i-1]) { // if the point is not close to his predecessor
+			rope = moveTailPoint(rope, i, i-1) // move the point close to his predecessor
 		}
 	}
 
-	// fmt.Println(grid)
-
-	for i := 0; i < len(curXs); i++ {
-		if i == 0 {
-			if !isTailClose(i, curX, curY) {
-				moveTail(i, curX, curY)
-			}
-		} else {
-			if !isTailClose(i, curXs[i-1], curYs[i-1]) {
-				moveTail(i, curXs[i-1], curYs[i-1])
-			}
-		}
-	}
-	// fmt.Println("tail:", curXs[8], curYs[8])
-
-	// // fmt.Println("tail:", curXtail, curYtail)
-	grid[curYs[TAIL-1]][curXs[TAIL-1]] = true
-
-	// // fmt.Println(grid)
-
-	// fmt.Println("\n---\n")
+	return rope
 }
 
-func editGrid(dir rune) {
-	switch dir {
-	case 'U':
-		grid = append(grid, make([]bool, len(grid[0])))
-		for i := len(grid) - 1; i > 0; i-- {
-			for j := 0; j < len(grid[i]); j++ {
-				grid[i][j] = grid[i-1][j]
-			}
-		}
-		for i := 0; i < len(grid[0]); i++ { //reset 1st line
-			grid[0][i] = false
-		}
-
-	case 'D':
-		grid = append(grid, make([]bool, len(grid[0])))
-
-	case 'L':
-		for i := 0; i < len(grid); i++ {
-			grid[i] = append(grid[i], false)
-			for j := len(grid[i]) - 1; j > 0; j-- {
-				grid[i][j] = grid[i][j-1]
-			}
-		}
-		// reset 1st column
-		for i := 0; i < len(grid); i++ {
-			grid[i][0] = false
-		}
-
-	case 'R':
-		for i := 0; i < len(grid); i++ {
-			grid[i] = append(grid[i], false)
-		}
-	}
-}
-
-func isTailClose(ii int, targetX, targetY int) bool {
-	if targetX == curXs[ii] && targetY == curYs[ii] {
-		return true
-	}
-	for i := targetY - 1; i < targetY+2; i++ {
-		for j := targetX - 1; j < targetX+2; j++ {
-			if !(i >= 0 && i < len(grid)) {
-				continue
-			}
-			if !(j >= 0 && j < len(grid[i])) {
-				continue
-			}
-			if i == curYs[ii] && j == curXs[ii] {
+// REQUIRES: currentPoint, targetPoint not nil
+// EFFECTS: returns true if target point is close (if it is tha same point or if it is in one of the 8 cells surrounding the point), false otherwise
+func isTailClose(currentPoint, targetPoint Point) bool {
+	// scan each of the 8 (+ the same point) surrounding the targetPoint
+	for i := targetPoint.y - 1; i < targetPoint.y+2; i++ {
+		for j := targetPoint.x - 1; j < targetPoint.x+2; j++ {
+			// if the current point is in this 9 points then it is close to targetPoint
+			if i == currentPoint.y && j == currentPoint.x {
 				return true
 			}
 		}
@@ -164,55 +112,49 @@ func isTailClose(ii int, targetX, targetY int) bool {
 	return false
 }
 
-func moveTail(i int, targetX, targetY int) {
-	if targetX == curXs[i] {
-		if targetY > curYs[i] {
-			curYs[i]++
+// REQUIRES: rope is not nil, currentIndex and targetIndex are valid indexes of rope
+// EFFECTS: returns the rope updated with the point at "currentIndex" moved if it is not close to "targetIndex" point
+func moveTailPoint(rope []Point, currentIndex, targetIndex int) []Point {
+	// same column, so move point only horizontally
+	if rope[targetIndex].x == rope[currentIndex].x {
+		if rope[targetIndex].y > rope[currentIndex].y {
+			rope[currentIndex].y++
 		} else {
-			curYs[i]--
+			rope[currentIndex].y--
 		}
-		return
+		return rope
 	}
 
-	if targetY == curYs[i] {
-		if targetX > curXs[i] {
-			curXs[i]++
+	// same row, so move point only vertically
+	if rope[targetIndex].y == rope[currentIndex].y {
+		if rope[targetIndex].x > rope[currentIndex].x {
+			rope[currentIndex].x++
 		} else {
-			curXs[i]--
+			rope[currentIndex].x--
 		}
-		return
+		return rope
 	}
 
-	if curXs[i] < targetX && curYs[i] < targetY {
-		curXs[i]++
-		curYs[i]++
-		return
+	// not same row or same column, so move point diagonally
+	if rope[currentIndex].x < rope[targetIndex].x && rope[currentIndex].y < rope[targetIndex].y {
+		rope[currentIndex].x++
+		rope[currentIndex].y++
+		return rope
 	}
-	if curXs[i] > targetX && curYs[i] < targetY {
-		curXs[i]--
-		curYs[i]++
-		return
+	if rope[currentIndex].x > rope[targetIndex].x && rope[currentIndex].y < rope[targetIndex].y {
+		rope[currentIndex].x--
+		rope[currentIndex].y++
+		return rope
 	}
-	if curXs[i] < targetX && curYs[i] > targetY {
-		curXs[i]++
-		curYs[i]--
-		return
+	if rope[currentIndex].x < rope[targetIndex].x && rope[currentIndex].y > rope[targetIndex].y {
+		rope[currentIndex].x++
+		rope[currentIndex].y--
+		return rope
 	}
-	if curXs[i] > targetX && curYs[i] > targetY {
-		curXs[i]--
-		curYs[i]--
-		return
+	if rope[currentIndex].x > rope[targetIndex].x && rope[currentIndex].y > rope[targetIndex].y {
+		rope[currentIndex].x--
+		rope[currentIndex].y--
+		return rope
 	}
-}
-
-func countTail() int {
-	var count int
-	for i := 0; i < len(grid); i++ {
-		for j := 0; j < len(grid[i]); j++ {
-			if grid[i][j] == true {
-				count++
-			}
-		}
-	}
-	return count
+	return rope
 }
