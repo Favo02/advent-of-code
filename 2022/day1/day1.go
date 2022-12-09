@@ -12,7 +12,7 @@ import (
 
 func main() {
 	top3 := maxElf()
-	fmt.Println("max 3 elfs:", top3)
+	fmt.Println("max elf:", top3[2])
 	fmt.Println("max 3 elfs total:", top3[0]+top3[1]+top3[2])
 }
 
@@ -26,7 +26,9 @@ func maxElf() [3]int {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		// fmt.Println(line)
+
+		cal, _ := strconv.Atoi(line)
+		curElf += cal
 
 		if line == "" { // current elf ended
 			if curElf > maxCals[0] { // check if current elf in top3
@@ -34,10 +36,15 @@ func maxElf() [3]int {
 				sort.Ints(maxCals[:])
 			}
 			curElf = 0 // reset current elf
-		} else { // current elf still carrying
-			cal, _ := strconv.Atoi(line)
-			curElf += cal
 		}
 	}
+
+	// check also last elf (no empty line at EOF)
+	if curElf > maxCals[0] { // check if current elf in top3
+		maxCals[0] = curElf
+		sort.Ints(maxCals[:])
+	}
+	curElf = 0 // reset current elf
+
 	return maxCals
 }
