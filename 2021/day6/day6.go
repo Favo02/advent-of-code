@@ -1,22 +1,21 @@
-// pesci lanterna - advent of code 2021 day 6
-// parti 1, 2
-
 package main
 
 import (
+	"fmt"
 	. "fmt"
+	"os"
 	"strconv"
 	"strings"
 )
 
 func main() {
 
-	// prendo in input i pesci iniziali come string
+	// read starting fishes
 	pesciStr := ""
 	Scan(&pesciStr)
 	pesci := strings.Split(pesciStr, ",")
 
-	// converto lo slice di stringhe a slice di interi
+	// parse strings slice to ints slice
 	var pesciInt = []int{}
 	for _, i := range pesci {
 		j, err := strconv.Atoi(i)
@@ -26,30 +25,32 @@ func main() {
 		pesciInt = append(pesciInt, j)
 	}
 
-	// prendo in input il numero di giorni
-	giorni := 0
-	giorno := 1
-	Scan(&giorni)
+	// current day
+	var giorno int = 1
 
-	// calcolo il numero di stati per i pesci iniziali
-	// i pesci iniziali possono essere solo da 0 a 6 ma predispongo fino ad 8
-	// per quando faranno spawnare nuovi pesciolini
+	// number of days
+	var giorni int
+	if len(os.Args) < 2 {
+		fmt.Println("insert number of days to calculate as command line argument")
+		return
+	}
+	giorniStr := os.Args[1]
+	giorni, _ = strconv.Atoi(giorniStr)
+
+	// calculate starting statuses of starting fishes
 	num_pesci_array := printUniqueValue(pesciInt)
-	num_pesci := num_pesci_array[:] //conversione array to slice
+	num_pesci := num_pesci_array[:] //array to slice
 
-	// inizio a scorrere i giorni
+	// for each day
 	for giorno <= giorni {
-		// metto da parte i pesci nello stato 0 (gli unici che effettivamente fanno qualcosa)
+		// fishes at status 0 are the only one that do something
 		num_pesci_a_zero := num_pesci[0]
 
-		// faccio scorrere a sinistra la slice (quelli nello stato 8 vanno a 7, i 6 a 5, ...)
-		// facendo finire i pesci nello stato 0 nello stato 8 (nuovi pesciolini)
+		// shift left fish slice (fish in status 8 --> status 7, status 7 --> 6, ...)
+		// move fishes in status 0 to status 8 (new fishes generated)
 		num_pesci = append(num_pesci[1:], num_pesci_a_zero)
-		// faccio tornare i pesci "genitori" che hanno appena fatto un altro pesce nello stato 6
-		// sommandoli a quelli che sono evoluti nello stato 6 (dal 7)
+		// move parent fishes (that just generated a fish) to status 6
 		num_pesci[6] += num_pesci_a_zero
-
-		Println("Giorno:", giorno, "- pesci", sommaSlice(num_pesci))
 
 		giorno++
 	}
@@ -57,17 +58,16 @@ func main() {
 
 }
 
-// calcola il numero di pesci in ogni stato
+// returns number of fishes in each status
 func printUniqueValue(arr []int) [9]int {
 	var num_pesci [9]int
 	for _, v := range arr {
 		num_pesci[v]++
 	}
-	Println(num_pesci)
 	return num_pesci
 }
 
-// somma i numeri contenuti nella slice
+// returns the sum of slice
 func sommaSlice(sl []int) int {
 	res := 0
 	for _, v := range sl {
