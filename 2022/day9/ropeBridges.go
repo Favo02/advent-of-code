@@ -10,26 +10,40 @@ import (
 	"strings"
 )
 
-const TAIL int = 10 // 2 for part1, 10 for part2
-
 type Point struct {
 	x int
 	y int
 }
 
 func main() {
+	const TAIL_LENGTH_p1 int = 2  // tail for part1 (length 2)
+	const TAIL_LENGTH_p2 int = 10 // tail for part2 (length 10)
+
 	instructions := parseInput()
 
-	// points are relative to starting point, can be negative
-	rope := make([]Point, TAIL)     // current rope points positions
-	crossed := make(map[Point]bool) // points crossed by the tail of the rope
+	var rope []Point
+	var crossed map[Point]bool
 
-	crossed[Point{0, 0}] = true
+	// execute 2 times, one for part1, one for part2
+	for i := 0; i < 2; i++ {
+		var tail int
+		if i == 0 {
+			tail = TAIL_LENGTH_p1
+		} else {
+			tail = TAIL_LENGTH_p2
+		}
 
-	for _, instruction := range instructions {
-		moveHead(instruction, rope, crossed)
+		// points are relative to starting point, can be negative
+		rope = make([]Point, tail)     // current rope points positions
+		crossed = make(map[Point]bool) // points crossed by the tail of the rope
+
+		crossed[Point{0, 0}] = true
+
+		for _, instruction := range instructions {
+			moveHead(instruction, rope, crossed, tail)
+		}
+		fmt.Print("Points crossed by the tail (of length ", tail, "): ", len(crossed), "\n")
 	}
-	fmt.Println("Points crossed by the tail:", len(crossed))
 }
 
 func parseInput() []string {
@@ -42,13 +56,13 @@ func parseInput() []string {
 	return lines
 }
 
-func moveHead(instruction string, rope []Point, crossed map[Point]bool) ([]Point, map[Point]bool) {
+func moveHead(instruction string, rope []Point, crossed map[Point]bool, tailLength int) ([]Point, map[Point]bool) {
 	tokens := strings.Split(instruction, " ")
 	direction := tokens[0]
 	amount, _ := strconv.Atoi(tokens[1])
 	for i := 0; i < amount; i++ {
 		moveStep(direction, rope)
-		crossed[rope[TAIL-1]] = true
+		crossed[rope[tailLength-1]] = true
 	}
 
 	return rope, crossed
