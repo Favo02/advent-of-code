@@ -7,13 +7,15 @@ import (
 )
 
 func main() {
-	parseInput()
+	lines := parseInput()
+	fmt.Println(lines)
 }
 
-func parseInput() {
+func parseInput() (lines []string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		fmt.Println(line)
+		lines = append(lines, line)
 	}
+	return lines
 }
