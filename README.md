@@ -23,6 +23,7 @@
 1. [ My stats ](#my-stats)
 2. [ What is advent of code ](#what-is-advent-of-code)
 3. [ Conventions ](#conventions)
+    - [ Why I don't include input files ](#why-i-dont-include-input-files)
     - [ File naming convention ](#file-naming-convention)
     - [ Commit convention ](#commit-convention)
     - [ Pull request convention ](#pull-request-convention)
@@ -33,6 +34,11 @@
 > Advent of Code is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
 
 # Conventions
+
+## Why I don't include input files:
+AoC creator asked to not share input files (in [this tweet](https://mobile.twitter.com/ericwastl/status/1465805354214830081) and in the [subreddit wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/copyright/puzzle_texts/)), so I do not include them into my repo.
+
+You can still run every challenge with your input, available at [Advent of code](https://adventofcode.com/), after login (input is unique for every user).
 
 ## File naming convention:
 `challenge.go`: clean solution with comments
