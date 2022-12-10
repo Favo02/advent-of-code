@@ -5,16 +5,18 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 )
 
 func main() {
-	instr := parseInput()
-	sum := signalPower(instr)
-	fmt.Println(sum)
-	crt := checkCTR(instr)
-	fmt.Println(crt)
+	instructions := parseInput()
+	signalPower := signalPower(instructions)
+	crt := generateCRT(instructions)
+
+	fmt.Println("sum of signals powers (part1):", signalPower)
+	fmt.Print("crt display (part2):\n", crt, "\n")
 }
 
 func parseInput() []string {
@@ -27,83 +29,102 @@ func parseInput() []string {
 	return lines
 }
 
-func signalPower(instr []string) int {
-	var x, clock, sum int
-	x = 1
-	for _, ins := range instr {
-		if ins[:4] == "noop" {
+func signalPower(instructions []string) int {
+	var x, clock int                                 // CPU values
+	x = 1                                            // x register initialized to 1
+	var sumSignalPower int                           // sum of signal powers at breakpoints
+	breakpoints := []int{20, 60, 100, 140, 180, 220} // points where to sum signalPower
+
+	for _, ins := range instructions {
+		switch ins[:4] {
+
+		case "noop":
 			clock++
-			if clock == 20 || clock == 60 || clock == 100 || clock == 140 || clock == 180 || clock == 220 {
-				fmt.Println(clock)
-				sum += clock * x
-				fmt.Println(clock * x)
-				fmt.Println(clock, x)
+			// after every clock change check if clock is in breakpoint
+			if equalBreakpoint(clock, breakpoints) {
+				sumSignalPower += clock * x
 			}
-		} else if ins[:4] == "addx" {
+
+		case "addx":
 			clock++
-			if clock == 20 || clock == 60 || clock == 100 || clock == 140 || clock == 180 || clock == 220 {
-				fmt.Println(clock)
-				sum += clock * x
-				fmt.Println(clock * x)
-				fmt.Println(clock, x)
+			// after every clock change check if clock is in breakpoint
+			if equalBreakpoint(clock, breakpoints) {
+				sumSignalPower += clock * x
 			}
+
 			clock++
-			if clock == 20 || clock == 60 || clock == 100 || clock == 140 || clock == 180 || clock == 220 {
-				fmt.Println(clock)
-				sum += clock * x
-				fmt.Println(clock * x)
-				fmt.Println(clock, x)
+			// after every clock change check if clock is in breakpoint
+			if equalBreakpoint(clock, breakpoints) {
+				sumSignalPower += clock * x
 			}
+
+			// clock MUST be checked before changing register x state
 			n, _ := strconv.Atoi(ins[5:])
 			x += n
+
 		}
 	}
-	return sum
+
+	return sumSignalPower
 }
 
-func checkCTR(instr []string) string {
-	var x, clock int
-	var res string
-	x = 1
-	for _, ins := range instr {
-		if clock%40 == x-1 || clock%40 == x || clock%40 == x+1 {
-			fmt.Println(clock%40, x)
-			res += "#"
-			fmt.Println("#")
-		} else {
-			fmt.Println(clock%40, x)
-			res += "."
-			fmt.Println(".")
+func equalBreakpoint(x int, breakpoints []int) bool {
+	for _, bp := range breakpoints {
+		if bp == x {
+			return true
 		}
-		if ins[:4] == "noop" {
+	}
+	return false
+}
+
+func generateCRT(instr []string) string {
+	var x, clock int     // CPU values
+	x = 1                // x register initialized to 1
+	var CRTscreen string // "ASCII art" displayed by CRT
+
+	for _, ins := range instr {
+
+		// print on CRT if printing position (clock) contains x (clock = x+-1)
+		if math.Abs(float64(clock%40-x)) < 2 {
+			CRTscreen += "#"
+		} else {
+			CRTscreen += "."
+		}
+
+		switch ins[:4] {
+
+		case "noop":
 			clock++
-			if clock == 40 || clock == 80 || clock == 120 || clock == 160 || clock == 200 || clock == 240 {
-				res += "\n"
-			}
-		} else if ins[:4] == "addx" {
+
+		case "addx":
 			clock++
-			if clock == 40 || clock == 80 || clock == 120 || clock == 160 || clock == 200 || clock == 240 {
-				res += "\n"
+
+			// special checks after clock increase
+
+			// if CRT dislay line length reached, go to new line
+			if clock%40 == 0 {
+				CRTscreen += "\n"
 			}
 
-			if clock%40 == x-1 || clock%40 == x || clock%40 == x+1 {
-				fmt.Println(clock%40, x)
-				res += "#"
-				fmt.Println("#")
+			// print on CRT if printing position (clock) contains x (clock = x+-1)
+			if math.Abs(float64(clock%40-x)) < 2 {
+				CRTscreen += "#"
 			} else {
-				fmt.Println(clock%40, x)
-				res += "."
-				fmt.Println(".")
+				CRTscreen += "."
 			}
 
 			clock++
-			if clock == 40 || clock == 80 || clock == 120 || clock == 160 || clock == 200 || clock == 240 {
-				res += "\n"
-			}
 
+			// change register x state
 			n, _ := strconv.Atoi(ins[5:])
 			x += n
 		}
+
+		// if CRT dislay line length reached, go to new line
+		if clock%40 == 0 {
+			CRTscreen += "\n"
+		}
 	}
-	return res
+
+	return CRTscreen
 }
