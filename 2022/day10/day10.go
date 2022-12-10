@@ -92,12 +92,8 @@ func generateCRT(instructions []string) string {
 
 	for _, instruction := range instructions {
 
-		// print on CRT if printing position (clock) contains x (clock = x+-1)
-		if math.Abs(float64(clock%40-x)) < 2 {
-			CRTscreen += "#"
-		} else {
-			CRTscreen += "."
-		}
+		// print character on screen ("█" or " ")
+		CRTscreen = printCRTcharacter(clock, x, CRTscreen)
 
 		switch instruction[:4] {
 
@@ -109,17 +105,11 @@ func generateCRT(instructions []string) string {
 
 			// special checks after clock increase
 
-			// if CRT dislay line length reached, go to new line
-			if clock%40 == 0 {
-				CRTscreen += "\n"
-			}
+			// print newline on screen if CRT dislay line length reached
+			CRTscreen = checkCRTnewline(clock, CRTscreen)
 
-			// print on CRT if printing position (clock) contains x (clock = x+-1)
-			if math.Abs(float64(clock%40-x)) < 2 {
-				CRTscreen += "#"
-			} else {
-				CRTscreen += "."
-			}
+			// print character on screen ("█" or " ")
+			CRTscreen = printCRTcharacter(clock, x, CRTscreen)
 
 			clock++
 
@@ -128,11 +118,28 @@ func generateCRT(instructions []string) string {
 			x += n
 		}
 
-		// if CRT dislay line length reached, go to new line
-		if clock%40 == 0 {
-			CRTscreen += "\n"
-		}
+		// print newline on screen if CRT dislay line length reached
+		CRTscreen = checkCRTnewline(clock, CRTscreen)
+
 	}
 
+	return CRTscreen
+}
+
+// EFFECTS: returns CRTscreen updated with "█" if printing position (clock) contains x (clock = x+-1), updated with " " otherwise
+func printCRTcharacter(clock, x int, CRTscreen string) string {
+	if math.Abs(float64(clock%40-x)) < 2 {
+		CRTscreen += "█"
+	} else {
+		CRTscreen += " "
+	}
+	return CRTscreen
+}
+
+// EFFECTS: returns CRTscreen updated with a new line if CRT display line length reached (each 40 characters)
+func checkCRTnewline(clock int, CRTscreen string) string {
+	if clock%40 == 0 {
+		CRTscreen += "\n"
+	}
 	return CRTscreen
 }
