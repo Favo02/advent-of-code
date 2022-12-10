@@ -16,9 +16,12 @@ func main() {
 	crt := generateCRT(instructions)
 
 	fmt.Println("sum of signals powers (part1):", signalPower)
-	fmt.Print("crt display (part2):\n", crt, "\n")
+	fmt.Print("CRT display (part2):\n", crt, "\n")
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns the instructions
 func parseInput() []string {
 	var lines []string
 	scanner := bufio.NewScanner(os.Stdin)
@@ -29,14 +32,16 @@ func parseInput() []string {
 	return lines
 }
 
+// REQUIRES: instructions contains valid challenge instructions
+// EFFECTS: returns the sum of signals powers at clock cycle 20, 60, 100, 140, 180, 220
 func signalPower(instructions []string) int {
 	var x, clock int                                 // CPU values
 	x = 1                                            // x register initialized to 1
 	var sumSignalPower int                           // sum of signal powers at breakpoints
 	breakpoints := []int{20, 60, 100, 140, 180, 220} // points where to sum signalPower
 
-	for _, ins := range instructions {
-		switch ins[:4] {
+	for _, instruction := range instructions {
+		switch instruction[:4] {
 
 		case "noop":
 			clock++
@@ -59,7 +64,7 @@ func signalPower(instructions []string) int {
 			}
 
 			// clock MUST be checked before changing register x state
-			n, _ := strconv.Atoi(ins[5:])
+			n, _ := strconv.Atoi(instruction[5:])
 			x += n
 
 		}
@@ -68,6 +73,7 @@ func signalPower(instructions []string) int {
 	return sumSignalPower
 }
 
+// EFFECTS: returns true if x is in breakpoints, false otherwise
 func equalBreakpoint(x int, breakpoints []int) bool {
 	for _, bp := range breakpoints {
 		if bp == x {
@@ -77,12 +83,14 @@ func equalBreakpoint(x int, breakpoints []int) bool {
 	return false
 }
 
-func generateCRT(instr []string) string {
+// REQUIRES: instructions contains valid challenge instructions
+// EFFECTS: returns the visualization of CRT display after the execution of instructions
+func generateCRT(instructions []string) string {
 	var x, clock int     // CPU values
 	x = 1                // x register initialized to 1
 	var CRTscreen string // "ASCII art" displayed by CRT
 
-	for _, ins := range instr {
+	for _, instruction := range instructions {
 
 		// print on CRT if printing position (clock) contains x (clock = x+-1)
 		if math.Abs(float64(clock%40-x)) < 2 {
@@ -91,7 +99,7 @@ func generateCRT(instr []string) string {
 			CRTscreen += "."
 		}
 
-		switch ins[:4] {
+		switch instruction[:4] {
 
 		case "noop":
 			clock++
@@ -116,7 +124,7 @@ func generateCRT(instr []string) string {
 			clock++
 
 			// change register x state
-			n, _ := strconv.Atoi(ins[5:])
+			n, _ := strconv.Atoi(instruction[5:])
 			x += n
 		}
 
