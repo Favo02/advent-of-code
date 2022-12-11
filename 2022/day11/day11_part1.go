@@ -29,6 +29,9 @@ func main() {
 	fmt.Println("business level after", rounds, "rounds:", businessLevel)
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns the monkeys parsed from input
 func parseInput() (monkeys []Monkey) {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -99,6 +102,8 @@ func parseInput() (monkeys []Monkey) {
 	return monkeys
 }
 
+// REQUIRES: each monkey of "monkeys" not nil
+// EFFECTS: returns the monkeys after simulating "rounds" rounds
 func simulateRounds(monkeys []Monkey, rounds int) []Monkey {
 	// simulate "rounds" rounds
 	for round := 1; round <= rounds; round++ {
@@ -141,6 +146,8 @@ func simulateRounds(monkeys []Monkey, rounds int) []Monkey {
 	return monkeys
 }
 
+// REQUIRES: each monkey of "monkeys" not nil
+// EFFECTS: returns the product of the 2 monkeys with most items inspected
 func getBusinessLevel(monkeys []Monkey) uint64 {
 	// top 2 monkeys with most itesmInspected
 	var max1, max2 uint64

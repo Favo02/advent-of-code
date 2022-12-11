@@ -30,6 +30,9 @@ func main() {
 	fmt.Println("business level after", rounds, "rounds:", businessLevel)
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns the monkeys, the objects (monkey items) and the dividers (all dividers of each monkey)
 func parseInput() (monkeys []Monkey, tempObj [][]int, dividers []int) {
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -103,6 +106,8 @@ func parseInput() (monkeys []Monkey, tempObj [][]int, dividers []int) {
 	return monkeys, tempObj, dividers
 }
 
+// REQUIRES: len(monkeys) = len(tempObj) = len(dividers), monkeys, tempObj, dividers not nil
+// EFFECTS: returns the monkeys updated with the modulos calculated on the objects (items) divided by each divider
 func calulateModulos(monkeys []Monkey, tempObj [][]int, dividers []int) []Monkey {
 	// scan each monkey
 	for i := 0; i < len(monkeys); i++ {
@@ -131,6 +136,8 @@ func calulateModulos(monkeys []Monkey, tempObj [][]int, dividers []int) []Monkey
 	return monkeys
 }
 
+// REQUIRES: each monkey of "monkeys" not nil, dividors not nil
+// EFFECTS: returns the monkeys after simulating "rounds" rounds
 func simulateRounds(monkeys []Monkey, dividors []int, rounds int) []Monkey {
 	// simulate "rounds" rounds
 	for round := 1; round <= rounds; round++ {
@@ -188,6 +195,8 @@ func simulateRounds(monkeys []Monkey, dividors []int, rounds int) []Monkey {
 	return monkeys
 }
 
+// REQUIRES: each monkey of "monkeys" not nil
+// EFFECTS: returns the product of the 2 monkeys with most items inspected
 func getBusinessLevel(monkeys []Monkey) int {
 	// top 2 monkeys with most itesmInspected
 	var max1, max2 int
