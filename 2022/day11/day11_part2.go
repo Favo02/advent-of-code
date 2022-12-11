@@ -1,3 +1,5 @@
+// https://adventofcode.com/2022/day/11
+
 package main
 
 import (
