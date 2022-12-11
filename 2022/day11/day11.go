@@ -8,24 +8,25 @@ import (
 	"strings"
 )
 
+type Monkey struct {
+	objectsOffsets []map[int]int // every object to what is divisible by
+	operation      rune
+	square         bool
+	multiplier     int
+	test           int
+	true_          int
+	false_         int
+	itemsInspected int
+}
+
 func main() {
-	monkeys := parseInput()
-	monkeys = start(monkeys)
+	monkeys, tempObj, conditions := parseInput()
+	monkeys = generateObjects(monkeys, tempObj, conditions)
+	monkeys = start(monkeys, conditions, 10000)
 	fmt.Println(getBusinessLevel(monkeys))
 }
 
-type Monkey struct {
-	objects        []uint64
-	operation      rune
-	square         bool
-	multiplier     uint64
-	test           uint64
-	true_          uint64
-	false_         uint64
-	itemsInspected uint64
-}
-
-func parseInput() (monkeys []Monkey) {
+func parseInput() (monkeys []Monkey, tempObj [][]int, conditions []int) {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	var curMonkey Monkey
@@ -42,92 +43,145 @@ func parseInput() (monkeys []Monkey) {
 
 		if line[:6] == "  Star" {
 			tokens := strings.Split(line[18:], ", ")
-			var starting []uint64
+			var starting []int
 			for _, v := range tokens {
 				n, _ := strconv.Atoi(v)
-				starting = append(starting, uint64(n))
+				starting = append(starting, n)
 			}
-			curMonkey.objects = starting
+			tempObj = append(tempObj, starting)
 		}
 
 		if line[:6] == "  Oper" {
 			if len(line) == 28 && line == "  Operation: new = old * old" {
 				curMonkey.square = true
-				continue
+				curMonkey.operation = '*'
+				curMonkey.multiplier = 1
+			} else {
+				curMonkey.square = false
+				curMonkey.operation = rune(line[23])
+				multiplier, _ := strconv.Atoi(line[25:])
+				curMonkey.multiplier = multiplier
 			}
-			op := line[23]
-			mult, _ := strconv.Atoi(line[25:])
-			curMonkey.operation = rune(op)
-			curMonkey.multiplier = uint64(mult)
 		}
 
 		if line[:6] == "  Test" {
 			test, _ := strconv.Atoi(line[21:])
-			curMonkey.test = uint64(test)
+			conditions = append(conditions, test)
+			curMonkey.test = test
 		}
 
 		if line[:8] == "    If t" {
 			tr, _ := strconv.Atoi(line[29:])
-			curMonkey.true_ = uint64(tr)
+			curMonkey.true_ = tr
 		}
 
 		if line[:8] == "    If f" {
 			fa, _ := strconv.Atoi(line[30:])
-			curMonkey.false_ = uint64(fa)
+			curMonkey.false_ = fa
 
 			monkeys = append(monkeys, curMonkey)
 		}
 
 	}
-	return monkeys
+	return monkeys, tempObj, conditions
 }
 
-func start(monkeys []Monkey) []Monkey {
-	for round := 1; round <= 1000; round++ {
+func generateObjects(monkeys []Monkey, tempObj [][]int, conditions []int) []Monkey {
+	for i := 0; i < len(monkeys); i++ {
 
-		for mi, m := range monkeys {
+		objects := make([]map[int]int, 0)
 
-			for i := 0; i < len(m.objects); i++ {
-				monkeys[mi].itemsInspected++
+		for j := 0; j < len(tempObj[i]); j++ {
 
-				if m.square {
-					m.objects[i] = m.objects[i] * m.objects[i]
+			offsets := make(map[int]int)
+
+			for k := 0; k < len(conditions); k++ {
+
+				mod := tempObj[i][j] % conditions[k]
+				if mod == 0 {
+					offsets[conditions[k]] = 0
 				} else {
-					switch m.operation {
-					case '*':
-						m.objects[i] = m.objects[i] * m.multiplier
-					case '+':
-						m.objects[i] = m.objects[i] + m.multiplier
-					}
+					offsets[conditions[k]] = mod
 				}
-
-				// m.objects[i] = m.objects[i] / 3
-
-				if m.objects[i]%m.test == 0 {
-					monkeys[m.true_].objects = append(monkeys[m.true_].objects, m.objects[i])
-				} else {
-					monkeys[m.false_].objects = append(monkeys[m.false_].objects, m.objects[i])
-				}
-
-				// fmt.Println("---")
-				// fmt.Println(monkeys)
-
 			}
-			monkeys[mi].objects = make([]uint64, 0)
 
+			objects = append(objects, offsets)
 		}
-		if round == 1000 { // 1000 = 27019168
-			fmt.Println("---")
-			fmt.Println("1000 =", getBusinessLevel(monkeys))
-		}
-
+		monkeys[i].objectsOffsets = objects
 	}
 
 	return monkeys
 }
 
-func getBusinessLevel(monkeys []Monkey) uint64 {
-	var max1, max2 uint64
+func start(monkeys []Monkey, conditions []int, rounds int) []Monkey {
+	for round := 1; round <= rounds; round++ {
+
+		for monkeyIndex := 0; monkeyIndex < len(monkeys); monkeyIndex++ {
+
+			// scan every object
+			for i := 0; i < len(monkeys[monkeyIndex].objectsOffsets); i++ {
+				monkeys[monkeyIndex].itemsInspected++
+
+				// refresh divisibility for each operation
+
+				if monkeys[monkeyIndex].square {
+
+					// refresh every divisibility
+					for _, cond := range conditions {
+
+						// (n % m) * (k % m)
+						mod := monkeys[monkeyIndex].objectsOffsets[i][cond] * monkeys[monkeyIndex].objectsOffsets[i][cond]
+
+						monkeys[monkeyIndex].objectsOffsets[i][cond] = mod
+					}
+
+				} else if monkeys[monkeyIndex].operation == '+' {
+
+					// refresh every divisibility
+					for _, cond := range conditions {
+						mod := (monkeys[monkeyIndex].multiplier + monkeys[monkeyIndex].objectsOffsets[i][cond]) % cond
+						monkeys[monkeyIndex].objectsOffsets[i][cond] = mod
+					}
+
+				} else if monkeys[monkeyIndex].operation == '*' {
+
+					// refresh every divisibility
+					for _, cond := range conditions {
+
+						// (n % m) * (k % m)
+						mod := monkeys[monkeyIndex].objectsOffsets[i][cond] * (monkeys[monkeyIndex].multiplier % cond)
+
+						monkeys[monkeyIndex].objectsOffsets[i][cond] = mod
+
+					}
+
+				}
+
+				test := monkeys[monkeyIndex].test
+				trueM := monkeys[monkeyIndex].true_
+				falseM := monkeys[monkeyIndex].false_
+
+				objectCopy := make(map[int]int)
+				for k, v := range monkeys[monkeyIndex].objectsOffsets[i] {
+					objectCopy[k] = v
+				}
+
+				if monkeys[monkeyIndex].objectsOffsets[i][test] == 0 {
+					monkeys[trueM].objectsOffsets = append(monkeys[trueM].objectsOffsets, objectCopy)
+				} else {
+					monkeys[falseM].objectsOffsets = append(monkeys[falseM].objectsOffsets, objectCopy)
+				}
+			}
+
+			monkeys[monkeyIndex].objectsOffsets = make([]map[int]int, 0)
+		}
+	}
+	printMonkeys(monkeys)
+	return monkeys
+}
+
+func getBusinessLevel(monkeys []Monkey) int {
+	var max1, max2 int
 	for _, m := range monkeys {
 		if m.itemsInspected > max1 {
 			max2 = max1
@@ -138,4 +192,11 @@ func getBusinessLevel(monkeys []Monkey) uint64 {
 	}
 	fmt.Println(max1, ",", max2)
 	return max1 * max2
+}
+
+func printMonkeys(monkeys []Monkey) {
+	for i, m := range monkeys {
+		fmt.Print("M", i, ":", len(m.objectsOffsets), "-", m.itemsInspected, " ")
+	}
+	fmt.Println()
 }
