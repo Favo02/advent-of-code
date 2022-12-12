@@ -37,8 +37,24 @@ func main() {
 	fmt.Println("E:", dest.x, dest.y)
 	fmt.Println("sx:", sizeX, "sy:", sizeY)
 
-	dist := dijkstra(cur)
-	fmt.Println("res:", dist[dest])
+	var minDist int = math.MaxInt
+	aCount := 0
+	for y := 0; y < sizeY; y++ {
+		for x := 0; x < sizeX; x++ {
+			if map__[y][x] == 'a' {
+				fmt.Println("from", x, y, "- a n°", aCount)
+				aCount++
+				distances := dijkstra(Point{x, y})
+				distFromE := distances[dest]
+				fmt.Println(distFromE)
+				fmt.Println()
+				if distFromE < minDist {
+					minDist = distFromE
+				}
+			}
+		}
+	}
+	fmt.Println("res:", minDist)
 }
 
 type Point struct {
@@ -85,7 +101,7 @@ func dijkstra(cur Point) map[Point]int {
 	// while c not empty
 	for len(c) > 0 {
 
-		fmt.Println(len(c))
+		// fmt.Println(len(c))
 
 		// u = min v
 		var min int = math.MaxInt
@@ -98,7 +114,7 @@ func dijkstra(cur Point) map[Point]int {
 		}
 
 		// remove minPoint from c
-		fmt.Println(u, min)
+		// fmt.Println(u, min)
 		delete(c, u)
 
 		// FOR EACH (u,v) ∈ E DO
