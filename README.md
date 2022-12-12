@@ -17,6 +17,7 @@
 |&nbsp;&nbsp;9|[Rope bridge](https://adventofcode.com/2022/day/9)|01:01:14|8492|01:19:43|5912|
 |&nbsp;&nbsp;10|[Cathode-Ray Tube](https://adventofcode.com/2022/day/10)|00:42:23|8177|01:05:06|6867|
 |&nbsp;&nbsp;11|[Monkey in the Middle](https://adventofcode.com/2022/day/11)|01:11:38|6885|09:05:34|20325|
+|&nbsp;&nbsp;12|[Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)|08:57:59 💤|19279|09:17:25 💤|18728|
 
 💤 = I didn't wake up :) 
 
