@@ -1,4 +1,5 @@
 // https://adventofcode.com/2022/day/12
+// usign Dijkstra algorithm
 
 package main
 
