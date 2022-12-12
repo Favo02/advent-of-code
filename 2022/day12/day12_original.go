@@ -1,18 +1,3 @@
-/*
-Sia d[V] un vettore con indici in V
-d[x,y] ← 0
-FOR EACH v ∈ V \ {S} DO
-	d[v.x, v.y] ← ∞
-C ← V
-WHILE C ≠ ∅ DO
-	u ← elemento di C con d[u] minima // scelta greedy
-	C ← C \ {u}
-	FOR EACH (u,v) ∈ E DO // u fissato
-		IF d[u] + w(u,v) < d[v] THEN
-			d[v] ← d[u] + w(u,v)
-RETURN d
-*/
-
 // https://adventofcode.com/2022/day/12
 
 package main
