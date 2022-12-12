@@ -22,6 +22,9 @@ type Point struct {
 	x, y int
 }
 
+// REQUIRES: stdin is a valid challenge input
+// MODIFIES: stdin
+// EFFECTS: returns the map parsed as a grid and destination point coordinates
 func parseInput() (grid []string, destination Point) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -36,7 +39,9 @@ func parseInput() (grid []string, destination Point) {
 	return grid, destination
 }
 
-func checkHeight(grid []string, curX, curY, targX, targY int) bool {
+// REQUIRES: grid is a valid map, curX, curY, targX, targY are valid grid coordinates
+// EFFECTS: returns true if targX, targY is reachable da curX, curY, false otherwise
+func checkHeightDifference(grid []string, curX, curY, targX, targY int) bool {
 	cur := grid[curY][curX]
 	target := grid[targY][targX]
 
@@ -51,29 +56,36 @@ func checkHeight(grid []string, curX, curY, targX, targY int) bool {
 	return diff <= 1
 }
 
-// returns the height of a point
+// EFFECTS: returns the height of a point (relative to 'a')
 func getPointHeight(h rune) int {
-	return int(math.Abs(float64('a' - h)))
+	return int(h - 'a')
 }
 
+// REQUIRES: grid is valid map, cur is a point on grid
+// EFFECTS: returns the amount of steps needed to reach every point (key of map) reachable on the grid
 func depthFirstSearch(grid []string, cur Point) map[Point]int {
-	queue := queue{nil}
-	distances := make(map[Point]int)
-	reached := make(map[Point]bool)
-	queue.enqueue(cur)
+	queue := queue{nil}              // queue of points to be analyzed
+	distances := make(map[Point]int) // distance from 'cur' to key of map
+	reached := make(map[Point]bool)  // points already reached
 
-	for !queue.isEmpty() {
-		u := queue.dequeue()
+	queue.enqueue(cur) // first point to analyze
 
+	for !queue.isEmpty() { // while there are points to analyze
+		u := queue.dequeue() // first point to analyze
+
+		// scan each point reachable from u
 		for y := -1; y <= 1; y++ {
 			for x := -1; x <= 1; x++ {
+				// only move top, down, left or right, no diagonal
 				if !(x == 0 || y == 0) {
 					continue
 				}
+				// do not analyze self
 				if x == 0 && y == 0 {
 					continue
 				}
 
+				// out of grid bounds
 				if (u.x+x) < 0 || (u.x+x) >= len(grid[0]) {
 					continue
 				}
@@ -81,15 +93,16 @@ func depthFirstSearch(grid []string, cur Point) map[Point]int {
 					continue
 				}
 
-				if !checkHeight(grid, u.x, u.y, u.x+x, u.y+y) {
+				// point not reachable from cur (height difference)
+				if !checkHeightDifference(grid, u.x, u.y, u.x+x, u.y+y) {
 					continue
 				}
 
-				v := Point{u.x + x, u.y + y}
-				if !reached[v] {
-					distances[v] = distances[u] + 1
-					reached[v] = true
-					queue.enqueue(v)
+				v := Point{u.x + x, u.y + y} // point reached
+				if !reached[v] {             // not reached yet
+					distances[v] = distances[u] + 1 // distance to reach v
+					reached[v] = true               // set as reached
+					queue.enqueue(v)                // add to points to analyze
 				}
 			}
 		}
@@ -97,15 +110,20 @@ func depthFirstSearch(grid []string, cur Point) map[Point]int {
 	return distances
 }
 
+// REQUIRES: destination is a valid point on grid
+// EFFECTS: returns the minimum amount of steps needed to go from 'S' to destination and the minimum amount of steps needed to go from the closest 'a' and destination
 func getSandAtoE(grid []string, destination Point) (int, int) {
 	var StoE int = math.MaxInt
 	var minAtoE int = math.MaxInt
+
 	for y := 0; y < len(grid); y++ {
 		for x := 0; x < len(grid[0]); x++ {
 			if grid[y][x] == 'S' {
+				// get distances to each point reachable, extract only the one to "destination"
 				StoE = depthFirstSearch(grid, Point{x, y})[destination]
 			}
 			if grid[y][x] == 'a' {
+				// get distances to each point reachable, extract only the one to "destination", save only the minimun one
 				AtoE, found := depthFirstSearch(grid, Point{x, y})[destination]
 				if found && AtoE < minAtoE {
 					minAtoE = AtoE
