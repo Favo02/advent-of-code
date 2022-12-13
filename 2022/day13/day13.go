@@ -12,48 +12,185 @@ import (
 )
 
 func main() {
-	pairs, packets := parseInput()
+	packets := parseInput()
 
-	part1 := comparePairs(pairs)
+	part1 := comparePairs(packets) // compare packet pairs
 
 	packets = append(packets, "[[2]]")
 	packets = append(packets, "[[6]]")
-	packets = sortP(packets)
-	part2 := findP(packets, "[[2]]") * findP(packets, "[[6]]")
-	fmt.Println("part1:", part1)
-	fmt.Println("part2:", part2)
+	packets = sortPackets(packets)
+	part2 := findPacketIndex(packets, "[[2]]") * findPacketIndex(packets, "[[6]]")
+
+	fmt.Println("sum of index of correct order packet pairs")
+	fmt.Println("\tpart1:", part1)
+	fmt.Println("product of indexes of packet [[2]] and [[6]]")
+	fmt.Println("\tpart2:", part2)
 }
 
-func parseInput() (pairs [][]string, packets []string) {
+// returns the packets
+func parseInput() (packets []string) {
 	scanner := bufio.NewScanner(os.Stdin)
-	pair := make([]string, 0)
 	for scanner.Scan() {
 		line := scanner.Text()
-		if line == "" {
-			pairs = append(pairs, pair)
-			pair = make([]string, 0)
-		} else {
+		if line != "" {
 			packets = append(packets, line)
-			pair = append(pair, line)
 		}
 	}
-	pairs = append(pairs, pair)
-	return pairs, packets
+	return packets
 }
 
-func comparePairs(pairs [][]string) int {
+// returns the sum of indexes (starting from 1) of pairs of packets that are in the correct order
+func comparePairs(packets []string) int {
 	var res int
-	for i, p := range pairs {
-		ord := compareLists(p[0], p[1])
-		// fmt.Println("cmp:", p[0], p[1], ord)
-		// fmt.Println()
-		if ord == 1 {
-			res += i + 1
+	var index int // packet pair index
+	for i := 0; i < len(packets); i += 2 {
+		ord := compareLists(packets[i], packets[i+1]) // compare pair
+
+		if ord == 1 { // pair is in order
+			res += index + 1 // sum pair index
 		}
+		index++
 	}
 	return res
 }
 
+// compare two lists: returns 1 if p0 < p1, 0 if p0 == p1, -1 if p0 > p1
+func compareLists(p0, p1 string) int {
+	// same lists, return 0
+	if p0 == p1 {
+		return 0
+	}
+
+	var i0, i1 int // index to analyze
+
+	// scanning the whole list
+	for i0 < len(p0) && i1 < len(p1) {
+
+		// skip comma (,)
+		if p0[i0] == ',' {
+			i0++
+			continue
+		}
+		if p1[i1] == ',' {
+			i1++
+			continue
+		}
+
+		// compare two lists: recursive until int comparison
+		if p0[i0] == '[' && p1[i1] == '[' {
+
+			// calculate the dimension of list
+			var end0, end1 int
+			end0 = listClosing(p0[i0:])
+			end1 = listClosing(p1[i1:])
+
+			// recursive on content of list
+			cmp := compareLists(p0[i0+1:i0+end0], p1[i1+1:i1+end1])
+
+			if cmp != 0 { // result found
+				return cmp
+			} else { // same list, keep scanning (jump the end of list)
+				i0 = i0 + end0 + 1
+				i1 = i1 + end1 + 1
+				continue
+			}
+		}
+
+		// compare two ints
+		if unicode.IsDigit(rune(p0[i0])) && unicode.IsDigit(rune(p1[i1])) {
+
+			// parse first int
+			var int0 int
+			// parse longer than 1 digit numbers
+			if indexOf(p0[i0:], ',') != -1 { // if contains comma (,)
+				int0, _ = strconv.Atoi(p0[i0 : i0+indexOf(p0[i0:], ',')])
+			} else { // no comma: int = whole string
+				int0, _ = strconv.Atoi(p0[i0:])
+			}
+
+			// parse second int
+			var int1 int
+			// parse longer than 1 digit numbers
+			if indexOf(p1[i1:], ',') != -1 { // if contains comma (,)
+				int1, _ = strconv.Atoi(p1[i1 : i1+indexOf(p1[i1:], ',')])
+			} else { // no comma: int = whole string
+				int1, _ = strconv.Atoi(p1[i1:])
+			}
+
+			// compare ints
+			if int0 < int1 {
+				return 1
+			}
+			if int0 > int1 {
+				return -1
+			}
+
+			// same int, keep scanning (jump to end of ints)
+			if int0 == int1 {
+				i0 += len(strconv.Itoa(int0))
+				i1 += len(strconv.Itoa(int1))
+				continue
+			}
+		}
+
+		// one list and one int: parse int to list
+
+		if p0[i0] == '[' { // first el is a list
+			end0 := listClosing(p0[i0:]) // find end of list
+
+			// parse int (second element)
+			var int1 int
+			if indexOf(p1[i1:], ',') != -1 { // if contains comma (,)
+				int1, _ = strconv.Atoi(p1[i1 : i1+indexOf(p1[i1:], ',')])
+			} else { // no comma: int = whole string
+				int1, _ = strconv.Atoi(p1[i1:])
+			}
+
+			// compare list content and int
+			cmp := compareLists(p0[i0+1:i0+end0], strconv.Itoa(int1))
+
+			if cmp != 0 { // result found
+				return cmp
+			} else { // same list and int (converted to list), keep scanning (jump to end of int and end of list)
+				i0 = i0 + end0 + 1
+				i1 += len(strconv.Itoa(int1))
+				continue
+			}
+		}
+
+		if p1[i1] == '[' { // second el is a list
+			end1 := listClosing(p1[i1:]) // find end of list
+
+			// parse int (first element)
+			var int0 int
+			if indexOf(p0[i0:], ',') != -1 { // if contains comma (,)
+				int0, _ = strconv.Atoi(p0[i0 : i0+indexOf(p0[i0:], ',')])
+			} else { // no comma: int = whole string
+				int0, _ = strconv.Atoi(p0[i0:])
+			}
+
+			// compare int and list content
+			cmp := compareLists(strconv.Itoa(int0), p1[i1+1:i1+end1])
+
+			if cmp != 0 { // result found
+				return cmp
+			} else { // same int (converted to list) and list, keep scanning (jump to end of list and end of int)
+				i1 = i1 + end1 + 1
+				i0 += len(strconv.Itoa(int0))
+				continue
+			}
+		}
+	}
+
+	// end of list, one list is shorted tha the otherone
+	if len(p0) < len(p1) { // first list shorter
+		return 1
+	} else { // second list shorter
+		return -1
+	}
+}
+
+// return index of end of list (closing ] for first [)
 func listClosing(s1 string) int {
 	var open int
 	for i, c := range s1 {
@@ -72,6 +209,7 @@ func listClosing(s1 string) int {
 	return -1
 }
 
+// return the index of runr "r" in string "s", -1 if not found
 func indexOf(s string, r rune) int {
 	for i, c := range s {
 		if c == r {
@@ -81,171 +219,20 @@ func indexOf(s string, r rune) int {
 	return -1
 }
 
-func contains(s string, r rune) bool {
-	for _, c := range s {
-		if c == r {
-			return true
-		}
-	}
-	return false
+// returns packets "p" sorted
+func sortPackets(p []string) []string {
+	sort.Slice(p, func(i, j int) bool {
+		return compareLists(p[i], p[j]) == 1
+	})
+	return p
 }
 
-func compareLists(p0, p1 string) int {
-	if p0 == p1 {
-		// fmt.Println("equal")
-		return 0
-	}
-
-	var i0, i1 int // index to analyze
-	for i0 < len(p0) && i1 < len(p1) {
-		// fmt.Println("comparing", p0[i0:], p1[i1:])
-
-		// skip ,
-		if p0[i0] == ',' {
-			i0++
-			continue
-		}
-		if p1[i1] == ',' {
-			i1++
-			continue
-		}
-
-		// ------ BOTH LIST --------
-		// recursive until int comparison
-		if p0[i0] == '[' && p1[i1] == '[' {
-			// fmt.Println("both lists: recursion")
-
-			// calculate the dimension of list
-			var end0, end1 int
-			end0 = listClosing(p0[i0:])
-			end1 = listClosing(p1[i1:])
-
-			cmp := compareLists(p0[i0+1:i0+end0], p1[i1+1:i1+end1])
-			if cmp != 0 {
-				return cmp
-			} else {
-				i0 = i0 + end0 + 1
-				i1 = i1 + end1 + 1
-				continue
-			}
-		}
-
-		// ------ BOTH INT --------
-		if unicode.IsDigit(rune(p0[i0])) && unicode.IsDigit(rune(p1[i1])) {
-
-			var int0 int
-			if contains(p0[i0:], ',') {
-				int0, _ = strconv.Atoi(p0[i0 : i0+indexOf(p0[i0:], ',')])
-			} else {
-				int0, _ = strconv.Atoi(p0[i0:])
-			}
-
-			var int1 int
-			if contains(p1[i1:], ',') {
-				int1, _ = strconv.Atoi(p1[i1 : i1+indexOf(p1[i1:], ',')])
-			} else {
-				int1, _ = strconv.Atoi(p1[i1:])
-			}
-
-			// fmt.Println("both ints:", int0, int1)
-
-			if int0 < int1 {
-				return 1
-			}
-			if int0 > int1 {
-				return -1
-			}
-
-			if int0 == int1 {
-				i0 += len(strconv.Itoa(int0))
-				i1 += len(strconv.Itoa(int1))
-				// fmt.Println("same int: continue")
-				continue
-			}
-		}
-
-		// ------ ONE LIST AND ONE INT --------
-		if p0[i0] == '[' {
-			end0 := listClosing(p0[i0:])
-
-			var int1 int
-			if contains(p1[i1:], ',') {
-				int1, _ = strconv.Atoi(p1[i1 : i1+indexOf(p1[i1:], ',')])
-			} else {
-				int1, _ = strconv.Atoi(p1[i1:])
-			}
-
-			// fmt.Println("first list:", p0[i0+1:i0+end0], int1)
-			cmp := compareLists(p0[i0+1:i0+end0], strconv.Itoa(int1))
-
-			if cmp != 0 {
-				return cmp
-			} else {
-				i0 = i0 + end0 + 1
-				i1 += len(strconv.Itoa(int1))
-				continue
-			}
-		}
-
-		if p1[i1] == '[' {
-			end1 := listClosing(p1[i1:])
-
-			var int0 int
-			if contains(p0[i0:], ',') {
-				int0, _ = strconv.Atoi(p0[i0 : i0+indexOf(p0[i0:], ',')])
-			} else {
-				int0, _ = strconv.Atoi(p0[i0:])
-			}
-
-			// fmt.Println("first list:", p1[i1+1:i1+end1], int0)
-			cmp := compareLists(strconv.Itoa(int0), p1[i1+1:i1+end1])
-
-			if cmp != 0 {
-				return cmp
-			} else {
-				i1 = i1 + end1 + 1
-				i0 += len(strconv.Itoa(int0))
-				continue
-			}
-		}
-
-		i0++
-		i1++
-	}
-
-	// ------ ONE EMPTY OR EQUAL --------
-	if len(p0) < len(p1) {
-		// fmt.Println("p0 less elms")
-		return 1
-	}
-	if len(p0) > len(p1) {
-		// fmt.Println("p1 less elms")
-		return -1
-	}
-
-	return 0
-}
-
-func findP(p []string, s string) int {
+// returns the index of pachet "s" in packets "p"
+func findPacketIndex(p []string, s string) int {
 	for i, v := range p {
 		if v == s {
 			return i + 1
 		}
 	}
 	return -1
-}
-
-func sortP(p []string) []string {
-	sort.Slice(p, func(i, j int) bool {
-		return boolCompareLists(p[i], p[j])
-	})
-	return p
-}
-
-func boolCompareLists(i, j string) bool {
-	res := compareLists(i, j)
-	if res == 1 {
-		return true
-	}
-	return false
 }
