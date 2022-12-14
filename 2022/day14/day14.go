@@ -17,6 +17,10 @@ type Point struct {
 
 var sandSpawn Point = Point{500, 0}
 
+const ROCK = 1
+const SAND = -1
+const VOID = 0
+
 func main() {
 	rocks := parseInput()
 	cave1 := fillRocks(rocks) // fill lines between rocks
@@ -75,22 +79,22 @@ func drawLine(cave map[Point]int, source, destination Point) map[Point]int {
 	// scan each point between rocks
 	if diffX > 0 {
 		for i := 0; i <= diffX; i++ {
-			cave[Point{source.x - i, source.y}] = 1
+			cave[Point{source.x - i, source.y}] = ROCK
 		}
 	} else {
 		for i := 0; i <= -diffX; i++ {
-			cave[Point{source.x + i, source.y}] = 1
+			cave[Point{source.x + i, source.y}] = ROCK
 		}
 	}
 
 	// scan each point between rocks
 	if diffY > 0 {
 		for i := 0; i <= diffY; i++ {
-			cave[Point{source.x, source.y - i}] = 1
+			cave[Point{source.x, source.y - i}] = ROCK
 		}
 	} else {
 		for i := 0; i <= -diffY; i++ {
-			cave[Point{source.x, source.y + i}] = 1
+			cave[Point{source.x, source.y + i}] = ROCK
 		}
 	}
 
@@ -102,12 +106,12 @@ func fillSand(cave map[Point]int, floor bool) map[Point]int {
 	var oldSand int
 	for true {
 		// sand spawn blocked
-		if cave[sandSpawn] == -1 {
+		if cave[sandSpawn] == SAND {
 			break
 		}
 
 		// spawn new sand
-		cave[sandSpawn] = -1
+		cave[sandSpawn] = SAND
 
 		// let sand spawned fall
 		cave = sandFall(cave, sandSpawn, floor)
@@ -131,38 +135,38 @@ func sandFall(cave map[Point]int, curSand Point, floor bool) map[Point]int {
 		if floor {
 			// below lowest rock: stop at floor
 			if curSand.y == lowestRock+1 {
-				cave[curSand] = -1
+				cave[curSand] = SAND
 				break
 			}
 		} else {
 			// below lowest rock: falling out of the cave
 			if curSand.y == lowestRock {
-				cave[curSand] = 0
+				cave[curSand] = VOID
 				break
 			}
 		}
 
 		// fall down one step
-		if cave[Point{curSand.x, curSand.y + 1}] == 0 {
-			cave[Point{curSand.x, curSand.y + 1}] = -1 // crate sand down
-			cave[curSand] = 0                          // remove sand on old point
-			curSand = Point{curSand.x, curSand.y + 1}  // update current sand
+		if cave[Point{curSand.x, curSand.y + 1}] == VOID {
+			cave[Point{curSand.x, curSand.y + 1}] = SAND // crate sand down
+			cave[curSand] = VOID                         // remove sand on old point
+			curSand = Point{curSand.x, curSand.y + 1}    // update current sand
 			continue
 		}
 
 		// fall one step down and to the left
-		if cave[Point{curSand.x - 1, curSand.y + 1}] == 0 {
-			cave[Point{curSand.x - 1, curSand.y + 1}] = -1 // create sand down left
-			cave[curSand] = 0                              // remove sand on old point
-			curSand = Point{curSand.x - 1, curSand.y + 1}  // update current sand
+		if cave[Point{curSand.x - 1, curSand.y + 1}] == VOID {
+			cave[Point{curSand.x - 1, curSand.y + 1}] = SAND // create sand down left
+			cave[curSand] = VOID                             // remove sand on old point
+			curSand = Point{curSand.x - 1, curSand.y + 1}    // update current sand
 			continue
 		}
 
 		// one step down and to the right
-		if cave[Point{curSand.x + 1, curSand.y + 1}] == 0 {
-			cave[Point{curSand.x + 1, curSand.y + 1}] = -1 // create sand down right
-			cave[curSand] = 0                              // remove sand on old point
-			curSand = Point{curSand.x + 1, curSand.y + 1}  // update current sand
+		if cave[Point{curSand.x + 1, curSand.y + 1}] == VOID {
+			cave[Point{curSand.x + 1, curSand.y + 1}] = SAND // create sand down right
+			cave[curSand] = VOID                             // remove sand on old point
+			curSand = Point{curSand.x + 1, curSand.y + 1}    // update current sand
 			continue
 		}
 
@@ -176,7 +180,7 @@ func sandFall(cave map[Point]int, curSand Point, floor bool) map[Point]int {
 func countSand(cave map[Point]int) int {
 	var sand int
 	for _, p := range cave {
-		if p == -1 {
+		if p == SAND {
 			sand++
 		}
 	}
@@ -187,7 +191,7 @@ func countSand(cave map[Point]int) int {
 func lowestRock(cave map[Point]int) int {
 	low := math.MinInt
 	for k, v := range cave {
-		if v == 1 && k.y > low {
+		if v == ROCK && k.y > low {
 			low = k.y
 		}
 	}
