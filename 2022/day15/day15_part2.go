@@ -18,8 +18,7 @@ type Point struct {
 
 func main() {
 	sensors := parseInput()
-	borderPoints := scanSensorBorder(sensors)
-	point := checkBorderPoints(sensors, borderPoints)
+	point := scanSensorBorder(sensors)
 
 	fmt.Println("score of the point not in reach of any sensor (part2):\n\t", point.x*MAX+point.y)
 }
@@ -51,21 +50,31 @@ func parseInput() map[Point]Point {
 	return sensors
 }
 
-// returns the points just outside of each sensor reach
-func scanSensorBorder(sensors map[Point]Point) []Point {
-	var borderPoints []Point
+// returns the point on a border of a sensor range not in reach of any sensor
+func scanSensorBorder(sensors map[Point]Point) Point {
 	for s, v := range sensors {
 		dist := manhattanDistance(s, v)
 
 		// add points just out of each direction of the sensor reach ("draw" a diamond)
 		for i := dist; i >= 0; i-- {
-			borderPoints = append(borderPoints, Point{s.x + (dist - i), s.y + (dist - (dist - i)) + 1})
-			borderPoints = append(borderPoints, Point{s.x - (dist - i), s.y - (dist - (dist - i)) - 1})
-			borderPoints = append(borderPoints, Point{s.x + (dist - (dist - i)) + 1, s.y + (dist - i)})
-			borderPoints = append(borderPoints, Point{s.x - (dist - (dist - i)) - 1, s.y - (dist - i)})
+
+			// four points in the four direction forming a part of border
+			var points []Point
+
+			points = append(points, Point{s.x + (dist - i), s.y + (dist - (dist - i)) + 1}) // bottom
+			points = append(points, Point{s.x - (dist - i), s.y - (dist - (dist - i)) - 1}) // top
+			points = append(points, Point{s.x + (dist - (dist - i)) + 1, s.y + (dist - i)}) // right
+			points = append(points, Point{s.x - (dist - (dist - i)) - 1, s.y - (dist - i)}) // left
+
+			// check the four points generated
+			for _, point := range points {
+				if !checkPointInRange(sensors, point) {
+					return point
+				}
+			}
 		}
 	}
-	return borderPoints
+	return Point{}
 }
 
 // returns the manhattand distance between "a" and "b"
@@ -81,43 +90,29 @@ func abs(a int) int {
 	return -(a)
 }
 
-// returns the (first) point outside of each sensor reach in border points
-func checkBorderPoints(sensors map[Point]Point, borderPoints []Point) Point {
-	// scan each border point
-	for _, borderPoint := range borderPoints {
+// returns true if the point is inside a sensor range, false otherwise
+func checkPointInRange(sensors map[Point]Point, point Point) bool {
 
-		// if current border point outside of valid range skip
-		if borderPoint.x > MAX || borderPoint.x < 0 {
-			continue
-		}
-		if borderPoint.y > MAX || borderPoint.y < 0 {
-			continue
-		}
+	// if current border point outside of valid range skip
+	if point.x > MAX || point.x < 0 || point.y > MAX || point.y < 0 {
+		return true
+	}
 
-		inReach := false // in reach of a sensor
+	// scan each sensor
+	for sen, bea := range sensors {
 
-		// scan each sensor
-		for sen, bea := range sensors {
+		// distance from border point to sensor
+		thisdist := manhattanDistance(sen, point)
 
-			// distance from border point to sensor
-			thisdist := manhattanDistance(sen, borderPoint)
+		// distance from sensor to his beacon
+		sendist := manhattanDistance(sen, bea)
 
-			// distance from sensor to his beacon
-			sendist := manhattanDistance(sen, bea)
-
-			// if sensor to beacon distance is greather than border point to beacon then the current border point is in sensor range
-			if thisdist <= sendist {
-				inReach = true
-				break
-			}
-		}
-
-		// point not in reach of any sensor
-		if !inReach {
-			return borderPoint
+		// if sensor to beacon distance is greather than border point to beacon then the current border point is in sensor range
+		if thisdist <= sendist {
+			return true
 		}
 	}
 
-	// no points outside of every sensor range
-	return Point{}
+	// point not in reach of any sensor
+	return false
 }
