@@ -10,11 +10,6 @@ import (
 	"strings"
 )
 
-const SENSOR int = 1
-const BEACON int = 2
-const VOID int = 0
-const FORCEDVOID int = -1
-
 const MAX int = 4000000
 
 type Point struct {
