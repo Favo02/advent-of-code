@@ -20,6 +20,7 @@
 |&nbsp;&nbsp;12|[Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)|08:57:59 💤|19279|09:17:25 💤|18728|
 |&nbsp;&nbsp;13|[Distress Signal](https://adventofcode.com/2022/day/13)|02:06:10|7236|02:39:21|7471|
 |&nbsp;&nbsp;14|[Regolith Reservoir](https://adventofcode.com/2022/day/14)|01:37:58|6631|01:51:51|6194|
+|&nbsp;&nbsp;15|[Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)|03:06:18|8765|05:51:24|8001|
 
 💤 = I didn't wake up :) 
 
