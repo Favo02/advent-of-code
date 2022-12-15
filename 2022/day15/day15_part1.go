@@ -11,55 +11,54 @@ import (
 	"strings"
 )
 
+const VOID int = -1
 const SENSOR int = 1
 const BEACON int = 2
-const VOID int = 0
-const FORCEDVOID int = -1
-
-// const LINE int = 10
 
 const LINE int = 2000000
-
-func main() {
-	sensors := parseInput()
-	cave := placeSensorsBeacon(sensors)
-
-	cave = forcedVoidOnLine(sensors, cave)
-	forcedVoid := countForcedVoid(cave)
-
-	fmt.Println(forcedVoid)
-}
 
 type Point struct {
 	x, y int
 }
 
+func main() {
+	sensors := parseInput()
+	cave := placeSensorsAndBeacons(sensors)
+
+	totVoid := placeVoidOnLine(sensors, cave)
+
+	fmt.Print("Total number of void on line ", LINE, " (part1):\n\t", totVoid, "\n")
+}
+
+// returns each sensor associated to his beacon
 func parseInput() map[Point]Point {
-	cave := make(map[Point]Point)
+	sensors := make(map[Point]Point)
+
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
 		tokens := strings.Split(line, " ")
 
-		sx, sy := tokens[2], tokens[3]
-		bx, by := tokens[8], tokens[9]
+		// get x,y as strings
+		senXstr, senYstr := tokens[2], tokens[3]
+		beaXstr, beaYstr := tokens[8], tokens[9]
 
-		sxx, _ := strconv.Atoi(sx[2 : len(sx)-1])
-		syy, _ := strconv.Atoi(sy[2 : len(sy)-1])
+		// parse sensor x,y to int
+		senX, _ := strconv.Atoi(senXstr[2 : len(senXstr)-1])
+		senY, _ := strconv.Atoi(senYstr[2 : len(senYstr)-1])
 
-		bxx, _ := strconv.Atoi(bx[2 : len(bx)-1])
-		byy, _ := strconv.Atoi(by[2:])
+		// parse beacon x,y to int
+		beaX, _ := strconv.Atoi(beaXstr[2 : len(beaXstr)-1])
+		beaY, _ := strconv.Atoi(beaYstr[2:])
 
-		cave[Point{sxx, syy}] = Point{bxx, byy}
+		// add sensor
+		sensors[Point{senX, senY}] = Point{beaX, beaY}
 	}
-	return cave
+	return sensors
 }
 
-func manhattanDistance(a, b Point) int {
-	return abs(a.x-b.x) + abs(a.y-b.y)
-}
-
-func placeSensorsBeacon(sensors map[Point]Point) map[Point]int {
+// returns a cave with sensors and beacons placed on it
+func placeSensorsAndBeacons(sensors map[Point]Point) map[Point]int {
 	cave := make(map[Point]int)
 	for s, b := range sensors {
 		cave[s] = SENSOR
@@ -68,43 +67,50 @@ func placeSensorsBeacon(sensors map[Point]Point) map[Point]int {
 	return cave
 }
 
-func forcedVoidOnLine(sensors map[Point]Point, cave map[Point]int) map[Point]int {
+// returns the number of void points on line "LINE"
+func placeVoidOnLine(sensors map[Point]Point, cave map[Point]int) (count int) {
+	// sensors with the minimum and maximum x
 	minS := mostLeftX(sensors)
-	min := minS.x - manhattanDistance(minS, sensors[minS])
-
 	maxS := mostRightX(sensors)
+
+	// minimum and maximum point on line: min x - distance from his beacon (max x + distance from his beacon)
+	min := minS.x - manhattanDistance(minS, sensors[minS])
 	max := maxS.x + manhattanDistance(maxS, sensors[maxS])
 
-	fmt.Println(min, max)
-
 	// scan each point of line
-	for i := min; i < max; i++ {
-		thispoint := Point{i, LINE}
+	for x := min; x < max; x++ {
+		linePoint := Point{x, LINE}
 
-		if cave[thispoint] == SENSOR {
-			continue
-		}
-		if cave[thispoint] == BEACON {
+		// skip sensors and beacons
+		if cave[linePoint] == SENSOR || cave[linePoint] == BEACON {
 			continue
 		}
 
-		// scan each sensor
+		// scan each sensor to check if covers the current line point
 		for sen, bea := range sensors {
 
 			// distance from line point to sensor
-			thisdist := manhattanDistance(sen, thispoint)
+			thisdist := manhattanDistance(sen, linePoint)
 
 			// distance from sensor to his beacon
 			sendist := manhattanDistance(sen, bea)
 
+			// if sensor to beacon distance is greather than line point to beacon then the current line point is in sensor range
 			if thisdist <= sendist {
-				cave[thispoint] = FORCEDVOID
+				count++
+				break
 			}
 		}
 	}
-	return cave
+	return count
 }
 
+// return manhattan distance between "a" and "b"
+func manhattanDistance(a, b Point) int {
+	return abs(a.x-b.x) + abs(a.y-b.y)
+}
+
+// returns the absolute value of "a"
 func abs(a int) int {
 	if a > 0 {
 		return a
@@ -112,17 +118,7 @@ func abs(a int) int {
 	return -(a)
 }
 
-func countLine(cave map[Point]int) (count int) {
-	for p, v := range cave {
-		if p.y == LINE {
-			if v == FORCEDVOID {
-				count++
-			}
-		}
-	}
-	return count
-}
-
+// returns the point with the minimum x
 func mostLeftX(sensors map[Point]Point) Point {
 	min := math.MaxInt
 	var senMin Point
@@ -135,6 +131,7 @@ func mostLeftX(sensors map[Point]Point) Point {
 	return senMin
 }
 
+// returns the point with the maximum x
 func mostRightX(sensors map[Point]Point) Point {
 	max := math.MinInt
 	var senMax Point
@@ -145,13 +142,4 @@ func mostRightX(sensors map[Point]Point) Point {
 		}
 	}
 	return senMax
-}
-
-func countForcedVoid(cave map[Point]int) (count int) {
-	for _, v := range cave {
-		if v == FORCEDVOID {
-			count++
-		}
-	}
-	return count
 }
