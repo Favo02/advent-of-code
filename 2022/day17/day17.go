@@ -59,8 +59,8 @@ func parseInput() string {
 // returns the cave height at PART1 time and at PART2 time
 func spawnRocks(gas string, nRocks int) (int, int) {
 
+	// cave: true = rock fixed, cave: false = rock not fixed
 	cave := make(map[Point]bool)
-	fixed := make(map[Point]bool)
 
 	var gasIndex int // index of gas
 
@@ -80,8 +80,8 @@ func spawnRocks(gas string, nRocks int) (int, int) {
 			part1res = highestRock(cave)
 		}
 
-		spawnRock(cave, nRocksSpawned%5)                // spawn new rock
-		gasIndex = fallRock(cave, fixed, gas, gasIndex) // let it fall (and update gas index)
+		spawnRock(cave, nRocksSpawned%5)         // spawn new rock
+		gasIndex = fallRock(cave, gas, gasIndex) // let it fall (and update gas index)
 
 		// skip cycle check if before part1 result
 		if nRocksSpawned < PART1 {
@@ -123,7 +123,7 @@ func spawnRock(cave map[Point]bool, t int) {
 		x := spawn.x
 		for _, rockPoint := range rockLine { // scan each line point
 			if rockPoint == '#' { // place only if rock point is #
-				cave[Point{x, spawn.y}] = true
+				cave[Point{x, spawn.y}] = false
 			}
 			x++
 		}
@@ -143,7 +143,7 @@ func highestRock(cave map[Point]bool) int {
 }
 
 // modifies cave, letting the rocks fall to definite position
-func fallRock(cave, fixed map[Point]bool, gas string, gasIndex int) int {
+func fallRock(cave map[Point]bool, gas string, gasIndex int) int {
 	var gasTurn bool = true // alternate gravity and gas effects
 
 	var isFixed bool // is rock overlapping another rock
@@ -172,9 +172,9 @@ func fallRock(cave, fixed map[Point]bool, gas string, gasIndex int) int {
 
 		// move rock
 		var currentRock, toMove []Point
-		for k := range cave { // scan each rock point
+		for k, fixed := range cave { // scan each rock point
 			// skip already fixed points
-			if fixed[k] {
+			if fixed {
 				continue
 			}
 
@@ -186,7 +186,7 @@ func fallRock(cave, fixed map[Point]bool, gas string, gasIndex int) int {
 
 		// check if any new rock point is out of cave range or overlaps an existing rock
 		for _, r := range toMove {
-			if fixed[r] { // overlap a rock
+			if cave[r] { // overlap a rock
 				overlap = true
 				break
 			}
@@ -201,7 +201,7 @@ func fallRock(cave, fixed map[Point]bool, gas string, gasIndex int) int {
 
 		if overlap && !gasTurn { // overlap going down: rock is fixed
 			for _, cr := range currentRock {
-				fixed[cr] = true
+				cave[cr] = true
 			}
 			isFixed = true
 		}
@@ -211,7 +211,7 @@ func fallRock(cave, fixed map[Point]bool, gas string, gasIndex int) int {
 				delete(cave, r)
 			}
 			for _, r := range toMove { // add new position
-				cave[r] = true
+				cave[r] = false
 			}
 		}
 
