@@ -10,11 +10,26 @@ import (
 	"strings"
 )
 
+// point in the cave
 type Point struct {
 	x, y int
 }
 
-var rocks [5]string = [5]string{"####", ".#.\n###\n.#.", "..#\n..#\n###", "#\n#\n#\n#", "##\n##"}
+// state at a current time
+type State struct {
+	nextRockIndex int
+	nextGasIndex  int
+	topRocks      string
+}
+
+// values at a current time
+type StateValue struct {
+	height int
+	rocks  int
+}
+
+// rocks shapes
+var ROCKS [5]string = [5]string{"####", ".#.\n###\n.#.", "..#\n..#\n###", "#\n#\n#\n#", "##\n##"}
 
 var cave map[Point]bool = make(map[Point]bool)
 var fixed map[Point]bool = make(map[Point]bool)
@@ -26,6 +41,9 @@ var turn, gasIndex int
 var gas string
 
 const PART1 int = 2022
+const PART2 int = 1_000_000_000_000
+
+var statuses map[State]StateValue = make(map[State]StateValue)
 
 func main() {
 	gas = parseInput()
@@ -34,14 +52,7 @@ func main() {
 	fmt.Println(p1, p2)
 }
 
-func reset() {
-	cave = make(map[Point]bool)
-	fixed = make(map[Point]bool)
-	turn = 0
-	gasIndex = 0
-	statuses = make(map[State]Payload)
-}
-
+// returns the gas flows read from stdin
 func parseInput() (gas string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
@@ -50,42 +61,10 @@ func parseInput() (gas string) {
 	return gas
 }
 
-// place rock on grid
-func spawnRock(t int) {
-	rock := rocks[t]
-
-	max := -highestRock()
-
-	spawn := Point{WALLEFT + 3, max - 4}
-
-	levels := strings.Split(rock, "\n")
-	spawn.y -= (len(levels) - 1)
-
-	for _, lev := range levels {
-		x := spawn.x
-		for _, ch := range lev {
-			if ch == '#' {
-				cave[Point{x, spawn.y}] = true
-			}
-			x++
-		}
-		spawn.y++
-	}
-}
-
-func highestRock() int {
-	min := 0
-	for rock := range cave {
-		if rock.y < min {
-			min = rock.y
-		}
-	}
-	return -(min)
-}
-
+// modifies cave placing nRocks rocks,
+// returns the cave height at PART1 time and at PART2 time
 func spawnRocks(nRocks int) (int, int) {
 	var part1res int
-	tot := 1_000_000_000_000
 	var foundCycle bool
 	var cycleHeight, steps int
 
@@ -107,17 +86,52 @@ func spawnRocks(nRocks int) (int, int) {
 			cycle := rocksSpawned - oldStatus.rocks // number of rocks in the cycle
 			cycleHeight = highestRock() - oldStatus.height
 
-			steps = (tot - oldStatus.rocks) / cycle // steps needed to reach tot rocks
+			steps = (PART2 - oldStatus.rocks) / cycle // steps needed to reach tot rocks
 
 			rocksSpawned = oldStatus.rocks + (cycle * steps)
 
 		} else {
-			statuses[curState] = Payload{highestRock(), rocksSpawned}
+			statuses[curState] = StateValue{highestRock(), rocksSpawned}
 		}
 	}
 	return part1res, (highestRock() + ((steps - 1) * cycleHeight)) - 1
 }
 
+// modifies the cave, placing a rock (of shape of index t) on grid (at top of cave)
+func spawnRock(t int) {
+	rock := ROCKS[t]
+
+	max := -highestRock()
+
+	spawn := Point{WALLEFT + 3, max - 4}
+
+	levels := strings.Split(rock, "\n")
+	spawn.y -= (len(levels) - 1)
+
+	for _, lev := range levels {
+		x := spawn.x
+		for _, ch := range lev {
+			if ch == '#' {
+				cave[Point{x, spawn.y}] = true
+			}
+			x++
+		}
+		spawn.y++
+	}
+}
+
+// returns the highest point of a rock
+func highestRock() int {
+	min := 0
+	for rock := range cave {
+		if rock.y < min {
+			min = rock.y
+		}
+	}
+	return -(min)
+}
+
+// modifies cave, letting the rocks fall to definite position
 func fallRock() {
 	var overlap bool
 	for !overlap {
@@ -193,6 +207,7 @@ func fallRock() {
 	}
 }
 
+// modifies stdout printing a visualization of the cave
 func visualizeMap() {
 	for i := -highestRock(); i < 0; i++ {
 		for j := 1; j < 8; j++ {
@@ -207,24 +222,13 @@ func visualizeMap() {
 	fmt.Println()
 }
 
-var statuses map[State]Payload = make(map[State]Payload)
-
-type Payload struct {
-	height int
-	rocks  int
-}
-
-type State struct {
-	nextRockIndex int
-	nextGasIndex  int
-	top10rocks    string
-}
-
+// returns the current state (generated on 40 top rocks levels)
 func getCurrentState(rock int) State {
 	curState := State{rock, gasIndex % len(gas), getTopRocks()}
 	return curState
 }
 
+// returns the top 40 rocks
 func getTopRocks() (res string) {
 	topRockIndex := -highestRock()
 	for i := topRockIndex; i < topRockIndex+40; i++ {
