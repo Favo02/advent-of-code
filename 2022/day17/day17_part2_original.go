@@ -231,7 +231,7 @@ func getCurrentState(rock int) State {
 
 func getTopRocks() (res string) {
 	topRockIndex := -highestRock()
-	for i := topRockIndex; i < topRockIndex+20; i++ {
+	for i := topRockIndex; i < topRockIndex+40; i++ {
 		for j := 1; j <= 7; j++ {
 			if cave[Point{j, i}] {
 				res += "#"
