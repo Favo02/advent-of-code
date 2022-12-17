@@ -1,4 +1,5 @@
 // https://adventofcode.com/2022/day/??
+// https://github.com/Favo02/advent-of-code
 
 package main
 
