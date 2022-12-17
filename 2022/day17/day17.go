@@ -39,21 +39,19 @@ const WALLRIGHT int = 8
 const PART1 int = 2022
 const PART2 int = 1_000_000_000_000
 
-// index of gas affecting the rocks
-
 func main() {
 	gas := parseInput()
 
-	p1, p2 := spawnRocks(gas, 1_000_000_000_000)
-	fmt.Println(p1, p2)
+	heightPart1, heightPart2 := spawnRocks(gas, 1_000_000_000_000)
+	fmt.Println("tower height at", PART1, "rocks spawned:\n\t", heightPart1)
+	fmt.Println("tower height at", PART2, "rocks spawned:\n\t", heightPart2)
 }
 
 // returns the gas flows read from stdin
-func parseInput() (gas string) {
+func parseInput() string {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
-	line := scanner.Text()
-	gas = line
+	gas := scanner.Text()
 	return gas
 }
 
@@ -64,36 +62,47 @@ func spawnRocks(gas string, nRocks int) (int, int) {
 	cave := make(map[Point]bool)
 	fixed := make(map[Point]bool)
 
-	var part1res int
+	var gasIndex int // index of gas
+
+	var part1res int // result at PART1 rocks spawned
+
+	// cycle
 	var foundCycle bool
 	var cycleHeight, steps int
-	var gasIndex int
+	states := make(map[State]StateValue) // states already encountered
 
-	statuses := make(map[State]StateValue)
+	for nRocksSpawned := 0; nRocksSpawned <= nRocks; nRocksSpawned++ {
+		// save current state
+		curState := getCurrentState(cave, gas, gasIndex, nRocksSpawned%5)
 
-	for rocksSpawned := 0; rocksSpawned <= nRocks; rocksSpawned++ {
-		if rocksSpawned == PART1 {
+		// save result for part1
+		if nRocksSpawned == PART1 {
 			part1res = highestRock(cave)
 		}
 
-		spawnRock(cave, rocksSpawned%5)
-		gasIndex = fallRock(cave, fixed, gas, gasIndex)
+		spawnRock(cave, nRocksSpawned%5)                // spawn new rock
+		gasIndex = fallRock(cave, fixed, gas, gasIndex) // let it fall (and update gas index)
 
-		curState := getCurrentState(cave, gas, gasIndex, rocksSpawned%5+1)
+		// skip cycle check if before part1 result
+		if nRocksSpawned < PART1 {
+			continue
+		}
 
-		oldStatus, found := statuses[curState]
-		if rocksSpawned >= PART1 && found && !foundCycle {
+		// check for cycle
+		oldStatus, found := states[curState]
+		if found && !foundCycle { // cycle found
 			foundCycle = true
 
-			cycle := rocksSpawned - oldStatus.rocks // number of rocks in the cycle
-			cycleHeight = highestRock(cave) - oldStatus.height
+			cycle := nRocksSpawned - oldStatus.rocks           // number of rocks in the cycle
+			cycleHeight = highestRock(cave) - oldStatus.height // height of a single cycle
 
-			steps = (PART2 - oldStatus.rocks) / cycle // steps needed to reach tot rocks
+			steps = (PART2 - oldStatus.rocks) / cycle // steps needed to go the closest possible to PART2 rocks
 
-			rocksSpawned = oldStatus.rocks + (cycle * steps)
+			nRocksSpawned = oldStatus.rocks + (cycle * steps) // skip all rocks spawned it cycle updating loop counter
 
 		} else {
-			statuses[curState] = StateValue{highestRock(cave), rocksSpawned}
+			// save state
+			states[curState] = StateValue{highestRock(cave), nRocksSpawned}
 		}
 	}
 	return part1res, (highestRock(cave) + ((steps - 1) * cycleHeight)) - 1
@@ -101,19 +110,19 @@ func spawnRocks(gas string, nRocks int) (int, int) {
 
 // modifies the cave, placing a rock (of shape of index t) on grid (at top of cave)
 func spawnRock(cave map[Point]bool, t int) {
-	rock := ROCKS[t]
+	rock := ROCKS[t] // rock shape to spawn
 
-	max := -highestRock(cave)
+	max := -highestRock(cave) // height of highest rock already in cave
 
-	spawn := Point{WALLEFT + 3, max - 4}
+	spawn := Point{WALLEFT + 3, max - 4} // spawn point
 
-	levels := strings.Split(rock, "\n")
-	spawn.y -= (len(levels) - 1)
+	rockHeight := strings.Split(rock, "\n") // height of new rock
+	spawn.y -= (len(rockHeight) - 1)        // update spawn point with rock height
 
-	for _, lev := range levels {
+	for _, rockLine := range rockHeight { // scan each rock line
 		x := spawn.x
-		for _, ch := range lev {
-			if ch == '#' {
+		for _, rockPoint := range rockLine { // scan each line point
+			if rockPoint == '#' { // place only if rock point is #
 				cave[Point{x, spawn.y}] = true
 			}
 			x++
@@ -124,7 +133,7 @@ func spawnRock(cave map[Point]bool, t int) {
 
 // returns the highest point of a rock
 func highestRock(cave map[Point]bool) int {
-	min := 0
+	min := 0 // highest rock has the lowest y
 	for rock := range cave {
 		if rock.y < min {
 			min = rock.y
@@ -135,86 +144,87 @@ func highestRock(cave map[Point]bool) int {
 
 // modifies cave, letting the rocks fall to definite position
 func fallRock(cave, fixed map[Point]bool, gas string, gasIndex int) int {
-	var turn int = 0
-	var overlap bool
-	for !overlap {
+	var gasTurn bool = true // alternate gravity and gas effects
 
-		var xMult, yMult int
+	var isFixed bool // is rock overlapping another rock
 
-		if turn%2 == 0 { // GAS
-			yMult = 0
+	for !isFixed { // keep falling until overlap
+
+		// calculate movement direction
+		var xMult, yMult int // x and y movement
+
+		if gasTurn { // gas turn
+			yMult = 0 // no vertical movement
 
 			gasDir := gas[gasIndex%len(gas)]
 			if gasDir == '<' {
-				xMult = -1
+				xMult = -1 // to left movement
 			} else if gasDir == '>' {
-				xMult = 1
+				xMult = 1 // to right movement
 			}
 
 			gasIndex++
 
-		} else { // GRAVITY
-			xMult = 0
-			yMult = +1
+		} else { // gravity turn
+			xMult = 0  // no horizontal movement
+			yMult = +1 // to bottom movement
 		}
 
+		// move rock
 		var currentRock, toMove []Point
-		for k := range cave {
+		for k := range cave { // scan each rock point
 			// skip already fixed points
 			if fixed[k] {
 				continue
 			}
 
 			currentRock = append(currentRock, k)
-			toMove = append(toMove, Point{k.x + xMult, k.y + yMult})
+			toMove = append(toMove, Point{k.x + xMult, k.y + yMult}) // move to movement
 		}
 
-		var invalid bool
-		// check if any point of rock overlaps an existing rock
+		var overlap, invalid bool // new rock is overlapping or invalid position
+
+		// check if any new rock point is out of cave range or overlaps an existing rock
 		for _, r := range toMove {
-			if fixed[r] {
+			if fixed[r] { // overlap a rock
 				overlap = true
 				break
 			}
-			if r.y >= 0 {
+			if r.y >= 0 { // floor (for 1st rock)
 				overlap = true
 				break
 			}
-			if !(r.x > WALLEFT && r.x < WALLRIGHT) {
+			if !(r.x > WALLEFT && r.x < WALLRIGHT) { // out of cave range
 				invalid = true
 			}
 		}
 
-		if !overlap {
-			if !invalid {
-				for _, r := range currentRock {
-					delete(cave, r)
-				}
-				for _, nr := range toMove {
-					cave[nr] = true
-				}
+		if overlap && !gasTurn { // overlap going down: rock is fixed
+			for _, cr := range currentRock {
+				fixed[cr] = true
 			}
-		} else {
-			if turn%2 == 1 {
-				for _, cr := range currentRock {
-					fixed[cr] = true
-				}
-			} else {
-				overlap = false
+			isFixed = true
+		}
 
+		if !overlap && !invalid { // new rock is valid
+			for _, r := range currentRock { // remove current position
+				delete(cave, r)
+			}
+			for _, r := range toMove { // add new position
+				cave[r] = true
 			}
 		}
 
-		turn++
-		// visualizeMap()
+		gasTurn = !gasTurn // alternate turn
+		// visualizeMap(cave)
 	}
 	return gasIndex
 }
 
 // modifies stdout printing a visualization of the cave
 func visualizeMap(cave map[Point]bool) {
-	for i := -highestRock(cave); i < 0; i++ {
-		for j := 1; j < 8; j++ {
+	for i := -highestRock(cave); i < 0; i++ { // start from highest rock
+		for j := WALLEFT; j < WALLRIGHT; j++ { // scan cave width
 			if cave[Point{j, i}] {
 				fmt.Print("█")
 			} else {
@@ -228,21 +238,20 @@ func visualizeMap(cave map[Point]bool) {
 
 // returns the current state (generated on 40 top rocks levels)
 func getCurrentState(cave map[Point]bool, gas string, gasIndex, rock int) State {
-	curState := State{rock, gasIndex % len(gas), getTopRocks(cave)}
-	return curState
-}
 
-// returns the top 40 rocks
-func getTopRocks(cave map[Point]bool) (res string) {
+	// generate top 40 rocks state
+	var topRocks string
 	topRockIndex := -highestRock(cave)
 	for i := topRockIndex; i < topRockIndex+40; i++ {
 		for j := 1; j <= 7; j++ {
 			if cave[Point{j, i}] {
-				res += "#"
+				topRocks += "#"
 			} else {
-				res += "."
+				topRocks += "."
 			}
 		}
 	}
-	return res
+
+	// create state object
+	return State{rock, gasIndex % len(gas), topRocks}
 }
