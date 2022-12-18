@@ -23,7 +23,7 @@
 |&nbsp;&nbsp;15|[Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)|03:06:18|8765|05:51:24|8001|
 |&nbsp;&nbsp;16|[Proboscidea Volcanium](https://adventofcode.com/2022/day/16)|11:34:21|8634|15:20:15|6299|
 |&nbsp;&nbsp;17|[Pyroclastic Flow](https://adventofcode.com/2022/day/17)|05:38:50|5909|13:47:27|6531|
-|&nbsp;&nbsp;17|[Boiling Boulders](https://adventofcode.com/2022/day/18)|00:33:40|3363|02:10:22|3423|
+|&nbsp;&nbsp;18|[Boiling Boulders](https://adventofcode.com/2022/day/18)|00:33:40|3363|02:10:22|3423|
 
 💤 = I didn't wake up :) 
 
