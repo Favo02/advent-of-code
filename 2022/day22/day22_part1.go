@@ -164,5 +164,5 @@ func pacManEffect(cur Point, modX, modY int) Point {
 			cur = next
 		}
 	}
-	return Point{}
+	return cur
 }
