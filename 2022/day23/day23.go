@@ -33,7 +33,6 @@ func main() {
 
 		if round == 10 { // save empty spaces at round 10
 			round10empty = countEmpty()
-			fmt.Println(round10empty)
 		}
 
 		if !someoneMoved {
@@ -42,7 +41,8 @@ func main() {
 		}
 	}
 
-	fmt.Println(round10empty, finalRound)
+	fmt.Println("empty spaces after round 10 (part1):\n\t", round10empty)
+	fmt.Println("first rounds where no elf move (part2):\n\t", finalRound)
 }
 
 // modifies elfes map parsing stdin input
@@ -87,13 +87,15 @@ func generateProposedMoves(nRound int) {
 		}
 
 		// find direction to move
-		var i int         // numbers of directions checked
-		var dirFound bool // found direction to move
-		var direction int // direction to move
+		var i int                // numbers of directions checked
+		var dirFound bool        // found direction to move
+		var direction int        // direction to move
+		var dirModifiers []Point // modifiers to reach points of selected direction
 
 		for i < 4 { // try every possible direction
-			direction = (nRound + i) % 4                                            // starting direction to look (changes every round)
-			if checkFreeDirection(p, directionToModifiers(directions[direction])) { // check if direction is free
+			direction = (nRound + i) % 4 // starting direction to look (changes every round)
+			dirModifiers = directionToModifiers(directions[direction])
+			if checkFreeDirection(p, dirModifiers) { // check if direction is free
 				dirFound = true // direction found
 				break           // stop looking for direction
 			}
@@ -103,10 +105,10 @@ func generateProposedMoves(nRound int) {
 		// update elf setting his proposed move
 		if dirFound { // move found
 			// apply direction modifiers to current point x and y
-			nextPointX := p.x + directionToModifiers(directions[direction])[1].x
-			nextPointY := p.y + directionToModifiers(directions[direction])[1].y
+			proposedMoveX := p.x + dirModifiers[1].x
+			proposedMoveY := p.y + dirModifiers[1].y
 			// assign proposed move and will to move to elf
-			elves[p] = Elve{Point{nextPointX, nextPointY}, true}
+			elves[p] = Elve{Point{proposedMoveX, proposedMoveY}, true}
 		} else {
 			elves[p] = Elve{Point{}, false} // no will to move
 		}
@@ -161,15 +163,14 @@ func moveToProposed() (map[Point]Elve, bool) {
 
 	newElves := make(map[Point]Elve) // new elves map
 
-	var someoneMoved bool
+	var someoneMoved bool // at least one elf moved
 
 	for p := range elves { // scan each elf
 
 		if elves[p].toMove { // if elf precalculated a valid position to move
 
-			uniqueMove := true
-
 			// check position to move is unique (no other elf wants to move there)
+			uniqueMove := true
 			for p2 := range elves {
 				if p == p2 { // skip self
 					continue
