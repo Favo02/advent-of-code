@@ -26,16 +26,27 @@ func main() {
 	elves = make(map[Point]Elve)
 	parseInput()
 
-	for i := 0; true; i++ {
-		someoneMoved := round(i)
-		fmt.Println("round:", i+1)
+	var round10empty, finalRound int
+
+	for round := 1; true; round++ {
+		someoneMoved := simulateRound(round - 1) // simulate a round
+
+		if round == 10 { // save empty spaces at round 10
+			round10empty = countEmpty()
+			fmt.Println(round10empty)
+		}
+
 		if !someoneMoved {
+			finalRound = round
 			break
 		}
 	}
+
+	fmt.Println(round10empty, finalRound)
 }
 
-// modifies elves map placing them
+// modifies elfes map parsing stdin input
+// modifies stdin
 func parseInput() {
 	scanner := bufio.NewScanner(os.Stdin)
 	y := 0
@@ -50,14 +61,23 @@ func parseInput() {
 	}
 }
 
-func round(nRound int) bool {
+// returns true if at least one elf moved, false otherwise
+// modifies elfes map simulating the movements of a round
+func simulateRound(nRound int) (someoneMoved bool) {
 
-	newElves := make(map[Point]Elve)
+	generateProposedMoves(nRound) // generate proposed moves
 
-	// generate proposed
+	elves, someoneMoved = moveToProposed() // moves elves to proposed position (if possible)
+
+	return someoneMoved // return if someone moved
+}
+
+// modifies elfs assigning them the proposed move and the will to move
+func generateProposedMoves(nRound int) {
+	// generate proposed moves
 	for p := range elves {
 
-		// scan 8 positions around
+		// scan 8 positions around the elve
 		someoneClose := scanAround(p)
 
 		// noone around, do nothing
@@ -66,80 +86,42 @@ func round(nRound int) bool {
 			continue
 		}
 
-		// direction to start looking
+		// find direction to move
+		var i int         // numbers of directions checked
+		var dirFound bool // found direction to move
+		var direction int // direction to move
 
-		// check direction
-		i := 0
-		dirFound := false
-		var finalDirection int
-		for i < 4 {
-			if checkFreeDirection(p, directionToModifiers(directions[((nRound%4)+i)%4])) {
-				finalDirection = ((nRound % 4) + i) % 4
-				dirFound = true
-				break
+		for i < 4 { // try every possible direction
+			direction = (nRound + i) % 4                                            // starting direction to look (changes every round)
+			if checkFreeDirection(p, directionToModifiers(directions[direction])) { // check if direction is free
+				dirFound = true // direction found
+				break           // stop looking for direction
 			}
 			i++
 		}
 
-		// update elf
-		if dirFound {
-			nextPointX := p.x + directionToModifiers(directions[finalDirection])[1].x
-			nextPointY := p.y + directionToModifiers(directions[finalDirection])[1].y
+		// update elf setting his proposed move
+		if dirFound { // move found
+			// apply direction modifiers to current point x and y
+			nextPointX := p.x + directionToModifiers(directions[direction])[1].x
+			nextPointY := p.y + directionToModifiers(directions[direction])[1].y
+			// assign proposed move and will to move to elf
 			elves[p] = Elve{Point{nextPointX, nextPointY}, true}
 		} else {
-			elves[p] = Elve{Point{}, false}
+			elves[p] = Elve{Point{}, false} // no will to move
 		}
 	}
-
-	var someoneMoved bool
-
-	// move to proposed
-	for p := range elves {
-
-		if elves[p].toMove { // if point has point to move
-
-			move := true
-			// check unique
-			for p2 := range elves {
-				if p == p2 {
-					continue
-				}
-				if elves[p2].toMove && elves[p].proposedMove == elves[p2].proposedMove {
-					move = false
-					break
-				}
-			}
-
-			if move {
-
-				if !(p == elves[p].proposedMove) {
-					someoneMoved = true
-				}
-
-				newElves[elves[p].proposedMove] = elves[p]
-
-			} else {
-				newElves[p] = elves[p]
-			}
-
-		} else { // point has nowhere to move
-			newElves[p] = elves[p]
-		}
-	}
-
-	elves = newElves
-
-	return someoneMoved
 }
 
+// returns true if there is an elf in the 8 positions around "p", false otherwise
 func scanAround(p Point) bool {
 	for y := p.y - 1; y < p.y-1+3; y++ {
 		for x := p.x - 1; x < p.x-1+3; x++ {
-			if y == p.y && x == p.x {
+			if y == p.y && x == p.x { // skip self
 				continue
 			}
 			_, found := elves[Point{x, y}]
-			if found {
+			if found { // elf found
 				return true
 			}
 		}
@@ -147,6 +129,7 @@ func scanAround(p Point) bool {
 	return false
 }
 
+// returns the modifiers to apply to current point to reach direction "dir"
 func directionToModifiers(dir rune) []Point {
 	switch dir {
 	case 'N':
@@ -161,33 +144,74 @@ func directionToModifiers(dir rune) []Point {
 	return []Point{}
 }
 
+// returns true if points reached by modifying "cur" current point with "mod" modifies are empty, false otherwise
 func checkFreeDirection(cur Point, mod []Point) bool {
 	for _, m := range mod {
 		_, found := elves[Point{cur.x + m.x, cur.y + m.y}]
-		if found {
+		if found { // elf found
 			return false
 		}
 	}
 	return true
 }
 
+// returns a new map of elves with elves moved to proposed position if possible
+// returns true if at least one elf moved, false otherwise
+func moveToProposed() (map[Point]Elve, bool) {
+
+	newElves := make(map[Point]Elve) // new elves map
+
+	var someoneMoved bool
+
+	for p := range elves { // scan each elf
+
+		if elves[p].toMove { // if elf precalculated a valid position to move
+
+			uniqueMove := true
+
+			// check position to move is unique (no other elf wants to move there)
+			for p2 := range elves {
+				if p == p2 { // skip self
+					continue
+				}
+				if elves[p2].toMove && elves[p].proposedMove == elves[p2].proposedMove { // another elf wants to move there
+					uniqueMove = false // shouldnt move
+					break
+				}
+			}
+
+			if uniqueMove {
+				newElves[elves[p].proposedMove] = elves[p] // move elf to proposed move
+				someoneMoved = true
+			} else {
+				newElves[p] = elves[p] // elf stays in same position
+			}
+
+		} else { // elf didnt want to move
+			newElves[p] = elves[p] // elf stays in same position
+		}
+	}
+	return newElves, someoneMoved
+}
+
+// returns the number of empty spaces in the area of elves
 func countEmpty() (count int) {
-	minX, maxX, minY, maxY := getGridBorders()
+	minX, maxX, minY, maxY := getGridBorders() // get dimensions of area to look in
+
+	// scan each position
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
+
 			_, found := elves[Point{x, y}]
-			if !found {
+			if !found { // position empty
 				count++
-				fmt.Print(".")
-			} else {
-				fmt.Print("#")
 			}
 		}
-		fmt.Println()
 	}
 	return count
 }
 
+// returns the maximum and minimun x and y coordinate
 func getGridBorders() (int, int, int, int) {
 	minX, minY := math.MaxInt, math.MaxInt
 	maxX, maxY := math.MinInt, math.MinInt
