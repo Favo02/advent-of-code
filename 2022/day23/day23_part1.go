@@ -15,8 +15,8 @@ type Point struct {
 }
 
 type Elve struct {
+	direction    int
 	proposedMove Point
-	toMove       bool
 }
 
 var elves map[Point]Elve
@@ -26,13 +26,17 @@ func main() {
 	elves = make(map[Point]Elve)
 	parseInput()
 
-	for i := 0; true; i++ {
-		someoneMoved := round(i)
+	countEmpty()
+	fmt.Println("")
+	for i := 0; i < 10; i++ {
+		round(i)
 		fmt.Println("round:", i+1)
-		if !someoneMoved {
-			break
-		}
+		countEmpty()
+		fmt.Println()
 	}
+
+	empty := countEmpty()
+	fmt.Println(empty)
 }
 
 // modifies elves map placing them
@@ -43,14 +47,14 @@ func parseInput() {
 		line := scanner.Text()
 		for x, v := range line {
 			if v == '#' {
-				elves[Point{x, y}] = Elve{Point{}, false}
+				elves[Point{x, y}] = Elve{0, Point{}}
 			}
 		}
 		y++
 	}
 }
 
-func round(nRound int) bool {
+func round(nRound int) {
 
 	newElves := make(map[Point]Elve)
 
@@ -62,74 +66,58 @@ func round(nRound int) bool {
 
 		// noone around, do nothing
 		if !someoneClose {
-			elves[p] = Elve{Point{}, false}
 			continue
 		}
 
 		// direction to start looking
+		originalDirection := nRound % 4
+		fmt.Println(string(directions[originalDirection]))
 
 		// check direction
 		i := 0
 		dirFound := false
 		var finalDirection int
 		for i < 4 {
-			if checkFreeDirection(p, directionToModifiers(directions[((nRound%4)+i)%4])) {
-				finalDirection = ((nRound % 4) + i) % 4
+			if checkFreeDirection(p, directionToModifiers(directions[(originalDirection+i)%4])) {
+				finalDirection = (originalDirection + i) % 4
 				dirFound = true
 				break
 			}
 			i++
 		}
 
-		// update elf
+		// update elf starting direction
 		if dirFound {
 			nextPointX := p.x + directionToModifiers(directions[finalDirection])[1].x
 			nextPointY := p.y + directionToModifiers(directions[finalDirection])[1].y
-			elves[p] = Elve{Point{nextPointX, nextPointY}, true}
+			elves[p] = Elve{(originalDirection + 1) % 4, Point{nextPointX, nextPointY}}
 		} else {
-			elves[p] = Elve{Point{}, false}
+			elves[p] = Elve{(originalDirection + 1) % 4, Point{p.x, p.y}}
 		}
 	}
-
-	var someoneMoved bool
 
 	// move to proposed
 	for p := range elves {
-
-		if elves[p].toMove { // if point has point to move
-
-			move := true
-			// check unique
-			for p2 := range elves {
-				if p == p2 {
-					continue
-				}
-				if elves[p2].toMove && elves[p].proposedMove == elves[p2].proposedMove {
-					move = false
-					break
-				}
+		move := true
+		// check unique
+		for p2 := range elves {
+			if p == p2 {
+				continue
 			}
-
-			if move {
-
-				if !(p == elves[p].proposedMove) {
-					someoneMoved = true
-				}
-
-				newElves[elves[p].proposedMove] = elves[p]
-
-			} else {
-				newElves[p] = elves[p]
+			if elves[p].proposedMove == elves[p2].proposedMove {
+				move = false
+				break
 			}
+		}
 
-		} else { // point has nowhere to move
+		if move {
+			newElves[elves[p].proposedMove] = elves[p]
+		} else {
 			newElves[p] = elves[p]
 		}
 	}
-
 	elves = newElves
 
-	return someoneMoved
 }
 
 func scanAround(p Point) bool {
