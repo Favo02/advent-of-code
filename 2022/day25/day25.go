@@ -12,48 +12,63 @@ import (
 )
 
 func main() {
-	lines := parseInput()
-
-	sum := 0
-	for _, num := range lines {
-		sum += snafuToDec(num)
-	}
-	fmt.Println(sum)
-
-	snafu := decToSnafu(sum)
-	fmt.Println(snafu)
-
+	snafuNums := parseInput()             // read input
+	decNums := snafuToDecArray(snafuNums) // convert snafu to dec
+	decSum := sumArray(decNums)           // sum dec array
+	snafu := decToSnafu(decSum)           // convert sum to snafu
+	fmt.Println("sum of all snafu numbers in snafu base (part1):\n\t", snafu)
 }
 
-func parseInput() (lines []string) {
+// returns numbers parse from stdin
+// modifies stdin
+func parseInput() (nums []string) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
 		line := scanner.Text()
-		lines = append(lines, line)
+		nums = append(nums, line)
 	}
-	return lines
+	return nums
 }
 
-func snafuToDec(num string) (res int) {
-	for i := 0; i < len(num); i++ {
+// returns snafu numbers converted to decimal numbers
+func snafuToDecArray(snafu []string) (dec []int) {
+	dec = make([]int, len(snafu))
+	for i, s := range snafu {
+		dec[i] = snafuToDec(s)
+	}
+	return dec
+}
+
+// returns the snafu number "num" converted to decimal
+func snafuToDec(snafu string) (dec int) {
+	for i := 0; i < len(snafu); i++ {
 		var digit int
-		if num[i] == '=' {
+		if snafu[i] == '=' {
 			digit = -2
-		} else if num[i] == '-' {
+		} else if snafu[i] == '-' {
 			digit = -1
 		} else {
-			digit, _ = strconv.Atoi(string(rune(num[i])))
+			digit, _ = strconv.Atoi(string(rune(snafu[i])))
 		}
-		res += digit * pow(5, len(num)-i-1)
+		dec += digit * pow(5, len(snafu)-i-1)
 	}
-	return res
+	return dec
 }
 
-func decToSnafu(num int) (res string) {
-	var rem []int
+// returns the sum of all numbers in "nums"
+func sumArray(nums []int) (sum int) {
+	for _, n := range nums {
+		sum += n
+	}
+	return sum
+}
+
+// returns decimal number "dec" converted to snafu
+func decToSnafu(dec int) (snafu string) {
+	var snafuDigits []int
 	var overflow int
-	for num != 0 {
-		remDigit := (num % 5) + overflow
+	for dec != 0 {
+		remDigit := (dec % 5) + overflow
 
 		if remDigit > 2 {
 			overflow = 1
@@ -61,37 +76,32 @@ func decToSnafu(num int) (res string) {
 			overflow = 0
 		}
 
-		rem = append(rem, remDigit)
-		num /= 5
+		snafuDigits = append(snafuDigits, remDigit)
+		dec /= 5
 	}
 
-	// missing final overflow
+	// still overflow after number is over
 	if overflow > 0 {
-		rem = append(rem, overflow)
+		snafuDigits = append(snafuDigits, overflow)
 	}
 
-	for i := len(rem) - 1; i >= 0; i-- {
-		digit := rem[i]
-		if rem[i] <= 2 {
-			res = fmt.Sprint(res, digit)
-		} else if rem[i] == 3 {
-			res = fmt.Sprint(res, "=")
-		} else if rem[i] == 4 {
-			res = fmt.Sprint(res, "-")
+	// parse array of digits to string, in reverse order
+	for i := len(snafuDigits) - 1; i >= 0; i-- {
+		digit := snafuDigits[i]
+		if snafuDigits[i] <= 2 {
+			snafu = fmt.Sprint(snafu, digit)
+		} else if snafuDigits[i] == 3 {
+			snafu = fmt.Sprint(snafu, "=")
+		} else if snafuDigits[i] == 4 {
+			snafu = fmt.Sprint(snafu, "-")
 		} else {
-			res = fmt.Sprint(res, "0")
+			snafu = fmt.Sprint(snafu, "0")
 		}
 	}
-	return res
+	return snafu
 }
 
+// returns a^b (math.Pow(a, b)) as int
 func pow(a, b int) int {
 	return int(math.Pow(float64(a), float64(b)))
-}
-
-func abs(a int) int {
-	if a >= 0 {
-		return a
-	}
-	return -a
 }
