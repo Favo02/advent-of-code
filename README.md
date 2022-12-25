@@ -26,6 +26,7 @@
 |&nbsp;&nbsp;18|[Boiling Boulders](https://adventofcode.com/2022/day/18)|00:33:40|3363|02:10:22|3423|
 |&nbsp;&nbsp;20|[Grove Positioning System](https://adventofcode.com/2022/day/20)|07:28:31|7253|15:26:56|10490|
 |&nbsp;&nbsp;23|[Unstable Diffusion](https://adventofcode.com/2022/day/23)|10:04:39|8098|12:05:51|8656|
+|&nbsp;&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|--|--|
 
 # Table of contents:
 1. [ My stats ](#my-stats)
