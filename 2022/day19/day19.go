@@ -36,17 +36,44 @@ var maxGeodeStatus State
 func main() {
 	blueprints := parseInput() // parse blueprints
 
-	var sum int
+	initialStatePart1 := State{23, 1, 0, 0, 0, 2, 0, 0, 0}
+	initialStatePart2 := State{31, 1, 0, 0, 0, 2, 0, 0, 0}
+
+	_ = initialStatePart1
+	_ = initialStatePart2
+
+	// part1
+
+	// var sum int
+	// for id, blue := range blueprints {
+	// 	fmt.Println("### blueprint", id+1, "###")
+	// 	simulateStates(initialStatePart1, blue, []bool{})
+	// 	sum += ((id + 1) * maxGeodeStatus.geode)
+	// 	fmt.Println()
+	// 	fmt.Println("max geodes:", maxGeodeStatus.geode)
+	// 	fmt.Println()
+	// 	maxGeodeStatus = State{}
+	// }
+	// fmt.Println("sum of blueprint levels", sum)
+
+	// part2
+
+	maxGeodes := make([]int, 3)
 	for id, blue := range blueprints {
-		fmt.Println("---- blueprint", id+1, "----")
-		simulateStates(State{23, 1, 0, 0, 0, 2, 0, 0, 0}, blue)
-		sum += ((id + 1) * maxGeodeStatus.geode)
-		fmt.Println(maxGeodeStatus.geode)
-		fmt.Println("---------------")
+		if id == 3 {
+			break
+		}
+
+		fmt.Println("### blueprint", id+1, "###")
+		simulateStates(initialStatePart2, blue, []bool{})
+		maxGeodes[id] = maxGeodeStatus.geode
+		fmt.Println()
+		fmt.Println("max geodes:", maxGeodeStatus.geode)
+		fmt.Println()
 		maxGeodeStatus = State{}
 	}
+	fmt.Println(maxGeodes)
 
-	fmt.Println(sum)
 }
 
 // returns blueprints parsed from stdin
@@ -74,7 +101,7 @@ func parseInput() (blueprints []Blueprint) {
 	return blueprints
 }
 
-func simulateStates(cur State, blue Blueprint) {
+func simulateStates(cur State, blue Blueprint, skip []bool) {
 
 	// end of time reached, stop
 	if cur.time <= 0 {
@@ -100,11 +127,18 @@ func simulateStates(cur State, blue Blueprint) {
 	// max geodes check
 	if cur.geode > maxGeodeStatus.geode {
 		maxGeodeStatus = cur
-		fmt.Println(cur.time, cur.geode, cur)
+		fmt.Print(" --> ", cur.geode)
 	}
 
 	// generate possible operations (robots to craft)
 	possibilities := generatePossibleOperations(cur, blue)
+
+	// skip states skipped last time
+	for i, s := range skip {
+		if s {
+			possibilities[i] = false
+		}
+	}
 
 	// scan each possible operation
 	for indexRobotToAdd, poss := range possibilities {
@@ -113,10 +147,15 @@ func simulateStates(cur State, blue Blueprint) {
 			robotsToAdd[indexRobotToAdd] = 1
 
 			// update resources edit robots precalculated
-			simulateStates(updateResources(cur, indexRobotToAdd, blue), blue)
+			simulateStates(updateResources(cur, indexRobotToAdd, blue), blue, []bool{})
 		}
 	}
-	simulateStates(updateResources(cur, -1, blue), blue)
+
+	if len(skip) > 0 {
+		simulateStates(updateResources(cur, -1, blue), blue, []bool{})
+	} else {
+		simulateStates(updateResources(cur, -1, blue), blue, possibilities)
+	}
 }
 
 // returns the possible operations to perform with "cur" resources
