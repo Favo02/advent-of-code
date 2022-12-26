@@ -1,6 +1,22 @@
 # My stats
 
-*Every year but 2022 is >24h*
+## Stars
+
+|Year|Stars|
+|-|-|
+|2022|50 ⭐|
+|2021|21 ⭐|
+|2019|2 ⭐|
+
+Total stars: 73 ⭐
+
+<br>
+
+## Ranks and Timings
+
+*Every year stats but 2022 is >24h*
+
+<br>
 
 ## 2022
 
@@ -32,6 +48,8 @@
 |&nbsp;&nbsp;24|[Blizzard Basin](https://adventofcode.com/2022/day/24)|>24h|11142|>24h|10924|
 |&nbsp;&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|>24h|8115|
 
+<br>
+
 # Table of contents:
 1. [ My stats ](#my-stats)
 2. [ What is advent of code ](#what-is-advent-of-code)
@@ -41,10 +59,14 @@
     - [ Commit convention ](#commit-convention)
     - [ Pull request convention ](#pull-request-convention)
 
+<br>
+
 # What is advent of code
 [Advent of code](https://adventofcode.com/) challenges, resolved using golang
 
 > Advent of Code is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
+
+<br>
 
 # Conventions
 
@@ -52,6 +74,8 @@
 AoC creator asked to not share input files (in [this tweet](https://mobile.twitter.com/ericwastl/status/1465805354214830081) and in the [subreddit wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/copyright/puzzle_texts/)), so I do not include them into my repo.
 
 You can still run every challenge with your input, available at [Advent of code](https://adventofcode.com/), after login (input is unique for every user).
+
+<br>
 
 ## File naming convention:
 `challenge.go`: clean solution with comments
@@ -66,6 +90,8 @@ You can still run every challenge with your input, available at [Advent of code]
 
 `input2.txt`: another input to test the result (usually from a smurf account or from a friend) (inputs are not the same for every user)
 
+<br>
+
 ## Commit convention:
 `YEAR-DAY: working`: usually first solution for the YEAR - DAY challenge
 
@@ -74,6 +100,8 @@ You can still run every challenge with your input, available at [Advent of code]
 `YEAR-DAY: add input`: add a test input for the YEAR - DAY challenge
 
 `repo: ...`: adjustments to the repository (not challenge related)
+
+<br>
 
 ## Pull request convention:
 I usually create a new branch (`YEAR-DAY`) for every challenge (so for every day) and I merge (sending a PR) when it works or whenever I think it is time to merge
