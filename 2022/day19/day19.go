@@ -30,50 +30,41 @@ type State struct {
 	ore, clay, obsidian, geode                         int
 }
 
-// max geodes generated
-var maxGeodeStatus State
-
 func main() {
 	blueprints := parseInput() // parse blueprints
 
-	initialStatePart1 := State{23, 1, 0, 0, 0, 2, 0, 0, 0}
-	initialStatePart2 := State{31, 1, 0, 0, 0, 2, 0, 0, 0}
-
-	_ = initialStatePart1
-	_ = initialStatePart2
-
 	// part1
-
-	// var sum int
-	// for id, blue := range blueprints {
-	// 	fmt.Println("### blueprint", id+1, "###")
-	// 	simulateStates(initialStatePart1, blue, []bool{})
-	// 	sum += ((id + 1) * maxGeodeStatus.geode)
-	// 	fmt.Println()
-	// 	fmt.Println("max geodes:", maxGeodeStatus.geode)
-	// 	fmt.Println()
-	// 	maxGeodeStatus = State{}
-	// }
-	// fmt.Println("sum of blueprint levels", sum)
+	sum := sumBlueprints(blueprints)
+	fmt.Println("sum of blueprint levels (part1):\n\t", sum)
 
 	// part2
+	mult := multiplyGeodes(blueprints)
+	fmt.Println("product of max geodes of first 3 blueprints (part2):\n\t", mult)
+}
 
-	maxGeodes := make([]int, 3)
+// returns the sum of blueprint level of each blueprint
+func sumBlueprints(blueprints []Blueprint) int {
+	initialStatePart1 := State{23, 1, 0, 0, 0, 2, 0, 0, 0}
+	var sum int
+	for id, blue := range blueprints {
+		maxGeode := simulateStates(initialStatePart1, initialStatePart1, blue, []bool{})
+		sum += ((id + 1) * maxGeode.geode)
+	}
+	return sum
+}
+
+// retusn the product of max geodes of first 3 blueprints
+func multiplyGeodes(blueprints []Blueprint) int {
+	initialStatePart2 := State{31, 1, 0, 0, 0, 2, 0, 0, 0}
+	var maxGeodes int = 1
 	for id, blue := range blueprints {
 		if id == 3 {
 			break
 		}
-
-		fmt.Println("### blueprint", id+1, "###")
-		simulateStates(initialStatePart2, blue, []bool{})
-		maxGeodes[id] = maxGeodeStatus.geode
-		fmt.Println()
-		fmt.Println("max geodes:", maxGeodeStatus.geode)
-		fmt.Println()
-		maxGeodeStatus = State{}
+		maxGeode := simulateStates(initialStatePart2, initialStatePart2, blue, []bool{})
+		maxGeodes *= maxGeode.geode
 	}
-	fmt.Println(maxGeodes)
-
+	return maxGeodes
 }
 
 // returns blueprints parsed from stdin
@@ -101,33 +92,33 @@ func parseInput() (blueprints []Blueprint) {
 	return blueprints
 }
 
-func simulateStates(cur State, blue Blueprint, skip []bool) {
+// returns the state with the maximum possible number of geodes
+func simulateStates(max, cur State, blue Blueprint, skip []bool) State {
 
 	// end of time reached, stop
 	if cur.time <= 0 {
-		return
+		return max
 	}
 
-	// optimization
-	if cur.geode < maxGeodeStatus.geode && cur.time <= maxGeodeStatus.time {
-		return
+	// cannot reach max number of geodes (not enough time)
+	if cur.geode < max.geode && cur.time <= max.time {
+		return max
 	}
 
 	// number of robots of resource > max amount needed of resource
 	if cur.oreRobots > blue.maxOreCost {
-		return
+		return max
 	}
 	if cur.clayRobots > blue.maxClayCost {
-		return
+		return max
 	}
 	if cur.obsidianRobots > blue.maxObsidianCost {
-		return
+		return max
 	}
 
-	// max geodes check
-	if cur.geode > maxGeodeStatus.geode {
-		maxGeodeStatus = cur
-		fmt.Print(" --> ", cur.geode)
+	// save geodes
+	if cur.geode > max.geode {
+		max = cur
 	}
 
 	// generate possible operations (robots to craft)
@@ -146,16 +137,15 @@ func simulateStates(cur State, blue Blueprint, skip []bool) {
 			robotsToAdd := make([]int, 4)
 			robotsToAdd[indexRobotToAdd] = 1
 
-			// update resources edit robots precalculated
-			simulateStates(updateResources(cur, indexRobotToAdd, blue), blue, []bool{})
+			// update resources (remove created robot and add generated resources)
+			max = simulateStates(max, updateResources(cur, indexRobotToAdd, blue), blue, []bool{})
 		}
 	}
 
-	if len(skip) > 0 {
-		simulateStates(updateResources(cur, -1, blue), blue, []bool{})
-	} else {
-		simulateStates(updateResources(cur, -1, blue), blue, possibilities)
-	}
+	// no robot generated, skip robots not created
+	max = simulateStates(max, updateResources(cur, -1, blue), blue, possibilities)
+
+	return max
 }
 
 // returns the possible operations to perform with "cur" resources
@@ -196,16 +186,19 @@ func updateResources(cur State, indexRobotToAdd int, blue Blueprint) State {
 	var oreR, clayR, obsR, geoR int
 	var ore, clay, obsidian, geode int
 
+	// generate resources (based on number of robots)
 	ore = cur.ore + cur.oreRobots
 	clay = cur.clay + cur.clayRobots
 	obsidian = cur.obsidian + cur.obsidianRobots
 	geode = cur.geode + cur.geodeRobots
 
+	// current robots
 	oreR = cur.oreRobots
 	clayR = cur.clayRobots
 	obsR = cur.obsidianRobots
 	geoR = cur.geodeRobots
 
+	// add robot to generate and subtract resources
 	switch indexRobotToAdd {
 	case -1: // no robots to add
 
