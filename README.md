@@ -12,7 +12,7 @@ Total stars: 73 ⭐
 
 <br>
 
-## Ranks and Timings
+## Placements and Timings
 
 *Every year stats but 2022 is >24h*
 
@@ -52,6 +52,8 @@ Total stars: 73 ⭐
 
 # Table of contents:
 1. [ My stats ](#my-stats)
+    - [ Stars ](#stars)
+    - [ Placements and Timings ](#placements-and-timings)
 2. [ What is advent of code ](#what-is-advent-of-code)
 3. [ Conventions ](#conventions)
     - [ Why I don't include input files ](#why-i-dont-include-input-files)
