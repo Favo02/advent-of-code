@@ -21,58 +21,30 @@ type Blizzard struct {
 
 var timeGenerated int
 
-var valley map[Point][]Blizzard
-
 var dirModifiers []Point = []Point{{0, -1, +1}, {+1, 0, +1}, {0, +1, +1}, {-1, 0, +1}}
 
 func main() {
-	valley = make(map[Point][]Blizzard)
-	parseInput()
+	valley := parseInput()
 
 	start := Point{1, 0, 0}
-	endX, endY := 120, 26
-	// endX, endY := 6, 5
+	// end := Point{6, 5, 0} // example
+	end := Point{120, 26, 0}
 
-	dist := depthFirstSearch(start, Point{endX, endY, 0})
-	minDist := math.MaxInt
-	for p, d := range dist {
-		if p.x == endX && p.y == endY {
-			if d < minDist {
-				minDist = d
-			}
-		}
-	}
-	fmt.Println(minDist)
+	startToEnd := distanceInTime(valley, start, end)
 
-	dist2 := depthFirstSearch(Point{endX, endY, minDist}, start)
-	minDist2 := math.MaxInt
-	for p, d := range dist2 {
-		if p.x == start.x && p.y == start.y {
-			if d < minDist2 {
-				minDist2 = d
-			}
-		}
-	}
-	fmt.Println(minDist2)
+	fmt.Println("start to end (part1):\n\t", startToEnd)
 
-	dist3 := depthFirstSearch(Point{start.x, start.y, minDist + minDist2}, Point{endX, endY, 0})
-	minDist3 := math.MaxInt
-	for p, d := range dist3 {
-		if p.x == endX && p.y == endY {
-			if d < minDist3 {
-				minDist3 = d
-			}
-		}
-	}
-	fmt.Println(minDist3)
+	endToStart := distanceInTime(valley, Point{end.x, end.y, startToEnd}, start)
+	startToEnd2 := distanceInTime(valley, Point{start.x, start.y, startToEnd + endToStart}, end)
+	part2 := startToEnd + endToStart + startToEnd2
 
-	fmt.Println(minDist + minDist2 + minDist3)
-
+	fmt.Println("start to end to start to end (part2):\n\t", part2)
 }
 
 // modifies valley placing the blizzard parsed from stdin
 // modifies stdin
-func parseInput() {
+func parseInput() map[Point][]Blizzard {
+	valley := make(map[Point][]Blizzard)
 	scanner := bufio.NewScanner(os.Stdin)
 	y := 0
 	for scanner.Scan() {
@@ -88,13 +60,27 @@ func parseInput() {
 		}
 		y++
 	}
+	return valley
+}
+
+func distanceInTime(valley map[Point][]Blizzard, start, end Point) int {
+	dist := depthFirstSearch(valley, start, end)
+	minDist := math.MaxInt
+	for p, d := range dist {
+		if p.x == end.x && p.y == end.y {
+			if d < minDist {
+				minDist = d
+			}
+		}
+	}
+	return minDist
 }
 
 // returns the points reachable from "u"
-func reachable(u Point) (reac []Point) {
+func reachable(valley map[Point][]Blizzard, u Point) (reac []Point) {
 
 	if timeGenerated <= u.time {
-		generateNextMinute(u.time)
+		generateNextMinute(valley, u.time)
 		timeGenerated++
 	}
 
@@ -120,7 +106,7 @@ func reachable(u Point) (reac []Point) {
 }
 
 // modifies valley moving the blizzards to next minute
-func generateNextMinute(curTime int) {
+func generateNextMinute(valley map[Point][]Blizzard, curTime int) {
 
 	// initialize points empty at time+1
 	for p := range valley {
@@ -141,7 +127,8 @@ func generateNextMinute(curTime int) {
 					valley[newBlizPoint] = append(valley[newBlizPoint], bliz)
 				} else {
 					// pacman effect
-					valley[pacmanEffect(newBlizPoint, blizMod)] = append(valley[pacmanEffect(newBlizPoint, blizMod)], bliz)
+					pacman := pacmanEffect(valley, newBlizPoint, blizMod)
+					valley[pacman] = append(valley[pacman], bliz)
 				}
 			}
 		}
@@ -166,7 +153,7 @@ func getDirectionModifiers(dir rune) Point {
 }
 
 // returns the point of the blizzard applying the pacman effect
-func pacmanEffect(p, mod Point) Point {
+func pacmanEffect(valley map[Point][]Blizzard, p, mod Point) Point {
 	for true {
 		newP := Point{p.x - mod.x, p.y - mod.y, p.time}
 		_, valid := valley[newP]
@@ -179,27 +166,7 @@ func pacmanEffect(p, mod Point) Point {
 	return Point{0, 0, 0}
 }
 
-// modifies stdout printint the valley at "time" time
-func printValley(time int) {
-	for y := 0; y < 6; y++ {
-		for x := 0; x < 8; x++ {
-			bliz, found := valley[Point{x, y, time}]
-			if !found {
-				fmt.Print("#")
-			} else if len(bliz) == 0 {
-				fmt.Print(".")
-			} else if len(bliz) == 1 {
-				fmt.Print(string(bliz[0].direction))
-			} else {
-				fmt.Print(len(bliz))
-			}
-		}
-		fmt.Println()
-	}
-	fmt.Println()
-}
-
-func depthFirstSearch(start Point, end Point) map[Point]int {
+func depthFirstSearch(valley map[Point][]Blizzard, start Point, end Point) map[Point]int {
 	queue := queue{nil}
 	distances := make(map[Point]int)
 	distances[start] = 0
@@ -211,7 +178,7 @@ func depthFirstSearch(start Point, end Point) map[Point]int {
 	for !queue.isEmpty() {
 		u := queue.dequeue()
 
-		reach := reachable(u)
+		reach := reachable(valley, u)
 		for _, v := range reach {
 			if !reached[v] {
 				distances[v] = distances[u] + 1
