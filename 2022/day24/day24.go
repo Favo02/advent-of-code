@@ -19,6 +19,8 @@ type Blizzard struct {
 	direction rune
 }
 
+var timeGenerated int
+
 var valley map[Point][]Blizzard
 
 var dirModifiers []Point = []Point{{0, -1, +1}, {+1, 0, +1}, {0, +1, +1}, {-1, 0, +1}}
@@ -26,9 +28,6 @@ var dirModifiers []Point = []Point{{0, -1, +1}, {+1, 0, +1}, {0, +1, +1}, {-1, 0
 func main() {
 	valley = make(map[Point][]Blizzard)
 	parseInput()
-	for i := 0; i < 1000; i++ {
-		generateNextMinute(i)
-	}
 
 	start := Point{1, 0, 0}
 	endX, endY := 120, 26
@@ -93,6 +92,12 @@ func parseInput() {
 
 // returns the points reachable from "u"
 func reachable(u Point) (reac []Point) {
+
+	if timeGenerated <= u.time {
+		generateNextMinute(u.time)
+		timeGenerated++
+	}
+
 	// scan each point reachable from current point (cur) using every direction modifier
 	for _, dirMod := range dirModifiers {
 
