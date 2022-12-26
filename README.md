@@ -29,7 +29,8 @@
 |&nbsp;&nbsp;21|[Monkey Math](https://adventofcode.com/2022/day/21)|07:37:24|11573|18:01:52|13679|
 |&nbsp;&nbsp;22|[Monkey Map](https://adventofcode.com/2022/day/22)|09:10:38|8352|17:42:53|6145|
 |&nbsp;&nbsp;23|[Unstable Diffusion](https://adventofcode.com/2022/day/23)|10:04:39|8098|12:05:51|8656|
-|&nbsp;&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|--|--|
+|&nbsp;&nbsp;24|[Blizzard Basin](https://adventofcode.com/2022/day/24)|>24h|11142|>24h|10924|
+|&nbsp;&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|>24h|8115|
 
 # Table of contents:
 1. [ My stats ](#my-stats)
