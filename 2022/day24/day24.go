@@ -26,22 +26,49 @@ var dirModifiers []Point = []Point{{0, -1, +1}, {+1, 0, +1}, {0, +1, +1}, {-1, 0
 func main() {
 	valley = make(map[Point][]Blizzard)
 	parseInput()
-	for i := 0; i < 500; i++ {
+	for i := 0; i < 1000; i++ {
 		generateNextMinute(i)
 	}
 
-	dist := depthFirstSearch(Point{1, 0, 0})
+	start := Point{1, 0, 0}
+	endX, endY := 120, 26
+	// endX, endY := 6, 5
 
+	dist := depthFirstSearch(start, Point{endX, endY, 0})
 	minDist := math.MaxInt
-
 	for p, d := range dist {
-		if p.x == 120 && p.y == 26 {
+		if p.x == endX && p.y == endY {
 			if d < minDist {
 				minDist = d
 			}
 		}
 	}
 	fmt.Println(minDist)
+
+	dist2 := depthFirstSearch(Point{endX, endY, minDist}, start)
+	minDist2 := math.MaxInt
+	for p, d := range dist2 {
+		if p.x == start.x && p.y == start.y {
+			if d < minDist2 {
+				minDist2 = d
+			}
+		}
+	}
+	fmt.Println(minDist2)
+
+	dist3 := depthFirstSearch(Point{start.x, start.y, minDist + minDist2}, Point{endX, endY, 0})
+	minDist3 := math.MaxInt
+	for p, d := range dist3 {
+		if p.x == endX && p.y == endY {
+			if d < minDist3 {
+				minDist3 = d
+			}
+		}
+	}
+	fmt.Println(minDist3)
+
+	fmt.Println(minDist + minDist2 + minDist3)
+
 }
 
 // modifies valley placing the blizzard parsed from stdin
@@ -167,7 +194,7 @@ func printValley(time int) {
 	fmt.Println()
 }
 
-func depthFirstSearch(start Point) map[Point]int {
+func depthFirstSearch(start Point, end Point) map[Point]int {
 	queue := queue{nil}
 	distances := make(map[Point]int)
 	distances[start] = 0
@@ -185,6 +212,11 @@ func depthFirstSearch(start Point) map[Point]int {
 				distances[v] = distances[u] + 1
 				reached[v] = true
 				queue.enqueue(v)
+			}
+
+			// check end
+			if v.x == end.x && v.y == end.y {
+				return distances
 			}
 		}
 
