@@ -5,10 +5,10 @@
 |Year|Stars|
 |-|-|
 |2022|50 ⭐|
-|2021|21 ⭐|
+|2021|22 ⭐|
 |2019|2 ⭐|
 
-Total stars: 73 ⭐
+Total stars: 74 ⭐
 
 <br>
 
@@ -50,23 +50,9 @@ Total stars: 73 ⭐
 
 <br>
 
-# Table of contents:
-1. [ My stats ](#my-stats)
-    - [ Stars ](#stars)
-    - [ Placements and Timings ](#placements-and-timings)
-2. [ What is advent of code ](#what-is-advent-of-code)
-3. [ Conventions ](#conventions)
-    - [ Why I don't include input files ](#why-i-dont-include-input-files)
-    - [ File naming convention ](#file-naming-convention)
-    - [ Commit convention ](#commit-convention)
-    - [ Pull request convention ](#pull-request-convention)
-
-<br>
-
 # What is advent of code
-[Advent of code](https://adventofcode.com/) challenges, resolved using golang
 
-> Advent of Code is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
+> [Advent of code](https://adventofcode.com/) is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
 
 <br>
 
@@ -80,30 +66,31 @@ You can still run every challenge with your input, available at [Advent of code]
 <br>
 
 ## File naming convention:
-`challenge.go`: clean solution with comments
 
-`challenge_original.go`: first solution writter, the one that calculated the result to submit
+`<year>/day<day>/day<day>.go`: clean solution with comments _`2022/day1/day1.go`_
 
-`challege_bruteforce.go`: inefficient algorithms written to test efficiency
+`<year>/day<day>/day<day>_original.go`: first solution writter, the one that calculated the result to submit _`2022/day1/day1_original.go`_
 
-`easyInput.txt`: input used in examples
+`<year>/day<day>/day<day>_bruteforce.go`: inefficient algorithms written to test efficiency _`2022/day1/day1_bruteforce.go`_
 
-`input.txt`: input to compute the result on
+~~`<year>/day<day>/easyInput.txt`: input used in examples~~ _not included in repo anymore_
 
-`input2.txt`: another input to test the result (usually from a smurf account or from a friend) (inputs are not the same for every user)
+~~`<year>/day<day>/input.txt`: input to compute the result on~~ _not included in repo anymore_
+
+~~`input2.txt`: another input to test the result (usually from a smurf account or from a friend) (inputs are not the same for every user)~~ _not included in repo anymore_
 
 <br>
 
 ## Commit convention:
-`YEAR-DAY: working`: usually first solution for the YEAR - DAY challenge
+`<year>-<day>: working`: usually first solution for the YEAR - DAY challenge
 
-`YEAR-DAY: refactor`: refactor of the clean solution or refactor of the comments
+`<year>-<day>: refactor`: refactor of the clean solution or refactor of the comments
 
-`YEAR-DAY: add input`: add a test input for the YEAR - DAY challenge
+~~`<year>-<day>: add input`: add a test input for the YEAR - DAY challenge~~
 
 `repo: ...`: adjustments to the repository (not challenge related)
 
 <br>
 
-## Pull request convention:
-I usually create a new branch (`YEAR-DAY`) for every challenge (so for every day) and I merge (sending a PR) when it works or whenever I think it is time to merge
+## Branch and Pull request convention:
+I usually create a new branch (`<year>-<day>`) for every challenge and I merge (creating a PR named `<year> <day>`) when it works or whenever I think it is time to merge
