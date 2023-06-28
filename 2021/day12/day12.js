@@ -23,7 +23,23 @@ function buildGraph(lines) {
   return graph
 }
 
-// true => valid for part2, false => not valid for part2
+// true: valid for part1, false: not valid for part1
+// not best way to calculate part1, but already calculating every path with 2 visits to small caves for part2
+// old commits contains better way to calculate part1
+function checkPart1Valid(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    const e = arr[i]
+
+    if (e === e.toLowerCase()) {
+      if (arr.filter(el => el === e).length >= 2) {
+        return false
+      }
+    }
+  }
+  return true
+}
+
+// true: valid for part2, false: not valid for part2
 function checkPart2Valid(arr) {
   var dupFound
 
@@ -31,10 +47,8 @@ function checkPart2Valid(arr) {
     const e = arr[i]
     
     if (e === e.toLowerCase()) {
-      const occ = arr.filter(el => el === e).length
-      if (occ >= 2) {
+      if (arr.filter(el => el === e).length >= 2) {
         if (dupFound && dupFound !== e) {
-          // console.log("fail for", e)
           return false
         } else {
           dupFound = e
@@ -45,20 +59,21 @@ function checkPart2Valid(arr) {
   return true
 }
 
-// const tree = new Map()
-var count = 0
+var countPart1 = 0
+var countPart2 = 0
 
 // build tree of possible paths, number of leaves are number of possible paths to reach end
 function buildTree(graph, cur) {
-  // console.log(cur.toString())
+
   if (cur.includes("end")) {
-    if (checkPart2Valid(cur)) {
-      // console.log("accepted", cur.toString())
-      count++
-    } else {
-      // console.log("rejected", cur.toString())
+    // not best way to calculate part1, but already calculating every path with 2 visits to small caves for part2
+    // old commits contains better way to calculate part1
+    if (checkPart1Valid(cur)) {
+      countPart1++
     }
-    // tree.delete(cur.toString())
+    if (checkPart2Valid(cur)) {
+      countPart2++
+    }
     return
   }
 
@@ -73,7 +88,6 @@ function buildTree(graph, cur) {
       }
     }
   })
-  // tree.set(cur.toString(), childs)
 
   childs.forEach((next) => {
     buildTree(graph, next)
@@ -81,13 +95,11 @@ function buildTree(graph, cur) {
 }
 
 const lines = parseInput(process.argv[2])
-// console.log(lines)
 
 const graph = buildGraph(lines)
-// console.log(graph)
 
 buildTree(graph, ["start"])
 
-// console.log(tree)
-console.log(count)
+console.log("part1", countPart1)
+console.log("part2", countPart2)
 
