@@ -1,6 +1,34 @@
 const fs = require("fs")
 const path = require("path")
 
+const lines = parseInput(process.argv[2])
+
+const pol = lines[0]
+const flines = lines.slice(2)
+
+const formulas = {}
+parseFormulas(flines)
+
+let couples = {}
+convertStringToCouples(pol)
+
+let part1
+for (let i = 0; i < 40; i++) {
+  if (i == 10) {
+    const { count, lenght } = countValues(pol)
+    const { max, min } = getMaxMin(count)
+    part1 = max-min  
+  }
+  executeReactionStep()
+}
+
+const { count, lenght } = countValues(pol)
+const { max, min } = getMaxMin(count)
+
+console.log("part1", part1)
+console.log("part2", max-min)
+
+// parse input from file given as process arg
 function parseInput(filepath) {
   return fs
     .readFileSync(path.join(__dirname, filepath), { encoding: "utf-8"})
@@ -8,73 +36,87 @@ function parseInput(filepath) {
     .slice(0, -1)
 }
 
-const formulas = new Map()
-
+// parse formula lines into map object (modifies formulas)
 function parseFormulas(flines) {
   flines.forEach(f => {
     let tokens = f.split(" -> ")
-    formulas.set(tokens[0], tokens[1])
+    formulas[tokens[0]] = tokens[1]
   })
 }
 
-function executeReactionStep(pol) {
-  let newPol = []
-
+// convert starting string to couples (modifies couples)
+function convertStringToCouples(pol) {
   for (let i = 0; i < pol.length-1; i++) {
     const sub = pol.slice(i, i+2)
-    // console.log(sub)
-    if (formulas.has(sub)) {
-      newPol.push(sub[0])
-      newPol.push(formulas.get(sub))
-    }
-    else {
-      newPol.push(sub[0])
+    couples[sub] = (couples[sub] ?? 0) +1
+  }
+}
+
+// execute one reaction step (modifies couples)
+function executeReactionStep() {
+  const newCouples = {}
+
+  // console.log("old", couples)
+
+  for (const k in couples) {
+    if (formulas[k]) {
+      const value = couples[k]
+      
+      const first = k.charAt(0) + formulas[k]
+      const second = formulas[k] + k.charAt(1)
+      
+      // console.log(k, "=>", first, second, value)
+
+      newCouples[first] = (newCouples[first] ?? 0) + value
+      newCouples[second] = (newCouples[second] ?? 0) + value
     }
   }
-  newPol.push(pol.charAt(pol.length-1))
-  return newPol.join("")
+
+  couples = newCouples
+  // console.log("new", couples)
+  // console.log(countValues(pol))
+  // console.log()
 }
 
-function getMax(str) {
-  var max = 0,
-      maxChar = '';
-   str.split('').forEach(function(char){
-     if(str.split(char).length > max) {
-         max = str.split(char).length;
-         maxChar = char;
-      }
-   });
-   return max;
- };
+// count the number of each element (and length)
+function countValues(pol) {
+  const count = {}
+  let length = 0
 
- function getMin(str) {
-  var max = 10198219872817,
-      maxChar = '';
-   str.split('').forEach(function(char){
-     if(str.split(char).length < max) {
-         max = str.split(char).length;
-         maxChar = char;
-      }
-   });
-   return max;
- };
+  for (const k in couples) {
+    const first = k.charAt(0)
+    const second = k.charAt(1)
 
-const lines = parseInput(process.argv[2])
+    count[first] = (count[first] ?? 0) + couples[k]
+    count[second] = (count[second] ?? 0) + couples[k]
 
-let pol = lines[0]
-const flines = lines.slice(2)
-parseFormulas(flines)
+    length += couples[k]
+  }
+  
+  count[pol.charAt(0)]++
+  count[pol.charAt(pol.length-1)]++
 
-console.log(pol)
-console.log(formulas)
+  for (const k in count) {
+    count[k] /= 2
+  }
 
-for (let i = 0; i < 10; i++) {
-  pol = executeReactionStep(pol)
-  console.log(pol)
+  return { count, lenght: length+1 }
 }
 
-const max = getMax(pol)
-const min = getMin(pol)
+// get most common and least common element
+function getMaxMin(count) {
+  let max = 0
+  let min = Number.MAX_SAFE_INTEGER // porcata ma ok
+  
+  for (const key in count) {
+    if (count[key] > max) {
+      max = count[key]
+    }
 
-console.log(max, min)
-console.log((max-1)-(min-1))
+    if (count[key] < min) {
+      min = count[key]
+    }
+  }
+
+  return { max, min }
+}
