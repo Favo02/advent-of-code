@@ -6,14 +6,17 @@ const lines = parseInput(process.argv[2])
 const matrix = []
 buildGraph(lines)
 
+const target1 = "99-99"
+const dist1 = dijkstra(0, 0, target1)
+
 expandHorizontally(4)
 expandVertically(4)
 
-// const target = "49-49"
-const target = "499-499"
-const dist = dijkstra(0, 0, target)
-console.log(dist[target])
-// console.log(dist)
+const target2 = "499-499"
+const dist2 = dijkstra(0, 0, target2)
+
+console.log("Part1:", dist1[target1])
+console.log("Part2:", dist2[target2])
 
 // parse input from file given as process arg
 function parseInput(filepath) {
@@ -30,7 +33,6 @@ function buildGraph(lines) {
   })
 }
 
-// does not works with negative weights
 function dijkstra(startX, startY, target) {
 
   const dist = {}
