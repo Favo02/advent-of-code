@@ -15,8 +15,7 @@ console.log("value", value)
 
 // parse input from file given as process arg
 function parseInput(filepath) {
-  return fs
-    .readFileSync(path.join(__dirname, filepath), { encoding: "utf-8"})
+  return fs.readFileSync(path.join(__dirname, filepath), { encoding: "utf-8"})
 }
 
 // hexadecimal to binary
@@ -48,6 +47,7 @@ function hex2bin(hex){
   return out
 }
 
+// parse a package into version, type, sub-packages or literal, remaining part
 function analyzePackage(p) {
   let info = {}
 
@@ -71,6 +71,7 @@ function analyzePackage(p) {
   return info
 }
 
+// parse a literal package into literal, remaining
 function parseLiteralPackage(payload) {
   const literalGroups = chunkSubstr(payload, 5)
   let literal = ""
@@ -99,6 +100,7 @@ function chunkSubstr(str, size) {
   return chunks
 }
 
+// parse a operator package in packages, remaining
 function parseOperatorPackage(payload) {
   const lengthType = payload[0]
 
@@ -126,8 +128,6 @@ function parseOperatorPackage(payload) {
     const subPackageNumberStr = payload.substring(1, 12)
     const subPackageNumber = parseInt(subPackageNumberStr, 2)
     // console.log("spn", subPackageNumber)
-
-    const res = analyzePackage(payload.substring(12))
 
     let subPayload = payload.substring(12)
 
@@ -164,12 +164,13 @@ function sumVersions(package) {
   return sum
 }
 
+// calculate recursively the value of a generic (literal or operator) package
 function calculatePackageValue(package) {
   if (package.type == 4) {
     return parseInt(package.literal, 2)
   }
 
-  const values = [...package.packages].map(p => calculatePackageValue(p))
+  const values = package.packages.map(p => calculatePackageValue(p))
 
   // console.log(packagesValues)
 
