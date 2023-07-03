@@ -5,10 +5,13 @@ const hex = parseInput(process.argv[2])
 const bin = hex2bin(hex)
 
 const package = analyzePackage(bin)
-console.log(JSON.stringify(package, null, 2))
+// console.log(JSON.stringify(package, null, 2))
 
-const v = sumVersions(package)
-console.log(v)
+const version = sumVersions(package)
+console.log("version", version)
+
+const value = calculatePackageValue(package)
+console.log("value", value)
 
 // parse input from file given as process arg
 function parseInput(filepath) {
@@ -49,11 +52,11 @@ function analyzePackage(p) {
   let info = {}
 
   info.version = p.substring(0, 3)
-  info.type = p.substring(3, 6)
+  info.type = parseInt(p.substring(3, 6), 2)
   const payload = p.substring(6)
 
   // literal type
-  if (info.type == "100") {
+  if (info.type == 4) {
     const parsed = parseLiteralPackage(payload)
     info.literal = parsed.literal
     info.remaining = parsed.remaining
@@ -154,10 +157,46 @@ function sumVersions(package) {
     }
     else if (key === 'version') {
       const ver = parseInt(package[key], 2)
-      console.log(ver)
       sum += ver
     }
   }
 
   return sum
+}
+
+function calculatePackageValue(package) {
+  if (package.type == 4) {
+    return parseInt(package.literal, 2)
+  }
+
+  const values = [...package.packages].map(p => calculatePackageValue(p))
+
+  // console.log(packagesValues)
+
+  switch(package.type) {
+    
+    case 0: // sum
+      return values.reduce((sum, a) => sum + a, 0)
+
+    case 1: // product
+      return values.reduce((prod, a) => prod * a, 1)
+
+    case 2: // min
+      return Math.min(...values)
+
+    case 3: // max
+      return Math.max(...values)
+
+    case 5: // gt
+      return values[0] > values[1] ? 1 : 0
+
+    case 6: // lt
+      return values[0] < values[1] ? 1 : 0
+
+    case 7: // eq
+      return values[0] == values[1] ? 1 : 0
+
+    default:
+      console.log("error")
+  }
 }
