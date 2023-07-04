@@ -49,7 +49,7 @@ function newPosition(x, y, xvel, yvel) {
 
 // returns true if the point cannot reach the target
 function isOver(target, x, y, xvel, yvel) {
-  if (y < (target.y2-1)) return true // y already under targer
+  if (y < target.y1) return true // y already under targer
   if (xvel <= 0 && x < target.x1) return true // x before target and x velocity not climbing up
   return false
 }
