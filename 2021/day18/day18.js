@@ -5,9 +5,12 @@ const lines = parseInput(process.argv[2])
 
 const res = sumAllAndReduce(lines)
 const mag = magnitude(res)
+const maxMag = findMaxMagnitude(lines)
 
-console.log(res.join(""))
+// console.log(res.join(""))
 console.log("magnitude (part1):", mag)
+console.log("max magnitude (part2):", maxMag)
+
 
 // parse input from file given as process arg
 function parseInput(filepath) {
@@ -161,4 +164,23 @@ function magnitude(expr) {
   }
 
   return expr[0]
+}
+
+// find max magnitude summing only 2 of the expresisons
+function findMaxMagnitude(exprs) {
+  let maxMag = 0
+
+  for (let i = 0; i < exprs.length; i++) {
+    for (let j = 0; j < exprs.length; j++) {
+      if (i == j) continue
+
+      const mag1 = magnitude(reduce(sum(exprs[i], exprs[j])))
+      if (mag1 > maxMag) maxMag = mag1
+    
+      const mag2 = magnitude(reduce(sum(exprs[j], exprs[i])))
+      if (mag2 > maxMag) maxMag = mag2
+    }
+  }
+
+  return maxMag
 }
