@@ -2,6 +2,7 @@ import advent
 
 advent.setup(202, 0)
 fin = advent.get_input()
+# fin = advent.get_input("easy_input.txt")
 lines = advent.get_lines(fin)
 
 part1 = 0
