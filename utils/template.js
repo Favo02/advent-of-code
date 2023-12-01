@@ -1,3 +1,6 @@
+// https://adventofcode.com/202?/day/??
+// https://github.com/Favo02/advent-of-code
+
 const fs = require("fs")
 const path = require("path")
 
