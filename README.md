@@ -1,24 +1,30 @@
-# My stats
+## Advent of code
 
-## Stars
+> [Advent of code](https://adventofcode.com/) is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
 
-|Year|Stars|
-|-|-|
-|2022|50 ⭐|
-|2021|36 ⭐|
-|2019|2 ⭐|
+## Progress
 
-Total stars: 88 ⭐
+![2019](https://img.shields.io/badge/2019-2_stars-darkgreen)
+![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
+![2021](https://img.shields.io/badge/2021-36_stars-darkgreen)
+![2022](https://img.shields.io/badge/2022-50_stars-gold)
+![2023](https://img.shields.io/badge/2023-2_stars-darkgreen)
 
-<br>
+![Total](https://img.shields.io/badge/Total-92_stars-gold)
 
 ## Placements and Timings
 
-*Every year stats but 2022 is >24h*
+<details>
+  <summary>2023</summary>
 
-<br>
+|Day|Name|Time|Rank|Time|Rank|
+|-|-|-|-|-|-|
+|&nbsp;&nbsp;1|[Trebuchet?!](https://adventofcode.com/2023/day/1)|00:07:51|3877|00:20:41|1842|
 
-## 2022
+</details>
+
+<details>
+  <summary>2022</summary>
 
 |Day|Name|Time|Rank|Time|Rank|
 |-|-|-|-|-|-|
@@ -48,49 +54,19 @@ Total stars: 88 ⭐
 |&nbsp;&nbsp;24|[Blizzard Basin](https://adventofcode.com/2022/day/24)|>24h|11142|>24h|10924|
 |&nbsp;&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|>24h|8115|
 
-<br>
+</details>
 
-# What is advent of code
+*Every year prior to 2022 is >24h (ehm, maybe even >1y).*
 
-> [Advent of code](https://adventofcode.com/) is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
+## Conventions
 
-<br>
-
-# Conventions
-
-## Why I don't include input files:
+### Why I don't include input files:
 AoC creator asked to not share input files (in [this tweet](https://mobile.twitter.com/ericwastl/status/1465805354214830081) and in the [subreddit wiki](https://www.reddit.com/r/adventofcode/wiki/faqs/copyright/puzzle_texts/)), so I do not include them into my repo.
 
 You can still run every challenge with your input, available at [Advent of code](https://adventofcode.com/), after login (input is unique for every user).
 
-<br>
+### Content of the repo:
 
-## File naming convention:
-
-`<year>/day<day>/day<day>.go`: clean solution with comments _`2022/day1/day1.go`_
-
-`<year>/day<day>/day<day>_original.go`: first solution writter, the one that calculated the result to submit _`2022/day1/day1_original.go`_
-
-`<year>/day<day>/day<day>_bruteforce.go`: inefficient algorithms written to test efficiency _`2022/day1/day1_bruteforce.go`_
-
-~~`<year>/day<day>/easyInput.txt`: input used in examples~~ _not included in repo anymore_
-
-~~`<year>/day<day>/input.txt`: input to compute the result on~~ _not included in repo anymore_
-
-~~`input2.txt`: another input to test the result (usually from a smurf account or from a friend) (inputs are not the same for every user)~~ _not included in repo anymore_
-
-<br>
-
-## Commit convention:
-`<year>-<day>: working`: usually first solution for the YEAR - DAY challenge
-
-`<year>-<day>: refactor`: refactor of the clean solution or refactor of the comments
-
-~~`<year>-<day>: add input`: add a test input for the YEAR - DAY challenge~~
-
-`repo: ...`: adjustments to the repository (not challenge related)
-
-<br>
-
-## Branch and Pull request convention:
-I usually create a new branch (`<year>-<day>`) for every challenge and I merge (creating a PR named `<year> <day>`) when it works or whenever I think it is time to merge
+- `<year>/day<day>/day<day>.*`: clean and refactored solution
+- `<year>/day<day>/day<day>_part*_original.*`: solution written as fast as possible _(impossible to read and almost always inefficient)_
+- `<year>/day<day>/day<day>_bruteforce.*`: bruteforce or other approaches to test efficiency
