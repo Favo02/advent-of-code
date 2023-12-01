@@ -1,4 +1,5 @@
+.vscode
+__pycache__
 *input*
 *Input*
-getInput.sh
-.vscode
+secret_session_cookie
