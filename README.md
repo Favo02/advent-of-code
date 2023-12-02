@@ -20,6 +20,7 @@
 |Day|Name|Time|Rank|Time|Rank|
 |-|-|-|-|-|-|
 |&nbsp;&nbsp;1|[Trebuchet?!](https://adventofcode.com/2023/day/1)|00:07:51|3877|00:20:41|1842|
+|&nbsp;&nbsp;2|[Cube Conundrum](https://adventofcode.com/2023/day/2)|00:22:20|5058|00:26:29|4405|
 
 </details>
 
