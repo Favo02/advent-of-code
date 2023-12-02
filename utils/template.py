@@ -10,5 +10,5 @@ part2 = 0
 for line in fin:
   print(line.rstrip())
 
-print("part1:", part1)
-print("part2:", part2)
+print("Part 1:", part1)
+print("Part 2:", part2)
