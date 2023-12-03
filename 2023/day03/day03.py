@@ -29,6 +29,7 @@ def checkBuf(lines, lineI, colI, buffer):
   return False
 
 # reconstruct a number given a line and a position of the number
+# return starting coordinate of the number and the number
 def reconstructNumber(line, x):
   start, end = x, x
 
@@ -37,13 +38,12 @@ def reconstructNumber(line, x):
   while end < len(line)-1 and line[end+1].isdigit():
     end += 1
 
-  return int("".join(line[start:end+1]))
+  return start, int("".join(line[start:end+1]))
 
 # search for numbers in the 8 adjacents of x,y
 def recSearch(lines,x,y):
-  # FIXME: assume that a point will no be adjacent to two distinct numbers
-  # works for my input but could lead to bugs
-  digits = set()
+  numbers = []
+  foundNumberCoords = set()
 
   for dy in range(-1,2):
     if (y == 0 and dy == -1) or (y == len(lines)-1 and dy == 1): continue
@@ -53,8 +53,14 @@ def recSearch(lines,x,y):
       if dx == dy == 0: continue
 
       if lines[y+dy][x+dx].isdigit():
-        digits.add(reconstructNumber(lines[y+dy],x+dx))
-  return digits
+        xCoord, num = reconstructNumber(lines[y+dy],x+dx)
+        numCoord = (xCoord, y+dy)
+
+        if numCoord not in foundNumberCoords:
+          foundNumberCoords.add(numCoord)
+          numbers.append(num)
+
+  return numbers
 
 part1 = 0
 part2 = 0
@@ -74,7 +80,7 @@ for lineI, line in enumerate(lines):
       buffer = []
 
     if char == '*':
-      adjNums = list(recSearch(lines, x=colI, y=lineI))
+      adjNums = recSearch(lines, x=colI, y=lineI)
       if len(adjNums) == 2:
         part2 += adjNums[0] * adjNums[1]
 
