@@ -10,27 +10,24 @@ for l in fin:
 part1 = 0
 part2 = 0
 
-cardCopies = [1 for _ in lines]
+cardCopies = [1] * len(lines)
 
 for cardNum, card in enumerate(lines):
   card = card.rstrip()
   card = card[card.index(":")+2:]
   parts = card.split(" | ")
 
-  winners = [int(p) for p in parts[0].split(" ") if len(p)]
-  my = [int(p) for p in parts[1].split(" ") if len(p)]
+  winners = { int(p) for p in parts[0].split() if len(p) }
+  my = { int(p) for p in parts[1].split() if len(p) }
 
-  cardPoints = 0
+  # set intersection
+  cardPoints = len(winners & my)
 
-  for m in my:
-    if m in winners:
-      cardPoints += 1
+  # parse to int (like floor)
+  part1 += int(2**(cardPoints-1))
 
-  if cardPoints > 0:
-    part1 += 2**(cardPoints-1)
-
-    for i in range(cardNum+1, cardNum+1+cardPoints):
-      cardCopies[i] += cardCopies[cardNum]
+  for i in range(cardNum+1, cardNum+1 + cardPoints):
+    cardCopies[i] += cardCopies[cardNum]
 
 part2 = sum(cardCopies)
 
