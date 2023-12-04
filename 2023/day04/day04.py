@@ -2,7 +2,6 @@
 # https://github.com/Favo02/advent-of-code
 
 import sys
-from math import floor
 fin = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
 lines = []
 for l in fin:
@@ -27,10 +26,11 @@ for cardNum, card in enumerate(lines):
     if m in winners:
       cardPoints += 1
 
-  part1 += floor(2**(cardPoints-1))
+  if cardPoints > 0:
+    part1 += 2**(cardPoints-1)
 
-  for i in range(cardNum+1, cardNum+1+cardPoints):
-    cardCopies[i] += cardCopies[cardNum]
+    for i in range(cardNum+1, cardNum+1+cardPoints):
+      cardCopies[i] += cardCopies[cardNum]
 
 part2 = sum(cardCopies)
 
