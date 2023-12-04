@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-6_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-8_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-98_stars-gold)
+![Total](https://img.shields.io/badge/Total-100_stars-gold)
 
 ## Placements and Timings
 
@@ -22,6 +22,7 @@
 |&nbsp;&nbsp;1|[Trebuchet?!](https://adventofcode.com/2023/day/1)|00:07:51|3877|00:20:41|1842|
 |&nbsp;&nbsp;2|[Cube Conundrum](https://adventofcode.com/2023/day/2)|00:22:20|5058|00:26:29|4405|
 |&nbsp;&nbsp;3|[Gear Ratios](https://adventofcode.com/2023/day/3)|00:33:30|3616|00:44:25|2878|
+|&nbsp;&nbsp;4|[Scratchcards](https://adventofcode.com/2023/day/4)|00:07:02|1624|00:14:06|986|
 
 </details>
 
