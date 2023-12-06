@@ -4,42 +4,43 @@
 import sys
 fin = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
 
-def split(seed, operation):
-  [sS, sE] = seed
-  [mS, mE] = operation
+def split(toSplit, where):
+  [ts, te] = toSplit
+  [ws, we] = where
 
-  res = []
+  # where:   [               )
 
-  if sS < mS < sE:
-    res.append((sS, mS-1))
-    res.append((mS, sE))
+  #    [ )                              = 1 range (= old)
+  #                               [  )  = 1 range (= old)
+  #    [         )                      = 2 ranges
+  #                       [        )    = 2 ranges
+  #               [   )                 = 1 range (= old)
+  #      [                         )    = 3 ranges
 
-  elif sS < mE < sE:
-    res.append((sS, mE))
-    res.append((mE+1, sE))
+  before =        ts, min(ws, te)
+  intersection =  max(ws, ts), min(we, te)
+  after =         max(we, ts), te
 
-  elif mS <= sS < sE <= mE:
-    res.append((sS, sE))
+  # filter out only valid
+  valid = []
+  if before[0] < before[1]: valid.append(before)
+  if intersection[0] < intersection[1]: valid.append(intersection)
+  if after[0] < after[1]: valid.append(after)
 
-  elif sS < mS < mE < sE:
-    res.append((sS, mS-1))
-    res.append((mS, mE))
-    res.append((mE+1, sE))
-
-  else:
-    res.append((sS, sE))
-
-  return res
+  return valid
 
 def shred(seeds, operations):
   for m in operations:
     i = 0
     while i < len(seeds):
       splitRes = split(seeds[i], m)
+
+      # only one new range: same as old one
       if len(splitRes) == 1:
         i += 1
+      # more ranges: there are some new
       else:
-        seeds = seeds[:i] + seeds[i+1:] + splitRes
+        seeds = seeds[:i] + splitRes + seeds[i+1:]
   return seeds
 
 part1 = 0
@@ -47,8 +48,8 @@ part2 = 0
 
 seeds = [int(n) for n in fin.readline()[6:].split() if len(n)]
 
-# trasfrom to ranges
-p1seeds = [(s, s) for s in seeds]
+# trasfrom to ranges in format [start, end) closed on start, open on end
+p1seeds = [(s, s+1) for s in seeds]
 p2seeds = [(seeds[i], seeds[i] + seeds[i+1]) for i in range(0, len(seeds), 2)]
 
 steps = []
@@ -61,7 +62,7 @@ for line in fin:
 
   elif len(line): # line not empty
     tokens = [int(n) for n in line.split()]
-    operS, operE, offset = tokens[1], tokens[1] + tokens[2]-1, tokens[0]-tokens[1]
+    operS, operE, offset = tokens[1], tokens[1] + tokens[2], tokens[0]-tokens[1]
     steps[-1][(operS,operE)] = offset
 
 for step in steps:
