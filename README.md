@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-8_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-12_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-100_stars-gold)
+![Total](https://img.shields.io/badge/Total-104_stars-gold)
 
 ## Placements and Timings
 
@@ -23,6 +23,8 @@
 |&nbsp;&nbsp;2|[Cube Conundrum](https://adventofcode.com/2023/day/2)|00:22:20|5058|00:26:29|4405|
 |&nbsp;&nbsp;3|[Gear Ratios](https://adventofcode.com/2023/day/3)|00:33:30|3616|00:44:25|2878|
 |&nbsp;&nbsp;4|[Scratchcards](https://adventofcode.com/2023/day/4)|00:07:02|1624|00:14:06|986|
+|&nbsp;&nbsp;5|[If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)|00:37:46|4395|04:54:12|10176|
+|&nbsp;&nbsp;6|[Wait For It](https://adventofcode.com/2023/day/6)|00:07:29|1474|00:20:51|4798|
 
 </details>
 
