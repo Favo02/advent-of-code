@@ -26,21 +26,24 @@ def split(toSplit, where):
   if before[0] < before[1]: valid.append(before)
   if intersection[0] < intersection[1]: valid.append(intersection)
   if after[0] < after[1]: valid.append(after)
-
   return valid
 
 def shred(seeds, operations):
-  for m in operations:
-    i = 0
-    while i < len(seeds):
-      splitRes = split(seeds[i], m)
+  for operation in operations:
+    done = []
+    for seed in seeds:
+      done += split(seed, operation)
+    seeds = done
+  return seeds
 
-      # only one new range: same as old one
-      if len(splitRes) == 1:
-        i += 1
-      # more ranges: there are some new
-      else:
-        seeds = seeds[:i] + splitRes + seeds[i+1:]
+def solvePart(steps, seeds):
+  for step in steps:
+    seeds = shred(seeds, step)
+
+    for i, (seedS, seedE) in enumerate(seeds):
+      for (operS, operE), offset in step.items():
+        if operS <= seedS < seedE <= operE:
+          seeds[i] = seedS+offset, seedE+offset
   return seeds
 
 part1 = 0
@@ -65,24 +68,8 @@ for line in fin:
     operS, operE, offset = tokens[1], tokens[1] + tokens[2], tokens[0]-tokens[1]
     steps[-1][(operS,operE)] = offset
 
-for step in steps:
-
-  p1seeds = shred(p1seeds, step)
-
-  for i, (seedS, seedE) in enumerate(p1seeds):
-    for (operS, operE), offset in step.items():
-      if operS <= seedS <= seedE <= operE:
-        p1seeds[i] = seedS+offset, seedE+offset
-
-  p2seeds = shred(p2seeds, step)
-
-  for i, (seedS, seedE) in enumerate(p2seeds):
-    for (operS, operE), offset in step.items():
-      if operS <= seedS <= seedE <= operE:
-        p2seeds[i] = seedS+offset, seedE+offset
-
-part1 = min(p1seeds)[0]
-part2 = min(p2seeds)[0]
+part1 = min(solvePart(steps, p1seeds))[0]
+part2 = min(solvePart(steps, p2seeds))[0]
 
 print("Part 1:", part1)
 print("Part 2:", part2)
