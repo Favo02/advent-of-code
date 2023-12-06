@@ -176,6 +176,14 @@ def get_lines(fin):
     lines.append(line.rstrip())
   return lines
 
+def time(func):
+  def wrapper():
+    start_time = datetime.now()
+    func()
+    end_time = datetime.now()
+    print('Duration: {}'.format(end_time - start_time))
+  return wrapper
+
 URL       = 'https://adventofcode.com/{:d}/day/{:d}/{:s}'
 SESSION   = ''
 CACHE_DIR = '../{:d}/day{:02d}/'
