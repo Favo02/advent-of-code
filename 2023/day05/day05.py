@@ -12,10 +12,10 @@ def split(toSplit, where):
 
   #    [ )                              = 1 range (= old)
   #                               [  )  = 1 range (= old)
-  #    [         )                      = 2 ranges
-  #                       [        )    = 2 ranges
+  #    [     |   )                      = 2 ranges
+  #                       [  |     )    = 2 ranges
   #               [   )                 = 1 range (= old)
-  #      [                         )    = 3 ranges
+  #      [   |               |     )    = 3 ranges
 
   before =        ts, min(ws, te)
   intersection =  max(ws, ts), min(we, te)
