@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-14_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-16_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-106_stars-gold)
+![Total](https://img.shields.io/badge/Total-108_stars-gold)
 
 ## Placements and Timings
 
@@ -26,6 +26,7 @@
 |&nbsp;&nbsp;5|[If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)|00:37:46|4395|04:54:12|10176|
 |&nbsp;&nbsp;6|[Wait For It](https://adventofcode.com/2023/day/6)|00:07:29|1474|00:20:51|4798|
 |&nbsp;&nbsp;7|[Camel Cards](https://adventofcode.com/2023/day/7)|00:34:07|3187|01:13:57|5004|
+|&nbsp;&nbsp;8|[Haunted Wasteland](https://adventofcode.com/2023/day/8)|00:07:52|1394|01:01:45|4898|
 
 </details>
 

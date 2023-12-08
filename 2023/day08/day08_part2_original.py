@@ -12,7 +12,6 @@ dirs = lines[0]
 graph = {}
 
 starts = []
-
 ends = []
 
 for line in lines[2:]:
@@ -69,10 +68,8 @@ while True:
     part2 = calcRepet(list(cycles.values()), time)
     break
 
-print(part2)
-
 # advent.print_answer(1, part1)
 # advent.submit_answer(1, part1)
 
-# advent.print_answer(2, part2)
+advent.print_answer(2, part2)
 # advent.submit_answer(2, part2)
