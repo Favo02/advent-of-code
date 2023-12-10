@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-18_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-20_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-110_stars-gold)
+![Total](https://img.shields.io/badge/Total-112_stars-gold)
 
 ## Placements and Timings
 
@@ -19,15 +19,16 @@
 
 |Day|Name|Time|Rank|Time|Rank|
 |-|-|-|-|-|-|
-|&nbsp;&nbsp;1|[Trebuchet?!](https://adventofcode.com/2023/day/1)|00:07:51|3877|00:20:41|1842|
-|&nbsp;&nbsp;2|[Cube Conundrum](https://adventofcode.com/2023/day/2)|00:22:20|5058|00:26:29|4405|
-|&nbsp;&nbsp;3|[Gear Ratios](https://adventofcode.com/2023/day/3)|00:33:30|3616|00:44:25|2878|
-|&nbsp;&nbsp;4|[Scratchcards](https://adventofcode.com/2023/day/4)|00:07:02|1624|00:14:06|986|
-|&nbsp;&nbsp;5|[If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)|00:37:46|4395|04:54:12|10176|
-|&nbsp;&nbsp;6|[Wait For It](https://adventofcode.com/2023/day/6)|00:07:29|1474|00:20:51|4798|
-|&nbsp;&nbsp;7|[Camel Cards](https://adventofcode.com/2023/day/7)|00:34:07|3187|01:13:57|5004|
-|&nbsp;&nbsp;8|[Haunted Wasteland](https://adventofcode.com/2023/day/8)|00:07:52|1394|01:01:45|4898|
-|&nbsp;&nbsp;9|[Mirage Maintenance](https://adventofcode.com/2023/day/9)|00:11:43|1663|00:23:39|3334|
+|&nbsp;01|[Trebuchet?!](https://adventofcode.com/2023/day/1)|00:07:51|3877|00:20:41|1842|
+|&nbsp;02|[Cube Conundrum](https://adventofcode.com/2023/day/2)|00:22:20|5058|00:26:29|4405|
+|&nbsp;03|[Gear Ratios](https://adventofcode.com/2023/day/3)|00:33:30|3616|00:44:25|2878|
+|&nbsp;04|[Scratchcards](https://adventofcode.com/2023/day/4)|00:07:02|1624|00:14:06|986|
+|&nbsp;05|[If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5)|00:37:46|4395|04:54:12|10176|
+|&nbsp;06|[Wait For It](https://adventofcode.com/2023/day/6)|00:07:29|1474|00:20:51|4798|
+|&nbsp;07|[Camel Cards](https://adventofcode.com/2023/day/7)|00:34:07|3187|01:13:57|5004|
+|&nbsp;08|[Haunted Wasteland](https://adventofcode.com/2023/day/8)|00:07:52|1394|01:01:45|4898|
+|&nbsp;09|[Mirage Maintenance](https://adventofcode.com/2023/day/9)|00:11:43|1663|00:23:39|3334|
+|&nbsp;10|[Pipe Maze](https://adventofcode.com/2023/day/10)|00:27:01|1078|01:46:58|2111|
 
 </details>
 
@@ -36,31 +37,31 @@
 
 |Day|Name|Time|Rank|Time|Rank|
 |-|-|-|-|-|-|
-|&nbsp;&nbsp;1|[Calorie counting](https://adventofcode.com/2022/day/1)|04:27:47|35634|04:34:32|33772|
-|&nbsp;&nbsp;2|[Rock paper scissors](https://adventofcode.com/2022/day/2)|03:02:40|32160|03:48:02|34395|
-|&nbsp;&nbsp;3|[Rucksack reorganization](https://adventofcode.com/2022/day/3)|00:38:19|11855|00:44:43|9742|
-|&nbsp;&nbsp;4|[Camp cleanup](https://adventofcode.com/2022/day/4)|02:15:40|21907|02:40:15|22753|
-|&nbsp;&nbsp;5|[Supply stacks](https://adventofcode.com/2022/day/5)|00:47:19|9299|00:51:58|8656|
-|&nbsp;&nbsp;6|[Tuning trouble](https://adventofcode.com/2022/day/6)|00:10:23|6419|00:12:15|5931|
-|&nbsp;&nbsp;7|[No space left on device](https://adventofcode.com/2022/day/7)|01:46:52|10534|01:51:12|9502|
-|&nbsp;&nbsp;8|[Treetop tree house](https://adventofcode.com/2022/day/8)|00:24:24|4216|00:32:42|2547|
-|&nbsp;&nbsp;9|[Rope bridge](https://adventofcode.com/2022/day/9)|01:01:14|8492|01:19:43|5912|
-|&nbsp;&nbsp;10|[Cathode-Ray Tube](https://adventofcode.com/2022/day/10)|00:42:23|8177|01:05:06|6867|
-|&nbsp;&nbsp;11|[Monkey in the Middle](https://adventofcode.com/2022/day/11)|01:11:38|6885|09:05:34|20325|
-|&nbsp;&nbsp;12|[Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)|08:57:59|19279|09:17:25|18728|
-|&nbsp;&nbsp;13|[Distress Signal](https://adventofcode.com/2022/day/13)|02:06:10|7236|02:39:21|7471|
-|&nbsp;&nbsp;14|[Regolith Reservoir](https://adventofcode.com/2022/day/14)|01:37:58|6631|01:51:51|6194|
-|&nbsp;&nbsp;15|[Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)|03:06:18|8765|05:51:24|8001|
-|&nbsp;&nbsp;16|[Proboscidea Volcanium](https://adventofcode.com/2022/day/16)|11:34:21|8634|15:20:15|6299|
-|&nbsp;&nbsp;17|[Pyroclastic Flow](https://adventofcode.com/2022/day/17)|05:38:50|5909|13:47:27|6531|
-|&nbsp;&nbsp;18|[Boiling Boulders](https://adventofcode.com/2022/day/18)|00:33:40|3363|02:10:22|3423|
-|&nbsp;&nbsp;19|[Not Enough Minerals](https://adventofcode.com/2022/day/19)|>24h|13543|>24h|12635|
-|&nbsp;&nbsp;20|[Grove Positioning System](https://adventofcode.com/2022/day/20)|07:28:31|7253|15:26:56|10490|
-|&nbsp;&nbsp;21|[Monkey Math](https://adventofcode.com/2022/day/21)|07:37:24|11573|18:01:52|13679|
-|&nbsp;&nbsp;22|[Monkey Map](https://adventofcode.com/2022/day/22)|09:10:38|8352|17:42:53|6145|
-|&nbsp;&nbsp;23|[Unstable Diffusion](https://adventofcode.com/2022/day/23)|10:04:39|8098|12:05:51|8656|
-|&nbsp;&nbsp;24|[Blizzard Basin](https://adventofcode.com/2022/day/24)|>24h|11142|>24h|10924|
-|&nbsp;&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|>24h|8115|
+|&nbsp;01|[Calorie counting](https://adventofcode.com/2022/day/1)|04:27:47|35634|04:34:32|33772|
+|&nbsp;02|[Rock paper scissors](https://adventofcode.com/2022/day/2)|03:02:40|32160|03:48:02|34395|
+|&nbsp;03|[Rucksack reorganization](https://adventofcode.com/2022/day/3)|00:38:19|11855|00:44:43|9742|
+|&nbsp;04|[Camp cleanup](https://adventofcode.com/2022/day/4)|02:15:40|21907|02:40:15|22753|
+|&nbsp;05|[Supply stacks](https://adventofcode.com/2022/day/5)|00:47:19|9299|00:51:58|8656|
+|&nbsp;06|[Tuning trouble](https://adventofcode.com/2022/day/6)|00:10:23|6419|00:12:15|5931|
+|&nbsp;07|[No space left on device](https://adventofcode.com/2022/day/7)|01:46:52|10534|01:51:12|9502|
+|&nbsp;08|[Treetop tree house](https://adventofcode.com/2022/day/8)|00:24:24|4216|00:32:42|2547|
+|&nbsp;09|[Rope bridge](https://adventofcode.com/2022/day/9)|01:01:14|8492|01:19:43|5912|
+|&nbsp;10|[Cathode-Ray Tube](https://adventofcode.com/2022/day/10)|00:42:23|8177|01:05:06|6867|
+|&nbsp;11|[Monkey in the Middle](https://adventofcode.com/2022/day/11)|01:11:38|6885|09:05:34|20325|
+|&nbsp;12|[Hill Climbing Algorithm](https://adventofcode.com/2022/day/12)|08:57:59|19279|09:17:25|18728|
+|&nbsp;13|[Distress Signal](https://adventofcode.com/2022/day/13)|02:06:10|7236|02:39:21|7471|
+|&nbsp;14|[Regolith Reservoir](https://adventofcode.com/2022/day/14)|01:37:58|6631|01:51:51|6194|
+|&nbsp;15|[Beacon Exclusion Zone](https://adventofcode.com/2022/day/15)|03:06:18|8765|05:51:24|8001|
+|&nbsp;16|[Proboscidea Volcanium](https://adventofcode.com/2022/day/16)|11:34:21|8634|15:20:15|6299|
+|&nbsp;17|[Pyroclastic Flow](https://adventofcode.com/2022/day/17)|05:38:50|5909|13:47:27|6531|
+|&nbsp;18|[Boiling Boulders](https://adventofcode.com/2022/day/18)|00:33:40|3363|02:10:22|3423|
+|&nbsp;19|[Not Enough Minerals](https://adventofcode.com/2022/day/19)|>24h|13543|>24h|12635|
+|&nbsp;20|[Grove Positioning System](https://adventofcode.com/2022/day/20)|07:28:31|7253|15:26:56|10490|
+|&nbsp;21|[Monkey Math](https://adventofcode.com/2022/day/21)|07:37:24|11573|18:01:52|13679|
+|&nbsp;22|[Monkey Map](https://adventofcode.com/2022/day/22)|09:10:38|8352|17:42:53|6145|
+|&nbsp;23|[Unstable Diffusion](https://adventofcode.com/2022/day/23)|10:04:39|8098|12:05:51|8656|
+|&nbsp;24|[Blizzard Basin](https://adventofcode.com/2022/day/24)|>24h|11142|>24h|10924|
+|&nbsp;25|[Full of Hot Air](https://adventofcode.com/2022/day/25)|11:48:33|9511|>24h|8115|
 
 </details>
 
