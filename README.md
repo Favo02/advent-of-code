@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-20_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-22_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-112_stars-gold)
+![Total](https://img.shields.io/badge/Total-114_stars-gold)
 
 ## Placements and Timings
 
@@ -29,6 +29,7 @@
 |&nbsp;08|[Haunted Wasteland](https://adventofcode.com/2023/day/8)|00:07:52|1394|01:01:45|4898|
 |&nbsp;09|[Mirage Maintenance](https://adventofcode.com/2023/day/9)|00:11:43|1663|00:23:39|3334|
 |&nbsp;10|[Pipe Maze](https://adventofcode.com/2023/day/10)|00:27:01|1078|01:46:58|2111|
+|&nbsp;11|[Cosmic Expansion](https://adventofcode.com/2023/day/11)|00:36:53|4773|00:48:21|4169|
 
 </details>
 
