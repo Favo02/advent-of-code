@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-22_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-24_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-114_stars-gold)
+![Total](https://img.shields.io/badge/Total-116_stars-gold)
 
 ## Placements and Timings
 
