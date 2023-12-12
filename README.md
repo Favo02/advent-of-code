@@ -30,6 +30,7 @@
 |&nbsp;09|[Mirage Maintenance](https://adventofcode.com/2023/day/9)|00:11:43|1663|00:23:39|3334|
 |&nbsp;10|[Pipe Maze](https://adventofcode.com/2023/day/10)|00:27:01|1078|01:46:58|2111|
 |&nbsp;11|[Cosmic Expansion](https://adventofcode.com/2023/day/11)|00:36:53|4773|00:48:21|4169|
+|&nbsp;12|[Hot Springs](https://adventofcode.com/2023/day/12)|04:08:18|10908|11:18:23|9020|
 
 </details>
 
