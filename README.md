@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-24_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-26_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-116_stars-gold)
+![Total](https://img.shields.io/badge/Total-118_stars-gold)
 
 ## Placements and Timings
 
@@ -31,6 +31,7 @@
 |&nbsp;10|[Pipe Maze](https://adventofcode.com/2023/day/10)|00:27:01|1078|01:46:58|2111|
 |&nbsp;11|[Cosmic Expansion](https://adventofcode.com/2023/day/11)|00:36:53|4773|00:48:21|4169|
 |&nbsp;12|[Hot Springs](https://adventofcode.com/2023/day/12)|04:08:18|10908|11:18:23|9020|
+|&nbsp;13|[Point of Incidence](https://adventofcode.com/2023/day/13)|00:28:17|1964|00:41:28|1684|
 
 </details>
 
