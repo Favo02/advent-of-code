@@ -22,22 +22,21 @@ def smudge(matrix):
 # find a valid reflection, both horizontally and vertically
 # ignore the reflection that gives as result "ignore"
 def reflection(matrix, ignore=None):
-  for x in range(1, len(matrix[0])):
-    if is_specular(matrix, x):
-      if x != ignore:
-        return x
-  for y in range(1, len(matrix)):
-    if is_specular(matrix, y, vertical=True):
-      if y*100 != ignore:
-        return y*100
+  transpose = lambda m: [[row[x] for row in m] for x in range(len(m[0]))]
+
+  for vertical in [False, True]:
+    if vertical:
+      matrix = transpose(matrix)
+
+    for x in range(1, len(matrix[0])):
+      if is_specular(matrix, x):
+        res = x*100 if vertical else x
+        if res != ignore:
+          return res
   return 0
 
 # check if a matrix is specular around a pivot (ignoring extra lines)
-def is_specular(matrix, pivot, vertical=False):
-  if vertical:
-    transpose = lambda m: [[row[x] for row in m] for x in range(len(m[0]))]
-    matrix = transpose(matrix)
-
+def is_specular(matrix, pivot):
   for row in matrix:
     left = row[:pivot]
     right = row[pivot:]
