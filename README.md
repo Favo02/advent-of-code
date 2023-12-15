@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-28_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-30_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-120_stars-gold)
+![Total](https://img.shields.io/badge/Total-122_stars-gold)
 
 ## Placements and Timings
 
@@ -33,6 +33,7 @@
 |&nbsp;12|[Hot Springs](https://adventofcode.com/2023/day/12)|04:08:18|10908|11:18:23|9020|
 |&nbsp;13|[Point of Incidence](https://adventofcode.com/2023/day/13)|00:28:17|1964|00:41:28|1684|
 |&nbsp;14|[Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)|00:14:39|2175|02:02:05|4909|
+|&nbsp;15|[Lens Library](https://adventofcode.com/2023/day/15)|00:06:44|2147|00:23:29|1337|
 
 </details>
 
