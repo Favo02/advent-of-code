@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-38_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-40_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-130_stars-gold)
+![Total](https://img.shields.io/badge/Total-132_stars-gold)
 
 ## Placements and Timings
 
@@ -38,6 +38,7 @@
 | &nbsp;17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17)                | 01:35:17 | 2239  | 01:53:19 | 2075  |
 | &nbsp;18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)                | 00:43:23 | 2468  | 02:13:23 | 2813  |
 | &nbsp;19 | [Aplenty](https://adventofcode.com/2023/day/19)                        | 00:29:00 | 1520  | 01:28:16 | 1725  |
+| &nbsp;20 | [Pulse Propagation](https://adventofcode.com/2023/day/20)              | 01:05:26 | 1817  | 04:58:11 | 3499  |
 
 </details>
 
