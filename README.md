@@ -8,39 +8,41 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-44_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-48_stars-darkgreen)
 
-![Total](https://img.shields.io/badge/Total-136_stars-gold)
+![Total](https://img.shields.io/badge/Total-140_stars-gold)
 
 ## Placements and Timings
 
 <details>
   <summary>2023</summary>
 
-| Day      | Name                                                                   | Time     | Rank  | Time     | Rank  |
-| -------- | ---------------------------------------------------------------------- | -------- | ----- | -------- | ----- |
-| &nbsp;01 | [Trebuchet?!](https://adventofcode.com/2023/day/1)                     | 00:07:51 | 3877  | 00:20:41 | 1842  |
-| &nbsp;02 | [Cube Conundrum](https://adventofcode.com/2023/day/2)                  | 00:22:20 | 5058  | 00:26:29 | 4405  |
-| &nbsp;03 | [Gear Ratios](https://adventofcode.com/2023/day/3)                     | 00:33:30 | 3616  | 00:44:25 | 2878  |
-| &nbsp;04 | [Scratchcards](https://adventofcode.com/2023/day/4)                    | 00:07:02 | 1624  | 00:14:06 | 986   |
-| &nbsp;05 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | 00:37:46 | 4395  | 04:54:12 | 10176 |
-| &nbsp;06 | [Wait For It](https://adventofcode.com/2023/day/6)                     | 00:07:29 | 1474  | 00:20:51 | 4798  |
-| &nbsp;07 | [Camel Cards](https://adventofcode.com/2023/day/7)                     | 00:34:07 | 3187  | 01:13:57 | 5004  |
-| &nbsp;08 | [Haunted Wasteland](https://adventofcode.com/2023/day/8)               | 00:07:52 | 1394  | 01:01:45 | 4898  |
-| &nbsp;09 | [Mirage Maintenance](https://adventofcode.com/2023/day/9)              | 00:11:43 | 1663  | 00:23:39 | 3334  |
-| &nbsp;10 | [Pipe Maze](https://adventofcode.com/2023/day/10)                      | 00:27:01 | 1078  | 01:46:58 | 2111  |
-| &nbsp;11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11)               | 00:36:53 | 4773  | 00:48:21 | 4169  |
-| &nbsp;12 | [Hot Springs](https://adventofcode.com/2023/day/12)                    | 04:08:18 | 10908 | 11:18:23 | 9020  |
-| &nbsp;13 | [Point of Incidence](https://adventofcode.com/2023/day/13)             | 00:28:17 | 1964  | 00:41:28 | 1684  |
-| &nbsp;14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)       | 00:14:39 | 2175  | 02:02:05 | 4909  |
-| &nbsp;15 | [Lens Library](https://adventofcode.com/2023/day/15)                   | 00:06:44 | 2147  | 00:23:29 | 1337  |
-| &nbsp;16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16)         | 00:36:19 | 2084  | 00:40:59 | 1687  |
-| &nbsp;17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17)                | 01:35:17 | 2239  | 01:53:19 | 2075  |
-| &nbsp;18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)                | 00:43:23 | 2468  | 02:13:23 | 2813  |
-| &nbsp;19 | [Aplenty](https://adventofcode.com/2023/day/19)                        | 00:29:00 | 1520  | 01:28:16 | 1725  |
-| &nbsp;20 | [Pulse Propagation](https://adventofcode.com/2023/day/20)              | 01:05:26 | 1817  | 04:58:11 | 3499  |
-| &nbsp;21 | [Step Counter](https://adventofcode.com/2023/day/21)                   | 01:00:19 | 4318  | 08:39:25 | 3757  |
-| &nbsp;22 | [Sand Slabs](https://adventofcode.com/2023/day/22)                     | 01:46:07 | 2459  | 02:01:38 | 2010  |
+| Day      | Name                                                                   | Time     | Rank    | Time     | Rank    |
+| -------- | ---------------------------------------------------------------------- | -------- | ------- | -------- | ------- |
+| &nbsp;01 | [Trebuchet?!](https://adventofcode.com/2023/day/1)                     | 00:07:51 | 3877    | 00:20:41 | 1842    |
+| &nbsp;02 | [Cube Conundrum](https://adventofcode.com/2023/day/2)                  | 00:22:20 | 5058    | 00:26:29 | 4405    |
+| &nbsp;03 | [Gear Ratios](https://adventofcode.com/2023/day/3)                     | 00:33:30 | 3616    | 00:44:25 | 2878    |
+| &nbsp;04 | [Scratchcards](https://adventofcode.com/2023/day/4)                    | 00:07:02 | 1624    | 00:14:06 | **986** |
+| &nbsp;05 | [If You Give A Seed A Fertilizer](https://adventofcode.com/2023/day/5) | 00:37:46 | 4395    | 04:54:12 | 10176   |
+| &nbsp;06 | [Wait For It](https://adventofcode.com/2023/day/6)                     | 00:07:29 | 1474    | 00:20:51 | 4798    |
+| &nbsp;07 | [Camel Cards](https://adventofcode.com/2023/day/7)                     | 00:34:07 | 3187    | 01:13:57 | 5004    |
+| &nbsp;08 | [Haunted Wasteland](https://adventofcode.com/2023/day/8)               | 00:07:52 | 1394    | 01:01:45 | 4898    |
+| &nbsp;09 | [Mirage Maintenance](https://adventofcode.com/2023/day/9)              | 00:11:43 | 1663    | 00:23:39 | 3334    |
+| &nbsp;10 | [Pipe Maze](https://adventofcode.com/2023/day/10)                      | 00:27:01 | 1078    | 01:46:58 | 2111    |
+| &nbsp;11 | [Cosmic Expansion](https://adventofcode.com/2023/day/11)               | 00:36:53 | 4773    | 00:48:21 | 4169    |
+| &nbsp;12 | [Hot Springs](https://adventofcode.com/2023/day/12)                    | 04:08:18 | 10908   | 11:18:23 | 9020    |
+| &nbsp;13 | [Point of Incidence](https://adventofcode.com/2023/day/13)             | 00:28:17 | 1964    | 00:41:28 | 1684    |
+| &nbsp;14 | [Parabolic Reflector Dish](https://adventofcode.com/2023/day/14)       | 00:14:39 | 2175    | 02:02:05 | 4909    |
+| &nbsp;15 | [Lens Library](https://adventofcode.com/2023/day/15)                   | 00:06:44 | 2147    | 00:23:29 | 1337    |
+| &nbsp;16 | [The Floor Will Be Lava](https://adventofcode.com/2023/day/16)         | 00:36:19 | 2084    | 00:40:59 | 1687    |
+| &nbsp;17 | [Clumsy Crucible](https://adventofcode.com/2023/day/17)                | 01:35:17 | 2239    | 01:53:19 | 2075    |
+| &nbsp;18 | [Lavaduct Lagoon](https://adventofcode.com/2023/day/18)                | 00:43:23 | 2468    | 02:13:23 | 2813    |
+| &nbsp;19 | [Aplenty](https://adventofcode.com/2023/day/19)                        | 00:29:00 | 1520    | 01:28:16 | 1725    |
+| &nbsp;20 | [Pulse Propagation](https://adventofcode.com/2023/day/20)              | 01:05:26 | 1817    | 04:58:11 | 3499    |
+| &nbsp;21 | [Step Counter](https://adventofcode.com/2023/day/21)                   | 01:00:19 | 4318    | 08:39:25 | 3757    |
+| &nbsp;22 | [Sand Slabs](https://adventofcode.com/2023/day/22)                     | 01:46:07 | 2459    | 02:01:38 | 2010    |
+| &nbsp;23 | [A Long Walk](https://adventofcode.com/2023/day/23)                    | 00:46:16 | 1911    | 03:41:50 | 2485    |
+| &nbsp;24 | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24)         | 00:32:03 | **511** | 09:23:50 | 3537    |
 
 </details>
 
