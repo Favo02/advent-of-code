@@ -34,29 +34,30 @@ def valid_direction(stone, intersection):
   ix, iy = intersection
   return same_sign(ix-x, sx) and same_sign(iy-y, sy)
 
-def solve_system(points, velocities):
-  solx, soly, solz, velx, vely, velz, t0, t1, t2 =\
-    symbols("rx ry rz ux uy uz t0 t1 t2")
+def solve_system(vectors):
+  # solution unknowns
+  sx, sy, sz, svx, svy, svz, = symbols("sx sy sz svx svy svz")
 
-  result = nonlinsolve([
-    t0 >= 0,
-    t1 >= 0,
-    t2 >= 0,
+  equations = []
+  times = []
+  for i, (point, velocity) in enumerate(vectors):
+    x, y, z = point
+    vx, vy, vz = velocity
+    time = symbols(f"time{i}")
+    times.append(time)
+    equations.append(time >= 0)
+    equations.append(x + time*vx - sx - time*svx)
+    equations.append(y + time*vy - sy - time*svy)
+    equations.append(z + time*vz - sz - time*svz)
+  unknowns = [sx, sy, sz, svx, svy, svz] + times
 
-    points[0][X] + t0 * velocities[0][X] - solx - t0 * velx,
-    points[0][Y] + t0 * velocities[0][Y] - soly - t0 * vely,
-    points[0][Z] + t0 * velocities[0][Z] - solz - t0 * velz,
+  try:
+    [ result ] = nonlinsolve(equations, tuple(unknowns))
+  except:
+    assert False, "cannot calculate system"
+  assert result, f"no valid solutions to system: {result}"
 
-    points[1][X] + t1 * velocities[1][X] - solx - t1 * velx,
-    points[1][Y] + t1 * velocities[1][Y] - soly - t1 * vely,
-    points[1][Z] + t1 * velocities[1][Z] - solz - t1 * velz,
-
-    points[2][X] + t2 * velocities[2][X] - solx - t2 * velx,
-    points[2][Y] + t2 * velocities[2][Y] - soly - t2 * vely,
-    points[2][Z] + t2 * velocities[2][Z] - solz - t2 * velz
-  ], (solx, soly, solz, velx, vely, velz, t0, t1, t2))
-
-  return list(result)[0][:3]
+  return result[:3]
 
 part1 = 0
 part2 = 0
@@ -93,9 +94,7 @@ for i, formula1 in enumerate(formulas):
 
     part1 += 1
 
-points = [h[0] for h in hailstones[:3]]
-velocities = [h[1] for h in hailstones[:3]]
-part2 = sum(solve_system(points, velocities))
+part2 = sum(solve_system(hailstones[:3]))
 
 print("Part 1:", part1)
 print("Part 2:", part2)
