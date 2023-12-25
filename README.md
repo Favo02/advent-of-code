@@ -8,9 +8,9 @@
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
 ![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
-![2023](https://img.shields.io/badge/2023-48_stars-darkgreen)
+![2023](https://img.shields.io/badge/2023-50_stars-gold)
 
-![Total](https://img.shields.io/badge/Total-140_stars-gold)
+![Total](https://img.shields.io/badge/Total-142_stars-gold)
 
 ## Placements and Timings
 
@@ -43,6 +43,7 @@
 | &nbsp;22 | [Sand Slabs](https://adventofcode.com/2023/day/22)                     | 01:46:07 | 2459    | 02:01:38 | 2010    |
 | &nbsp;23 | [A Long Walk](https://adventofcode.com/2023/day/23)                    | 00:46:16 | 1911    | 03:41:50 | 2485    |
 | &nbsp;24 | [Never Tell Me The Odds](https://adventofcode.com/2023/day/24)         | 00:32:03 | **511** | 09:23:50 | 3537    |
+| &nbsp;25 | [Snowverload](https://adventofcode.com/2023/day/25)                    | 01:00:23 | 1429    | 01:00:23 | 1237    |
 
 </details>
 
