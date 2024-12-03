@@ -1,18 +1,21 @@
-import advent
+from heapq import heappop, heappush
+from collections import defaultdict, Counter, deque
+from functools import reduce, lru_cache
+import math
+import sys
+fin = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
 
-advent.setup(202, 0)
-fin = advent.get_input()
-# fin = advent.get_input("easy_input.txt")
-lines = advent.get_lines(fin)
+res = 0
 
-part1 = 0
-part2 = 0
+field = []
+for y, line in enumerate(fin):
+  print(line.rstrip())
+  field.append(line)
 
-for line in lines:
-  print(line)
+  for x, cell in enumerate(line):
+    pass
 
-advent.print_answer(1, part1)
-# advent.submit_answer(1, part1)
+ROWS = len(field)
+COLS = len(field[0])
 
-advent.print_answer(2, part2)
-# advent.submit_answer(2, part2)
+print("RES:", res)

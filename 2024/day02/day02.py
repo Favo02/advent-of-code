@@ -1,4 +1,8 @@
+# https://adventofcode.com/2024/day/2
+# https://github.com/Favo02/advent-of-code
+
 import sys
+fin = open(sys.argv[1]) if len(sys.argv) > 1 else sys.stdin
 
 def sign(a, b):
   if a-b == 0: return +1
