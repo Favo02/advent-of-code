@@ -9,7 +9,7 @@ res = 0
 
 field = []
 for y, line in enumerate(fin):
-  print(line.rstrip())
+  line = line.rstrip()
   field.append(line)
 
   for x, cell in enumerate(line):
