@@ -6,13 +6,47 @@
 
 ![2019](https://img.shields.io/badge/2019-2_stars-darkgreen)
 ![2020](https://img.shields.io/badge/2020-2_stars-darkgreen)
-![2021](https://img.shields.io/badge/2021-38_stars-darkgreen)
+![2021](https://img.shields.io/badge/2021-40_stars-darkgreen)
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
 ![2023](https://img.shields.io/badge/2023-50_stars-gold)
+![2024](https://img.shields.io/badge/2024-50_stars-gold)
 
-![Total](https://img.shields.io/badge/Total-142_stars-gold)
+![Total](https://img.shields.io/badge/Total-194_stars-gold)
 
 ## Placements and Timings
+
+<details>
+  <summary>2024</summary>
+
+| Day      | Name                                                           | Time     | Rank    | Time     | Rank    |
+| -------- | -------------------------------------------------------------- | -------- | ------- | -------- | ------- |
+| &nbsp;01 | [Historian Hysteria](https://adventofcode.com/2024/day/1)      | 00:01:59 | **279** | 00:05:01 | **761** |
+| &nbsp;02 | [Red-Nosed Reports](https://adventofcode.com/2024/day/2)       | 00:07:16 | 1342    | 00:10:35 | **926** |
+| &nbsp;03 | [Mull It Over](https://adventofcode.com/2024/day/3)            | 00:07:55 | 3063    | 00:27:23 | 5438    |
+| &nbsp;04 | [Ceres Search](https://adventofcode.com/2024/day/4)            | 00:10:09 | 1630    | 00:19:53 | 1684    |
+| &nbsp;05 | [Print Queue](https://adventofcode.com/2024/day/5)             | 00:11:26 | 1685    | 00:24:48 | 2266    |
+| &nbsp;06 | [Guard Gallivant](https://adventofcode.com/2024/day/6)         | 00:06:04 | **418** | 00:34:45 | 2012    |
+| &nbsp;07 | [Bridge Repair](https://adventofcode.com/2024/day/7)           | 00:05:52 | **591** | 00:07:17 | **387** |
+| &nbsp;08 | [Resonant Collinearity](https://adventofcode.com/2024/day/8)   | 00:19:34 | 2393    | 00:22:15 | 1553    |
+| &nbsp;09 | [Disk Fragmenter](https://adventofcode.com/2024/day/9)         | 00:11:18 | **577** | 00:42:11 | 1361    |
+| &nbsp;10 | [Hoof It](https://adventofcode.com/2024/day/10)                | 00:08:21 | **763** | 00:18:21 | 1815    |
+| &nbsp;11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11)      | 00:08:08 | 1599    | 00:13:20 | **646** |
+| &nbsp;12 | [Garden Groups](https://adventofcode.com/2024/day/12)          | 00:24:58 | 2771    | 00:50:17 | 1480    |
+| &nbsp;13 | [Claw Contraption](https://adventofcode.com/2024/day/13)       | 00:27:43 | 3016    | 08:54:34 | 16875   |
+| &nbsp;14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14)       | 00:15:03 | 1320    | 00:24:54 | **396** |
+| &nbsp;15 | [Warehouse Woes](https://adventofcode.com/2024/day/15)         | 00:16:16 | **559** | 01:09:49 | 1406    |
+| &nbsp;16 | [Reindeer Maze](https://adventofcode.com/2024/day/16)          | 00:17:15 | 1044    | 00:32:24 | **774** |
+| &nbsp;17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17) | 00:22:52 | 1325    | 04:23:12 | 3723    |
+| &nbsp;18 | [RAM Run](https://adventofcode.com/2024/day/18)                | 00:11:53 | 1048    | 00:13:53 | **623** |
+| &nbsp;19 | [Linen Layout](https://adventofcode.com/2024/day/19)           | 00:08:41 | 1042    | 00:11:46 | **823** |
+| &nbsp;20 | [Race Condition](https://adventofcode.com/2024/day/20)         | 00:35:34 | 1766    | 03:44:38 | 4864    |
+| &nbsp;21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21)       | 03:19:54 | 2837    | 08:40:37 | 3505    |
+| &nbsp;22 | [Monkey Market](https://adventofcode.com/2024/day/22)          | 00:12:56 | 1912    | 01:02:03 | 2288    |
+| &nbsp;23 | [LAN Party](https://adventofcode.com/2024/day/23)              | 00:05:51 | **492** | 00:25:00 | 1010    |
+| &nbsp;24 | [Crossed Wires](https://adventofcode.com/2024/day/24)          | 00:13:19 | **681** | 01:32:22 | **335** |
+| &nbsp;25 | [Code Chronicle](https://adventofcode.com/2024/day/25)         | 00:12:25 | 1111    | 00:12:28 | **910** |
+
+</details>
 
 <details>
   <summary>2023</summary>
