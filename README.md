@@ -10,9 +10,9 @@
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
 ![2023](https://img.shields.io/badge/2023-50_stars-gold)
 ![2024](https://img.shields.io/badge/2024-50_stars-gold)
-![2025](https://img.shields.io/badge/2025-8_stars-gold)
+![2025](https://img.shields.io/badge/2025-10_stars-gold)
 
-![Total](https://img.shields.io/badge/Total-202_stars-gold)
+![Total](https://img.shields.io/badge/Total-204_stars-gold)
 
 ## Placements and Timings
 
@@ -25,6 +25,7 @@
 | &nbsp;02 | [Gift Shop](https://adventofcode.com/2025/day/2)           | 00:05:35 | 00:19:58 | ~1500 |
 | &nbsp;03 | [Lobby](https://adventofcode.com/2025/day/3)               | 00:05:09 | 00:23:55 | ~1700 |
 | &nbsp;04 | [Printing Department](https://adventofcode.com/2025/day/4) | 00:06:34 | 00:11:26 | ~800  |
+| &nbsp;05 | [Cafeteria](https://adventofcode.com/2025/day/5)           | 00:03:15 | 00:16:43 | ~900  |
 
 > [!NOTE]
 > Since the global leaderboard is [no longer visible](https://adventofcode.com/2025/about#faq_leaderboard), the ranks shown are approximate and based on the total number of solves listed on the [stats page](https://adventofcode.com/2025/stats) at the time I completed each problem.
