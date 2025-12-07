@@ -10,9 +10,9 @@
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
 ![2023](https://img.shields.io/badge/2023-50_stars-gold)
 ![2024](https://img.shields.io/badge/2024-50_stars-gold)
-![2025](https://img.shields.io/badge/2025-12_stars-gold)
+![2025](https://img.shields.io/badge/2025-14_stars-gold)
 
-![Total](https://img.shields.io/badge/Total-206_stars-gold)
+![Total](https://img.shields.io/badge/Total-208_stars-gold)
 
 ## Placements and Timings
 
@@ -27,6 +27,7 @@
 | 04  | [Printing Department](https://adventofcode.com/2025/day/4) | 00:06:34 | 00:11:26 | ~800  |
 | 05  | [Cafeteria](https://adventofcode.com/2025/day/5)           | 00:03:15 | 00:16:43 | ~900  |
 | 06  | [Trash Compactor](https://adventofcode.com/2025/day/6)     | 00:06:39 | 00:18:19 | ~600  |
+| 07  | [Laboratories](https://adventofcode.com/2025/day/7)        | 00:07:59 | 00:13:20 | ~500  |
 
 Since the global leaderboard is [no longer visible](https://adventofcode.com/2025/about#faq_leaderboard), the ranks shown are approximate and based on the total number of solves listed on the [stats page](https://adventofcode.com/2025/stats) at the time I completed each problem.
 
