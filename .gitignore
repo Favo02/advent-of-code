@@ -4,3 +4,4 @@ __pycache__
 *Input*
 secret_session_cookie
 *.in
+venv
