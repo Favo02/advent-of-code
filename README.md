@@ -10,28 +10,29 @@
 ![2022](https://img.shields.io/badge/2022-50_stars-gold)
 ![2023](https://img.shields.io/badge/2023-50_stars-gold)
 ![2024](https://img.shields.io/badge/2024-50_stars-gold)
-![2025](https://img.shields.io/badge/2025-22_stars-gold)
+![2025](https://img.shields.io/badge/2025-24_stars-gold)
 
-![Total](https://img.shields.io/badge/Total-216_stars-gold)
+![Total](https://img.shields.io/badge/Total-218_stars-gold)
 
 ## Placements and Timings
 
 <details>
   <summary>2025</summary>
 
-| Day | Name                                                       | Time     | Time     | ~Rank |
-| :-: | ---------------------------------------------------------- | -------- | -------- | ----- |
-| 01  | [Secret Entrance](https://adventofcode.com/2025/day/1)     | 00:02:55 | 00:08:23 | ~300  |
-| 02  | [Gift Shop](https://adventofcode.com/2025/day/2)           | 00:05:35 | 00:19:58 | ~1500 |
-| 03  | [Lobby](https://adventofcode.com/2025/day/3)               | 00:05:09 | 00:23:55 | ~1700 |
-| 04  | [Printing Department](https://adventofcode.com/2025/day/4) | 00:06:34 | 00:11:26 | ~800  |
-| 05  | [Cafeteria](https://adventofcode.com/2025/day/5)           | 00:03:15 | 00:16:43 | ~900  |
-| 06  | [Trash Compactor](https://adventofcode.com/2025/day/6)     | 00:06:39 | 00:18:19 | ~600  |
-| 07  | [Laboratories](https://adventofcode.com/2025/day/7)        | 00:07:59 | 00:13:20 | ~500  |
-| 08  | [Playground](https://adventofcode.com/2025/day/8)          | 00:28:33 | 00:38:55 | ~1500 |
-| 09  | [Movie Theater](https://adventofcode.com/2025/day/9)       | 00:05:05 | 01:18:14 | ~1500 |
-| 10  | [Factory](https://adventofcode.com/2025/day/10)            | 00:21:23 | 00:56:26 | ~600  |
-| 11  | [Reactor](https://adventofcode.com/2025/day/11)            | 00:04:58 | 00:21:56 | ~800  |
+| Day | Name                                                        | Time     | Time     | ~Rank |
+| :-: | ----------------------------------------------------------- | -------- | -------- | ----- |
+| 01  | [Secret Entrance](https://adventofcode.com/2025/day/1)      | 00:02:55 | 00:08:23 | ~300  |
+| 02  | [Gift Shop](https://adventofcode.com/2025/day/2)            | 00:05:35 | 00:19:58 | ~1500 |
+| 03  | [Lobby](https://adventofcode.com/2025/day/3)                | 00:05:09 | 00:23:55 | ~1700 |
+| 04  | [Printing Department](https://adventofcode.com/2025/day/4)  | 00:06:34 | 00:11:06 | ~800  |
+| 05  | [Cafeteria](https://adventofcode.com/2025/day/5)            | 00:03:15 | 00:16:43 | ~900  |
+| 06  | [Trash Compactor](https://adventofcode.com/2025/day/6)      | 00:06:39 | 00:18:19 | ~600  |
+| 07  | [Laboratories](https://adventofcode.com/2025/day/7)         | 00:07:59 | 00:13:20 | ~500  |
+| 08  | [Playground](https://adventofcode.com/2025/day/8)           | 00:28:33 | 00:38:55 | ~1500 |
+| 09  | [Movie Theater](https://adventofcode.com/2025/day/9)        | 00:05:05 | 01:18:14 | ~1500 |
+| 10  | [Factory](https://adventofcode.com/2025/day/10)             | 00:21:23 | 00:56:26 | ~600  |
+| 11  | [Reactor](https://adventofcode.com/2025/day/11)             | 00:04:58 | 00:21:56 | ~800  |
+| 12  | [Christmas Tree Farm](https://adventofcode.com/2025/day/12) | 00:46:55 | 00:47:00 | ~1200 |
 
 Since the global leaderboard is [no longer visible](https://adventofcode.com/2025/about#faq_leaderboard), the ranks shown are approximate and based on the total number of solves listed on the [stats page](https://adventofcode.com/2025/stats) at the time I completed each problem.
 
